@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 29.9.12
  * Time: 16:09
  */
-public class EventToolbar extends ToolbarPanel {
+public class EventToolbar extends InternalPanel {
 
     private List<ToolbarViewEventControl> eventControlList;
 
@@ -96,7 +96,6 @@ public class EventToolbar extends ToolbarPanel {
             labelDescription.setText(getEventDescription().getDescription());
 
         }
-
 
         @Override
         protected void paintComponent(Graphics g) {
