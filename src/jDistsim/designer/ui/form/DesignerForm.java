@@ -3,6 +3,7 @@ package jDistsim.designer.ui.form;
 import jDistsim.designer.ui.MenuBar;
 import jDistsim.designer.ui.StatusBar;
 import jDistsim.designer.ui.panel.EventToolbar;
+import jDistsim.designer.ui.panel.InternalPanel;
 import jDistsim.designer.ui.panel.ToolbarPanel;
 import jDistsim.designer.ui.panel.WorkSpacePanel;
 
@@ -28,14 +29,10 @@ public class DesignerForm extends JFrame {
         setJMenuBar(new MenuBar(this));
         setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(220, 220, 220));
-        panel.setBorder(new LineBorder(new Color(165, 165, 165), 1));
-        panel.setPreferredSize(new Dimension(100, 20));
 
-        add(panel, BorderLayout.NORTH);
+        add(new ToolbarPanel(), BorderLayout.NORTH);
         add(new StatusBar(), BorderLayout.SOUTH);
-        add(new ToolbarPanel("Information"), BorderLayout.EAST);
+        add(new InternalPanel("Information"), BorderLayout.EAST);
         add(new EventToolbar(), BorderLayout.WEST);
         add(new WorkSpacePanel(), BorderLayout.CENTER);
 
@@ -45,11 +42,5 @@ public class DesignerForm extends JFrame {
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(1000, 600);
-    }
-
-    private JPanel makePanel(Color color) {
-        JPanel panel = new JPanel();
-        panel.setBackground(color);
-        return panel;
     }
 }
