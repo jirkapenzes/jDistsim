@@ -4,6 +4,7 @@ import jDistsim.designer.ui.UIConfiguration;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.Resources;
 import jDistsim.utils.resource.TextResources;
+import jDistsim.utils.ui.control.IconHoverStyle;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -43,14 +44,14 @@ public class GradientTitle extends JComponent {
     private void initializeComponents(String titleText) {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(0, 20, 0, 10));
-        setMinimumSize(new Dimension(300, 20));
+        setMinimumSize(new Dimension(100, 20));
 
         labelTitle = new JLabel();
         setTitleText(titleText);
         setTitleTextFont(UIConfiguration.getInstance().getDefaultFont());
         setTitleTextForeground(new Color(96, 96, 96));
 
-        minimizeIconButton = new IconButton(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon.png")), new ImageIcon(Resources.getImage("system/toolbar-minimize-icon-hover.png")));
+        minimizeIconButton = new IconButton(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon.png")), new IconHoverStyle(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon-hover.png"))));
         minimizeIconButton.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -82,19 +83,19 @@ public class GradientTitle extends JComponent {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(300, 20);
+        return new Dimension(parentControl.getWidth(), 20);
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        Graphics2D g2 = (Graphics2D) graphics;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         GradientPaint gradientPaint = new GradientPaint(0, 0, color1, 0, getHeight(), color2);
         g2.setPaint(gradientPaint);
         g2.fill(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
-        g.setColor(new Color(192, 192, 192));
+        graphics.setColor(new Color(192, 192, 192));
         g2.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
 
         g2.setColor(new Color(157, 157, 157));
