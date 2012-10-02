@@ -1,5 +1,7 @@
 package jDistsim.designer.ui.control;
 
+import jDistsim.utils.ui.control.IIconButtonHoverStyle;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -13,20 +15,20 @@ import java.awt.event.MouseEvent;
 public class IconButton extends JComponent {
 
     private Icon icon;
-    private Icon iconHover;
     private JLabel iconLabel;
+    private IIconButtonHoverStyle iconButtonHoverStyle;
 
     public IconButton(Icon icon) {
         this(icon, null);
     }
 
-    public IconButton(Icon icon, Icon iconHover) {
-        this(icon, iconHover, new Dimension(15, 15));
+    public IconButton(Icon icon, IIconButtonHoverStyle iconButtonHoverStyle) {
+        this(icon, iconButtonHoverStyle, new Dimension(15, 15));
     }
 
-    public IconButton(Icon icon, Icon iconHover, Dimension dimension) {
+    public IconButton(Icon icon, IIconButtonHoverStyle iconButtonHoverStyle, Dimension dimension) {
         this.icon = icon;
-        this.iconHover = iconHover;
+        this.iconButtonHoverStyle = iconButtonHoverStyle;
 
         setSize(dimension);
         setLayout(new BorderLayout());
@@ -52,9 +54,11 @@ public class IconButton extends JComponent {
     }
 
     private void iconLabelMouseEntered() {
-        if (iconHover != null)
-            iconLabel.setIcon(iconHover);
+        if (iconButtonHoverStyle != null)
+            iconButtonHoverStyle.applyHoverStyle(this);
     }
 
-
+    public JLabel getIconLabel() {
+        return iconLabel;
+    }
 }
