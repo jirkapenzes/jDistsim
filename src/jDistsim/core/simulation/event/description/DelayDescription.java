@@ -1,5 +1,7 @@
 package jDistsim.core.simulation.event.description;
 
+import jDistsim.core.simulation.event.ui.IEventDescription;
+
 /**
  * Author: Jirka Pénzeš
  * Date: 29.9.12
