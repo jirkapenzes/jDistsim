@@ -1,6 +1,6 @@
 package jDistsim.designer.ui.control.event;
 
-import jDistsim.core.simulation.event.description.IEventDescription;
+import jDistsim.core.simulation.event.ui.IEventDescription;
 import jDistsim.designer.ui.UIConfiguration;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package jDistsim.designer.ui.panel;
 
 import jDistsim.core.simulation.event.description.DelayDescription;
-import jDistsim.core.simulation.event.description.IEventDescription;
+import jDistsim.core.simulation.event.ui.IEventDescription;
 import jDistsim.designer.ui.UIConfiguration;
 import jDistsim.designer.ui.control.event.*;
 import jDistsim.utils.resource.TextResources;
@@ -34,7 +34,7 @@ public class EventToolbar extends InternalPanel {
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
         JPanel controls = new JPanel();
-        controls.setLayout(new WrapLayout(FlowLayout.LEFT, 15, 0));
+        controls.setLayout(new WrapLayout(FlowLayout.LEFT, 10, 0));
         controls.setBackground(Color.white);
         controls.setBorder(new EmptyBorder(10, 0, 0, 0));
 
