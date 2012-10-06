@@ -1,6 +1,6 @@
 package jDistsim.utils.ui.control;
 
-import jDistsim.designer.ui.control.IconButton;
+import jDistsim.designer.ui.control.ImageButton;
 
 import javax.swing.*;
 
@@ -18,8 +18,8 @@ public class IconHoverStyle implements IIconButtonHoverStyle {
     }
 
     @Override
-    public void applyHoverStyle(IconButton iconButton) {
+    public void applyHoverStyle(ImageButton imageButton) {
         if (icon != null)
-            iconButton.getIconLabel().setIcon(icon);
+            imageButton.setIcon(icon);
     }
 }

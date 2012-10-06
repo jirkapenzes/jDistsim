@@ -1,6 +1,6 @@
 package jDistsim.utils.ui.control;
 
-import jDistsim.designer.ui.control.IconButton;
+import jDistsim.designer.ui.control.ImageButton;
 
 /**
  * Author: Jirka Pénzeš
@@ -9,6 +9,6 @@ import jDistsim.designer.ui.control.IconButton;
  */
 public interface IIconButtonHoverStyle {
 
-    public void applyHoverStyle(IconButton iconButton);
+    public void applyHoverStyle(ImageButton imageButton);
 
 }

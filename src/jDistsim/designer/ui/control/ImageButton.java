@@ -12,29 +12,25 @@ import java.awt.event.MouseEvent;
  * Date: 26.9.12
  * Time: 14:36
  */
-public class IconButton extends JComponent {
+public class ImageButton extends JComponent {
 
     private Icon icon;
-    private JLabel iconLabel;
+    private boolean active = false;
     private IIconButtonHoverStyle iconButtonHoverStyle;
 
-    public IconButton(Icon icon) {
+    public ImageButton(Icon icon) {
         this(icon, null);
     }
 
-    public IconButton(Icon icon, IIconButtonHoverStyle iconButtonHoverStyle) {
+    public ImageButton(Icon icon, IIconButtonHoverStyle iconButtonHoverStyle) {
         this(icon, iconButtonHoverStyle, new Dimension(15, 15));
     }
 
-    public IconButton(Icon icon, IIconButtonHoverStyle iconButtonHoverStyle, Dimension dimension) {
+    public ImageButton(Icon icon, IIconButtonHoverStyle iconButtonHoverStyle, Dimension dimension) {
         this.icon = icon;
         this.iconButtonHoverStyle = iconButtonHoverStyle;
 
         setSize(dimension);
-        setLayout(new BorderLayout());
-        iconLabel = new JLabel(icon);
-        add(iconLabel, BorderLayout.CENTER);
-
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -50,15 +46,25 @@ public class IconButton extends JComponent {
     }
 
     private void iconLabelMouseExited() {
-        iconLabel.setIcon(icon);
+        active = false;
+        repaint();
     }
 
     private void iconLabelMouseEntered() {
+        active = true;
         if (iconButtonHoverStyle != null)
             iconButtonHoverStyle.applyHoverStyle(this);
+
+        repaint();
     }
 
-    public JLabel getIconLabel() {
-        return iconLabel;
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+    }
+
+    @Override
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        icon.paintIcon(this, graphics, 0, 0);
     }
 }

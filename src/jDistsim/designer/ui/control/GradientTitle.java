@@ -21,7 +21,7 @@ import java.awt.geom.Rectangle2D;
 public class GradientTitle extends JComponent {
 
     private JComponent parentControl;
-    private IconButton minimizeIconButton;
+    private ImageButton minimizeImageButton;
     private JLabel labelTitle;
     private Color color1;
     private Color color2;
@@ -51,8 +51,8 @@ public class GradientTitle extends JComponent {
         setTitleTextFont(UIConfiguration.getInstance().getDefaultFont());
         setTitleTextForeground(new Color(96, 96, 96));
 
-        minimizeIconButton = new IconButton(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon.png")), new IconHoverStyle(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon-hover.png"))));
-        minimizeIconButton.addMouseListener(new MouseAdapter() {
+        minimizeImageButton = new ImageButton(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon.png")), new IconHoverStyle(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon-hover.png"))));
+        minimizeImageButton.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -60,7 +60,7 @@ public class GradientTitle extends JComponent {
             }
         });
 
-        add(minimizeIconButton, BorderLayout.EAST);
+        add(minimizeImageButton, BorderLayout.EAST);
         add(labelTitle, BorderLayout.WEST);
     }
 
