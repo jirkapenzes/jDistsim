@@ -10,7 +10,6 @@ public class TextResources {
     public static String APPLICATION_NAME = "jDistsim:designer beta - model1.jdsim";
     public static String INFORMATION_PANEL_TITLE = "Project bar";
     public static String TOOLBAR_EVENT_PANEL_TITLE = "Event toolbar";
-
     public static String NULL_TEXT = "Empty string";
 
 }
