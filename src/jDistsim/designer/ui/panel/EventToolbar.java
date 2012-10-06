@@ -1,17 +1,17 @@
 package jDistsim.designer.ui.panel;
 
-import jDistsim.core.simulation.event.description.DelayDescription;
-import jDistsim.core.simulation.event.ui.IEventDescription;
+import jDistsim.core.model.EventToolbarModel;
+import jDistsim.core.module.IEventToolbarModule;
+import jDistsim.core.simulation.event.description.EmptyDescription;
+import jDistsim.core.simulation.event.description.IEventDescription;
 import jDistsim.designer.ui.UIConfiguration;
-import jDistsim.designer.ui.control.event.*;
+import jDistsim.designer.ui.control.event.ToolbarEventPreviewControl;
 import jDistsim.utils.resource.TextResources;
 import jDistsim.utils.ui.WrapLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -20,10 +20,11 @@ import java.util.List;
  */
 public class EventToolbar extends InternalPanel {
 
-    private List<ToolbarViewEventControl> eventControlList;
+    private EventToolbarModel eventToolbarModel;
 
-    public EventToolbar() {
+    public EventToolbar(EventToolbarModel eventToolbarModel) {
         super(TextResources.TOOLBAR_EVENT_PANEL_TITLE);
+        this.eventToolbarModel = eventToolbarModel;
         initializeComponents();
     }
 
@@ -42,15 +43,8 @@ public class EventToolbar extends InternalPanel {
         add(scrollPane, BorderLayout.CENTER);
         add(new EventInformationPanel(), BorderLayout.SOUTH);
 
-        eventControlList = new ArrayList<ToolbarViewEventControl>();
-        eventControlList.add(new ToolbarViewEventControl(new CreateEvent(new DelayDescription())));
-        eventControlList.add(new ToolbarViewEventControl(new DecideEvent(new DelayDescription())));
-        eventControlList.add(new ToolbarViewEventControl(new ProcessEvent(new DelayDescription())));
-        eventControlList.add(new ToolbarViewEventControl(new DelayEvent(new DelayDescription())));
-        eventControlList.add(new ToolbarViewEventControl(new RecordEvent(new DelayDescription())));
-
-        for (ToolbarViewEventControl toolbarViewEventControl : eventControlList) {
-            controls.add(toolbarViewEventControl);
+        for (IEventToolbarModule toolbarModule : eventToolbarModel.getModules()) {
+            controls.add(new ToolbarEventPreviewControl(toolbarModule.getEventPreview()));
         }
     }
 
@@ -62,7 +56,7 @@ public class EventToolbar extends InternalPanel {
         private JLabel labelDescription;
 
         public EventInformationPanel() {
-            this(new DelayDescription());
+            this(new EmptyDescription());
         }
 
         public EventInformationPanel(IEventDescription eventDescription) {

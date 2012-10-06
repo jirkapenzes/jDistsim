@@ -1,5 +1,11 @@
 package jDistsim.designer.ui.form;
 
+import jDistsim.core.model.EventToolbarModel;
+import jDistsim.core.module.EventToolbarModule;
+import jDistsim.core.simulation.event.description.CreateEventDescription;
+import jDistsim.core.simulation.event.description.DisposeDescription;
+import jDistsim.core.simulation.event.ui.preview.CreateUIEventPreview;
+import jDistsim.core.simulation.event.ui.preview.DisposeUIEventPreview;
 import jDistsim.designer.ui.MenuBar;
 import jDistsim.designer.ui.StatusBar;
 import jDistsim.designer.ui.panel.EventToolbar;
@@ -8,7 +14,6 @@ import jDistsim.designer.ui.panel.ToolbarPanel;
 import jDistsim.designer.ui.panel.WorkSpacePanel;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -29,11 +34,15 @@ public class DesignerForm extends JFrame {
         setJMenuBar(new MenuBar(this));
         setLayout(new BorderLayout());
 
+        EventToolbarModel eventToolbarModel = new EventToolbarModel();
+        eventToolbarModel
+                .addEventToolbarModule(new EventToolbarModule(new CreateUIEventPreview(new CreateEventDescription())))
+                .addEventToolbarModule(new EventToolbarModule(new DisposeUIEventPreview(new DisposeDescription())));
 
         add(new ToolbarPanel(), BorderLayout.NORTH);
         add(new StatusBar(), BorderLayout.SOUTH);
         add(new InternalPanel("Information"), BorderLayout.EAST);
-        add(new EventToolbar(), BorderLayout.WEST);
+        add(new EventToolbar(eventToolbarModel), BorderLayout.WEST);
         add(new WorkSpacePanel(), BorderLayout.CENTER);
 
         pack();
