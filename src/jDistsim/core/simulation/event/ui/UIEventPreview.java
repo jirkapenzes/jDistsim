@@ -1,5 +1,7 @@
 package jDistsim.core.simulation.event.ui;
 
+import jDistsim.core.simulation.event.description.IEventDescription;
+
 import java.awt.*;
 
 /**

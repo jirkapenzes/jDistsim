@@ -1,6 +1,6 @@
 package jDistsim.core.simulation.event.library.create;
 
-import jDistsim.core.simulation.event.ui.IEventDescription;
+import jDistsim.core.simulation.event.description.IEventDescription;
 
 /**
  * Author: Jirka Pénzeš

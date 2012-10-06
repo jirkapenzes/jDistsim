@@ -1,6 +1,5 @@
 package jDistsim.core.simulation.event.description;
 
-import jDistsim.core.simulation.event.ui.IEventDescription;
 import jDistsim.utils.resource.EventTextResource;
 
 /**
