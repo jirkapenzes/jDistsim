@@ -1,4 +1,4 @@
-package jDistsim.core.simulation.event.ui;
+package jDistsim.core.simulation.event.description;
 
 /**
  * Author: Jirka Pénzeš

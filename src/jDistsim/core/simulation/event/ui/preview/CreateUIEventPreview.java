@@ -2,7 +2,7 @@ package jDistsim.core.simulation.event.ui.preview;
 
 import jDistsim.core.simulation.event.library.create.ICreateEventDescription;
 import jDistsim.core.simulation.event.library.create.ICreateUIEventPreview;
-import jDistsim.core.simulation.event.ui.IEventDescription;
+import jDistsim.core.simulation.event.description.IEventDescription;
 import jDistsim.core.simulation.event.ui.UIDrawingHelper;
 import jDistsim.utils.math.PointUtilities;
 
