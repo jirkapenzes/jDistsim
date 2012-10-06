@@ -1,6 +1,7 @@
 package jDistsim.designer.ui.control;
 
 import jDistsim.designer.ui.UIConfiguration;
+import jDistsim.designer.ui.control.button.ImageButton;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.Resources;
 import jDistsim.utils.resource.TextResources;
@@ -51,7 +52,7 @@ public class GradientTitle extends JComponent {
         setTitleTextFont(UIConfiguration.getInstance().getDefaultFont());
         setTitleTextForeground(new Color(96, 96, 96));
 
-        minimizeImageButton = new ImageButton(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon.png")), new IconHoverStyle(new ImageIcon(Resources.getImage("system/toolbar-minimize-icon-hover.png"))));
+        minimizeImageButton = new ImageButton(Resources.getImage("system/toolbar-minimize-icon.png"), new IconHoverStyle(Resources.getImage("system/toolbar-minimize-icon-hover.png")));
         minimizeImageButton.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -60,7 +61,11 @@ public class GradientTitle extends JComponent {
             }
         });
 
-        add(minimizeImageButton, BorderLayout.EAST);
+        Container container = new Container();
+        container.setLayout(new FlowLayout(FlowLayout.CENTER));
+        container.add(minimizeImageButton);
+
+        add(container, BorderLayout.EAST);
         add(labelTitle, BorderLayout.WEST);
     }
 
