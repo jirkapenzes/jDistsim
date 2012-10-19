@@ -1,6 +1,6 @@
 package jDistsim.designer.ui.panel;
 
-import jDistsim.designer.model.EventToolbarModel;
+import jDistsim.core.model.EventToolbarModel;
 import jDistsim.core.module.IEventToolbarModule;
 import jDistsim.core.simulation.event.description.EmptyDescription;
 import jDistsim.core.simulation.event.description.IEventDescription;

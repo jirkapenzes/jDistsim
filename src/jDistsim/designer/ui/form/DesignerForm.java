@@ -12,6 +12,7 @@ import jDistsim.designer.ui.panel.EventToolbar;
 import jDistsim.designer.ui.panel.InternalPanel;
 import jDistsim.designer.ui.panel.ToolbarPanel;
 import jDistsim.designer.ui.panel.WorkSpacePanel;
+import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,8 +25,10 @@ import java.awt.*;
 public class DesignerForm extends JFrame {
 
     public DesignerForm(String title) {
+        Logger.log("Initialize GUI designer");
         initializeComponents();
         setTitle(title);
+        Logger.log("Designer GUI application initialization is complete");
     }
 
     private void initializeComponents() {
