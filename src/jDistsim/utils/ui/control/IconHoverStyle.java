@@ -1,6 +1,6 @@
 package jDistsim.utils.ui.control;
 
-import jDistsim.designer.ui.control.button.ImageButton;
+import jDistsim.ui.control.button.ImageButton;
 
 import java.awt.*;
 

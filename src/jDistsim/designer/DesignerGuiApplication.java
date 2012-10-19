@@ -1,6 +1,6 @@
 package jDistsim.designer;
 
-import jDistsim.designer.ui.form.DesignerForm;
+import jDistsim.ui.form.DesignerForm;
 import jDistsim.main.IGuiApplication;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
