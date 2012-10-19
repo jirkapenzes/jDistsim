@@ -1,11 +1,12 @@
 package jDistsim.designer.ui.panel;
 
-import jDistsim.core.model.EventToolbarModel;
+import jDistsim.designer.model.EventToolbarModel;
 import jDistsim.core.module.IEventToolbarModule;
 import jDistsim.core.simulation.event.description.EmptyDescription;
 import jDistsim.core.simulation.event.description.IEventDescription;
 import jDistsim.designer.ui.UIConfiguration;
 import jDistsim.designer.ui.control.event.ToolbarEventPreviewControl;
+import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
 import jDistsim.utils.ui.WrapLayout;
 
@@ -24,6 +25,7 @@ public class EventToolbar extends InternalPanel {
 
     public EventToolbar(EventToolbarModel eventToolbarModel) {
         super(TextResources.TOOLBAR_EVENT_PANEL_TITLE);
+        Logger.log("Initialize event toolbar panel");
         this.eventToolbarModel = eventToolbarModel;
         initializeComponents();
     }

@@ -1,5 +1,7 @@
 package jDistsim.designer.ui.panel;
 
+import jDistsim.utils.logging.Logger;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,6 +14,7 @@ import java.awt.*;
 public class WorkSpacePanel extends JPanel {
 
     public WorkSpacePanel() {
+        Logger.log("Initialize workspace panel");
         initializeComponents();
     }
 

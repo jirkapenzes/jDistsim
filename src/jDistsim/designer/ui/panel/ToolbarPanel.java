@@ -2,6 +2,7 @@ package jDistsim.designer.ui.panel;
 
 import jDistsim.designer.ui.control.MenuSeparator;
 import jDistsim.designer.ui.control.button.ImageButton;
+import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.Resources;
 import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
 
@@ -17,6 +18,7 @@ import java.awt.*;
 public class ToolbarPanel extends JPanel {
 
     public ToolbarPanel() {
+        Logger.log("Initialize toolbar panel");
         initializeComponents();
     }
 

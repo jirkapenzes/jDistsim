@@ -2,6 +2,7 @@ package jDistsim.designer.ui.panel;
 
 import jDistsim.designer.ui.control.GradientTitle;
 import jDistsim.designer.ui.control.IconBar;
+import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,6 +19,7 @@ public class InternalPanel extends JComponent {
     private boolean visibleIconBar = false;
 
     public InternalPanel(String titleName) {
+        Logger.log("Initialize internal panel");
         initializeComponents(titleName);
     }
 

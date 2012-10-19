@@ -3,6 +3,7 @@ package jDistsim.designer.ui.panel;
 import jDistsim.designer.ui.control.GradientTitle;
 import jDistsim.designer.ui.control.tabControl.TabControl;
 import jDistsim.designer.ui.control.tabControl.TabItem;
+import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ import java.awt.*;
 public class InformationPanel extends JPanel {
 
     public InformationPanel() {
+        Logger.log("Initialize information panel");
         initializeComponents();
     }
 

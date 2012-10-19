@@ -14,7 +14,7 @@ public class DesignerGuiApplication implements IGuiApplication {
 
     @Override
     public void Start() {
-        Logger.log("Initialize ui designer");
+        Logger.log("Prepare gui jDistsim designer");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new DesignerForm(TextResources.APPLICATION_NAME).setVisible(true);
