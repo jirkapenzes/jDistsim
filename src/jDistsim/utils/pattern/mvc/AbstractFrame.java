@@ -1,8 +1,9 @@
 package jDistsim.utils.pattern.mvc;
 
+import jDistsim.utils.ioc.IObjectContainer;
+import jDistsim.utils.ioc.ObjectContainer;
+
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: Jirka Pénzeš
@@ -14,13 +15,13 @@ public abstract class AbstractFrame {
     private IComponentFactory componentFactory;
 
     protected JFrame frame;
-    protected final Map<Class<? extends AbstractView<? extends JComponent>>, AbstractView<? extends JComponent>> views;
-    protected final Map<Class<? extends AbstractController>, AbstractController> controllers;
+    protected final IObjectContainer<AbstractView<? extends JComponent>> views;
+    protected final IObjectContainer<AbstractController> controllers;
 
     public AbstractFrame(IComponentFactory componentFactory) {
         this.componentFactory = componentFactory;
-        this.views = new HashMap<Class<? extends AbstractView<? extends JComponent>>, AbstractView<? extends JComponent>>();
-        this.controllers = new HashMap<Class<? extends AbstractController>, AbstractController>();
+        this.views = new ObjectContainer<AbstractView<? extends JComponent>>();
+        this.controllers = new ObjectContainer<AbstractController>();
         registerAllViews();
         registerAllControllers();
     }
@@ -37,10 +38,10 @@ public abstract class AbstractFrame {
     }
 
     public <V extends AbstractView<? extends JComponent>> V getView(Class<V> viewClass) {
-        return (V) views.get(viewClass);
+        return views.get(viewClass);
     }
 
     public <C extends AbstractController> C getController(Class<C> controllerClass) {
-        return (C) controllers.get(controllerClass);
+        return controllers.get(controllerClass);
     }
 }
