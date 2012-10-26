@@ -18,13 +18,13 @@ public class ObjectContainer<TObject> implements IObjectContainer<TObject> {
     }
 
     @Override
-    public void bind(Class<TObject> classType, TObject object) {
-       objectMap.put(classType, object);
+    public  <V extends TObject> void bind(Class<V> classType, TObject object) {
+        objectMap.put((Class<TObject>) classType, object);
     }
 
     @Override
-    public TObject get(Class<TObject> classType) {
-        return objectMap.get(classType);
+    public <V extends TObject> V get(Class<V> classType) {
+        return (V) objectMap.get(classType);
     }
 
     @Override
