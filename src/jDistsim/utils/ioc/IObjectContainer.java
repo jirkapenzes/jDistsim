@@ -9,9 +9,9 @@ import java.util.Iterator;
  */
 public interface IObjectContainer<TObject> {
 
-    <V extends TObject> void bind(Class<V> classType, TObject object);
+    <Type extends TObject> void bind(Class<Type> classType, TObject object);
 
-    <V extends TObject> V get(Class<V> classType);
+    <Type extends TObject> Type get(Class<Type> classType);
 
     Iterator<TObject> listObjects();
 }
