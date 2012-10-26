@@ -37,11 +37,11 @@ public abstract class AbstractFrame {
         componentFactory.showFrame(frame);
     }
 
-    public <V extends AbstractView<? extends JComponent>> V getView(Class<V> viewClass) {
+    public <View extends AbstractView<? extends JComponent>> View getView(Class<View> viewClass) {
         return views.get(viewClass);
     }
 
-    public <C extends AbstractController> C getController(Class<C> controllerClass) {
+    public <Controller extends AbstractController> Controller getController(Class<Controller> controllerClass) {
         return controllers.get(controllerClass);
     }
 }
