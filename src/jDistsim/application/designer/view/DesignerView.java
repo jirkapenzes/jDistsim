@@ -35,7 +35,7 @@ public class DesignerView extends AbstractView<JPanel> {
 
         contentPane.add(getMainFrame().getView(ToolbarView.class).getContentPane(), BorderLayout.NORTH);
         contentPane.add(getMainFrame().getView(StatusBarView.class).getContentPane(), BorderLayout.SOUTH);
-        contentPane.add(getMainFrame().getView(InformationView.class).getContentPane(), BorderLayout.EAST);
+        contentPane.add(getMainFrame().getView(PropertiesView.class).getContentPane(), BorderLayout.EAST);
         contentPane.add(new EventToolbar(eventToolbarModel), BorderLayout.WEST);
         contentPane.add(getMainFrame().getView(ModelSpaceView.class).getContentPane(), BorderLayout.CENTER);
         return contentPane;

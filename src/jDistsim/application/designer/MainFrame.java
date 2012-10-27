@@ -26,7 +26,7 @@ public class MainFrame extends AbstractFrame {
         Logger.log("Register all views");
         views.bind(DesignerView.class, new DesignerView(this));
         views.bind(ModelSpaceView.class, new ModelSpaceView(this));
-        views.bind(InformationView.class, new InformationView(this));
+        views.bind(PropertiesView.class, new PropertiesView(this));
         views.bind(ToolbarView.class, new ToolbarView(this));
         views.bind(StatusBarView.class, new StatusBarView(this));
         views.bind(ToolboxView.class, new ToolboxView(this));
