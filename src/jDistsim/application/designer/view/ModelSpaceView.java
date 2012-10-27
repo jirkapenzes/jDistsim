@@ -1,6 +1,6 @@
 package jDistsim.application.designer.view;
 
-import jDistsim.ui.panel.ModelSpacePanel;
+import jDistsim.ui.panel.workspace.ModelSpacePanel;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractView;
 

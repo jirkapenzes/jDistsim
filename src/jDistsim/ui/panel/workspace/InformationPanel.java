@@ -1,4 +1,4 @@
-package jDistsim.ui.panel;
+package jDistsim.ui.panel.workspace;
 
 import jDistsim.ui.control.GradientTitle;
 import jDistsim.ui.control.tabControl.TabControl;

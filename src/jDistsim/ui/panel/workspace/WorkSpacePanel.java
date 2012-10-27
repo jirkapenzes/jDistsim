@@ -1,4 +1,4 @@
-package jDistsim.ui.panel;
+package jDistsim.ui.panel.workspace;
 
 import jDistsim.utils.logging.Logger;
 

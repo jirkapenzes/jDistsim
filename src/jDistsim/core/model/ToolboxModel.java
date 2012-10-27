@@ -10,15 +10,15 @@ import java.util.List;
  * Date: 6.10.12
  * Time: 21:38
  */
-public class EventToolbarModel {
+public class ToolboxModel {
 
     private List<IEventToolbarModule> modules;
 
-    public EventToolbarModel() {
+    public ToolboxModel() {
         this.modules = new ArrayList<IEventToolbarModule>();
     }
 
-    public EventToolbarModel addEventToolbarModule(IEventToolbarModule eventToolbarModule) {
+    public ToolboxModel addEventToolbarModule(IEventToolbarModule eventToolbarModule) {
         modules.add(eventToolbarModule);
         return this;
     }

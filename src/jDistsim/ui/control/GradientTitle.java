@@ -52,7 +52,7 @@ public class GradientTitle extends JComponent {
         setTitleTextFont(UIConfiguration.getInstance().getDefaultFont());
         setTitleTextForeground(new Color(96, 96, 96));
 
-        minimizeImageButton = new ImageButton(Resources.getImage("system/toolbar-minimize-icon.png"), new IconHoverStyle(Resources.getImage("system/toolbar-minimize-icon-hover.png")));
+        minimizeImageButton = new ImageButton(Resources.getImage("system/toolbox-minimize-icon.png"), new IconHoverStyle(Resources.getImage("system/toolbox-minimize-icon-hover.png")));
         minimizeImageButton.addMouseListener(new MouseAdapter() {
 
             @Override

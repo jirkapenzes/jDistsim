@@ -35,7 +35,7 @@ public class TabTitleControl extends JComponent {
         setLayout(new BorderLayout());
         JLabel label = new JLabel(tabItem.getName());
         label.setFont(UIConfiguration.getInstance().getDefaultFont());
-        // label.setImage(new ImageIcon(Resources.getImage("system/project-toolbar-tab-log.png")));
+        // label.setImage(new ImageIcon(Resources.getImage("system/project-toolbox-tab-log.png")));
         add(label, BorderLayout.CENTER);
         setBorder(new EmptyBorder(5, 10, 3, 10));
 
