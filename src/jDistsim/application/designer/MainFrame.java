@@ -1,5 +1,7 @@
 package jDistsim.application.designer;
 
+import jDistsim.application.designer.controller.StatusBarController;
+import jDistsim.application.designer.model.StatusBarModel;
 import jDistsim.application.designer.view.*;
 import jDistsim.ui.MenuBar;
 import jDistsim.utils.logging.Logger;
@@ -37,6 +39,7 @@ public class MainFrame extends AbstractFrame {
     @Override
     protected void registerAllControllers() {
         Logger.log("Register all controllers");
+        controllers.bind(StatusBarController.class, new StatusBarController(this, new StatusBarModel()));
     }
 
     @Override

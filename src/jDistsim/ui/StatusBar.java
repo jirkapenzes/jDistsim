@@ -18,9 +18,6 @@ public class StatusBar extends JPanel {
 
     public StatusBar() {
         initializeComponents();
-
-        setLabelLeftText(Logger.getMessages().next().toString());
-        setLabelRightText("Demo");
     }
 
     private void initializeComponents() {
