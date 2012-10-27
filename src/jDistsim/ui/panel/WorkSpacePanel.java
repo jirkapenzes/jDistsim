@@ -13,19 +13,20 @@ import java.awt.*;
  */
 public class WorkSpacePanel extends JPanel {
 
-    public WorkSpacePanel() {
+    private InformationPanel informationPanel;
+    private ModelSpacePanel modelSpacePanel;
+
+    public WorkSpacePanel(ModelSpacePanel modelSpacePanel, InformationPanel informationPanel) {
         Logger.log("Initialize workspace panel");
+        this.informationPanel = informationPanel;
+        this.modelSpacePanel = modelSpacePanel;
         initializeComponents();
     }
 
     private void initializeComponents() {
         setBorder(new EmptyBorder(0, 0, 0, 0));
         setLayout(new BorderLayout());
-        InformationPanel informationPanel = new InformationPanel();
         add(informationPanel, BorderLayout.SOUTH);
-
-        ModelSpacePanel modelSpacePanel = new ModelSpacePanel();
-
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
