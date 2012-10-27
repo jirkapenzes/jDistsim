@@ -1,9 +1,8 @@
-package jDistsim.designer;
+package jDistsim.application.designer;
 
-import jDistsim.ui.form.DesignerForm;
+import jDistsim.application.designer.common.ComponentFactory;
 import jDistsim.main.IGuiApplication;
 import jDistsim.utils.logging.Logger;
-import jDistsim.utils.resource.TextResources;
 
 /**
  * Author: Jirka Pénzeš
@@ -14,10 +13,10 @@ public class DesignerGuiApplication implements IGuiApplication {
 
     @Override
     public void Start() {
-        Logger.log("Prepare gui jDistsim designer");
+        Logger.log("Prepare GUI jDistsim designer");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DesignerForm(TextResources.APPLICATION_NAME).setVisible(true);
+                new MainFrame(new ComponentFactory()).show();
             }
         });
     }

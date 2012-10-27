@@ -1,6 +1,6 @@
 package jDistsim.ui.control;
 
-import jDistsim.designer.UIConfiguration;
+import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.Resources;

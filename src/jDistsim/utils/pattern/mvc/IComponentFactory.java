@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  */
 public interface IComponentFactory {
 
-    public JFrame frame(String title, JComponent contentPane, JToolBar toolBar);
+    public JFrame frame(String title, JComponent contentPane, JMenuBar menuBar);
 
     public JFrame showFrame(JFrame frame);
 

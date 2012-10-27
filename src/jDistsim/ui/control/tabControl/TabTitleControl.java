@@ -1,6 +1,6 @@
 package jDistsim.ui.control.tabControl;
 
-import jDistsim.designer.UIConfiguration;
+import jDistsim.application.designer.common.UIConfiguration;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

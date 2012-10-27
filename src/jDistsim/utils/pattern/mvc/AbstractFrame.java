@@ -12,11 +12,10 @@ import javax.swing.*;
  */
 public abstract class AbstractFrame {
 
-    private IComponentFactory componentFactory;
-
     protected JFrame frame;
     protected final IObjectContainer<AbstractView<? extends JComponent>> views;
     protected final IObjectContainer<AbstractController> controllers;
+    protected IComponentFactory componentFactory;
 
     public AbstractFrame(IComponentFactory componentFactory) {
         this.componentFactory = componentFactory;

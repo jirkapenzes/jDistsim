@@ -4,7 +4,7 @@ import jDistsim.core.model.EventToolbarModel;
 import jDistsim.core.module.IEventToolbarModule;
 import jDistsim.core.simulation.event.description.EmptyDescription;
 import jDistsim.core.simulation.event.description.IEventDescription;
-import jDistsim.designer.UIConfiguration;
+import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.ui.control.event.ToolbarEventPreviewControl;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;

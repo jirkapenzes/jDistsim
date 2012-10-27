@@ -1,6 +1,6 @@
 package jDistsim.core.simulation.event.ui;
 
-import jDistsim.designer.UIConfiguration;
+import jDistsim.application.designer.common.UIConfiguration;
 
 import java.awt.*;
 

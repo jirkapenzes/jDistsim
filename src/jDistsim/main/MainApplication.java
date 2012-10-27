@@ -1,6 +1,6 @@
 package jDistsim.main;
 
-import jDistsim.designer.DesignerGuiApplication;
+import jDistsim.application.designer.DesignerGuiApplication;
 import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
@@ -17,8 +17,7 @@ public class MainApplication {
         Logger.log("Start jDistsim application");
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            IGuiApplication application = new DesignerGuiApplication();
-            application.Start();
+            new DesignerGuiApplication().Start();
         } catch (Exception ex) {
         }
     }

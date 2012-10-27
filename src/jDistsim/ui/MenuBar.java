@@ -13,6 +13,10 @@ public class MenuBar extends JMenuBar {
 
     private DesignerForm designerForm;
 
+    public MenuBar() {
+        this(null);
+    }
+
     public MenuBar(DesignerForm designerForm) {
         this.designerForm = designerForm;
 
