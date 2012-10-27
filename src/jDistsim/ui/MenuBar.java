@@ -1,7 +1,5 @@
 package jDistsim.ui;
 
-import jDistsim.ui.form.DesignerForm;
-
 import javax.swing.*;
 
 /**
@@ -11,15 +9,11 @@ import javax.swing.*;
  */
 public class MenuBar extends JMenuBar {
 
-    private DesignerForm designerForm;
-
     public MenuBar() {
-        this(null);
+        initializeMenuBar();
     }
 
-    public MenuBar(DesignerForm designerForm) {
-        this.designerForm = designerForm;
-
+    private void initializeMenuBar() {
         JMenu menu;
         JMenuItem menuItem;
 
