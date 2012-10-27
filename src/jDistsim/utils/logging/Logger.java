@@ -5,6 +5,7 @@ import jDistsim.utils.logging.handlers.ILoggerHandlerManager;
 import jDistsim.utils.logging.handlers.LoggerHandlerManager;
 import jDistsim.utils.logging.module.LoggerModule;
 import jDistsim.utils.logging.module.ModuleManager;
+import jDistsim.utils.pattern.observer.Observable;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ public class Logger {
     private volatile static Object lock = new Object();
     private static ILoggerHandlerManager loggerHandlerManager;
     private static ModuleManager moduleManager;
+    private static Observable observable;
     private static Level defaultLevel = Level.Info;
     private static boolean isTurned = true;
     private static boolean isTurnedDebug = true;
@@ -30,6 +32,7 @@ public class Logger {
         synchronized (lock) {
             loggerHandlerManager = new LoggerHandlerManager();
             moduleManager = new ModuleManager();
+            observable = new Observable();
         }
     }
 
@@ -124,5 +127,9 @@ public class Logger {
         }
 
         return elements[elements.length - 1];
+    }
+
+    public static Observable getObservable() {
+        return observable;
     }
 }
