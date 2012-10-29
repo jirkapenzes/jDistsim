@@ -15,6 +15,9 @@ public class MemoryWatcher extends ActionObject implements Runnable {
     private long totalMemory;
     private long freeMemory;
 
+    private boolean running;
+    private final Object lock = new Object();
+
     public MemoryWatcher() {
         this(1000);
     }
@@ -26,7 +29,10 @@ public class MemoryWatcher extends ActionObject implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        synchronized (lock) {
+            running = true;
+        }
+        while (running) {
             try {
                 calculateMemory();
                 doActionPerformed();
@@ -34,6 +40,12 @@ public class MemoryWatcher extends ActionObject implements Runnable {
             } catch (InterruptedException exception) {
                 Logger.log(exception);
             }
+        }
+    }
+
+    public void stopMonitoring() {
+        synchronized (lock) {
+            running = false;
         }
     }
 
