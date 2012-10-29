@@ -21,6 +21,7 @@ public class MemoryWatcher extends ActionObject implements Runnable {
 
     public MemoryWatcher(int sleepTime) {
         this.sleepTime = sleepTime;
+        calculateMemory();
     }
 
     @Override
