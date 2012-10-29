@@ -4,7 +4,7 @@ import jDistsim.application.designer.model.StatusBarModel;
 import jDistsim.application.designer.view.StatusBarView;
 import jDistsim.utils.event.ActionArgument;
 import jDistsim.utils.event.ActionObjectListener;
-import jDistsim.utils.gc.MemoryWatcher;
+import jDistsim.utils.gc.MemoryMonitoring;
 import jDistsim.utils.logging.LogMessage;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.logging.handlers.ILoggerHandler;
@@ -20,21 +20,21 @@ import jDistsim.utils.pattern.observer.IObserver;
  */
 public class StatusBarController extends AbstractController<StatusBarModel> implements ILoggerHandler, IObserver {
 
-    private final MemoryWatcher memoryWatcher;
+    private final MemoryMonitoring memoryMonitoring;
 
     public StatusBarController(AbstractFrame mainFrame, StatusBarModel statusBarModel) {
         super(mainFrame, statusBarModel);
         Logger.getLoggerHandlerManager().addHandler(this);
         getModel().addObserver(this);
 
-        memoryWatcher = new MemoryWatcher();
-        memoryWatcher.addActionObjectListener(new ActionObjectListener() {
+        memoryMonitoring = new MemoryMonitoring();
+        memoryMonitoring.addActionObjectListener(new ActionObjectListener() {
             @Override
             public void ActionPerformed(ActionArgument actionArgument) {
-                getModel().setRightContentText("Current used memory " + memoryWatcher.getUsedMemory() + "M of " + memoryWatcher.getTotalMemory() + "M");
+                getModel().setRightContentText("Current used memory " + memoryMonitoring.getUsedMemory() + "M of " + memoryMonitoring.getTotalMemory() + "M");
             }
         });
-        new Thread(memoryWatcher).start();
+        new Thread(memoryMonitoring).start();
     }
 
     @Override

@@ -8,7 +8,7 @@ import jDistsim.utils.logging.Logger;
  * Date: 28.10.12
  * Time: 1:12
  */
-public class MemoryWatcher extends ActionObject implements Runnable {
+public class MemoryMonitoring extends ActionObject implements Runnable {
 
     private static final long MEGABYTE = 1024L * 1024L;
     private int sleepTime;
@@ -18,11 +18,11 @@ public class MemoryWatcher extends ActionObject implements Runnable {
     private boolean running;
     private final Object lock = new Object();
 
-    public MemoryWatcher() {
+    public MemoryMonitoring() {
         this(1000);
     }
 
-    public MemoryWatcher(int sleepTime) {
+    public MemoryMonitoring(int sleepTime) {
         this.sleepTime = sleepTime;
         calculateMemory();
     }
