@@ -25,5 +25,4 @@ public class ActionObject {
         for (ActionObjectListener listener : listeners)
             listener.ActionPerformed(new ActionArgument(this));
     }
-
 }

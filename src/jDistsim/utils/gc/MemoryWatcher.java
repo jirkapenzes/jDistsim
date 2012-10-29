@@ -27,8 +27,7 @@ public class MemoryWatcher extends ActionObject implements Runnable {
     public void run() {
         while (true) {
             try {
-                totalMemory = Runtime.getRuntime().totalMemory();
-                freeMemory = Runtime.getRuntime().freeMemory();
+                calculateMemory();
                 doActionPerformed();
                 Thread.sleep(sleepTime);
             } catch (InterruptedException exception) {
@@ -49,7 +48,12 @@ public class MemoryWatcher extends ActionObject implements Runnable {
         return bytesToMegabytes(totalMemory - freeMemory);
     }
 
-    public static long bytesToMegabytes(long bytes) {
+    private void calculateMemory() {
+        totalMemory = Runtime.getRuntime().totalMemory();
+        freeMemory = Runtime.getRuntime().freeMemory();
+    }
+
+    private static long bytesToMegabytes(long bytes) {
         return bytes / MEGABYTE;
     }
 }
