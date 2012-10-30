@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Logger {
 
-    private volatile static Object lock = new Object();
+    private static final Object lock = new Object();
     private static ILoggerHandlerManager loggerHandlerManager;
     private static ModuleManager moduleManager;
     private static Observable observable;

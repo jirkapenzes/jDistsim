@@ -26,9 +26,9 @@ public class ToolbarPanel extends JPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
 
         setBorder(new EmptyBorder(0, 0, 0, 0));
-        add(new ImageButton(Resources.getImage("system/toolbox-icon-new.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
-        add(new ImageButton(Resources.getImage("system/toolbox-icon-open.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
-        add(new ImageButton(Resources.getImage("system/toolbox-icon-save-as.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
+        add(new ImageButton(Resources.getImage("system/toolbar-icon-new.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
+        add(new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
+        add(new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
         add(new MenuSeparator());
     }
 

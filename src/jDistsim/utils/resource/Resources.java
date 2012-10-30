@@ -1,7 +1,5 @@
 package jDistsim.utils.resource;
 
-import jDistsim.utils.logging.Logger;
-
 import java.awt.*;
 import java.net.URL;
 
@@ -13,11 +11,10 @@ import java.net.URL;
 public class Resources {
 
     private static Resources resource = new Resources();
+    private static final String resourceRootDirectory = "/jDistsim/resources/";
 
-    public static Image getImage(String name) {
-        URL url = resource.getClass().getResource("/jDistsim/resources/"  + name);
-        //URL url = Resources.class.getResource(name);
-
+    public static Image getImage(String resourceName) {
+        URL url = resource.getClass().getResource(resourceRootDirectory + resourceName);
         return Toolkit.getDefaultToolkit().getImage(url);
     }
 }
