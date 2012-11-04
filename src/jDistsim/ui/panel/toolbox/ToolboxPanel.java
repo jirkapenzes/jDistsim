@@ -2,10 +2,8 @@ package jDistsim.ui.panel.toolbox;
 
 import jDistsim.core.model.ToolboxModel;
 import jDistsim.core.module.IEventToolbarModule;
-import jDistsim.core.simulation.event.description.EmptyDescription;
-import jDistsim.core.simulation.event.description.IEventDescription;
-import jDistsim.application.designer.common.UIConfiguration;
-import jDistsim.ui.control.event.ToolbarEventPreviewControl;
+import jDistsim.ui.component.ComponentView;
+import jDistsim.ui.component.toolboxView.CreateComponentView;
 import jDistsim.ui.panel.InternalPanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
@@ -47,7 +45,10 @@ public class ToolboxPanel extends InternalPanel {
         add(new ToolboxDescriptionPanel(), BorderLayout.SOUTH);
 
         for (IEventToolbarModule toolbarModule : toolboxModel.getModules()) {
-            controls.add(new ToolbarEventPreviewControl(toolbarModule.getEventPreview()));
+            // controls.add(new ToolbarEventPreviewControl(toolbarModule.getEventPreview()));
         }
+
+        ComponentView componentView = new CreateComponentView();
+        controls.add(new ToolboxButton(componentView));
     }
 }
