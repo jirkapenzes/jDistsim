@@ -29,16 +29,17 @@ public class ToolboxButton extends JComponent {
     private boolean mouseEnteredMode = true;
     private int padding;
     private String title;
+    private String identifier;
 
-
-    public ToolboxButton(ComponentView component, String title) {
-        this(component, title, DefaultPadding, DefaultSize, DefaultSize);
+    public ToolboxButton(ComponentView component, String title, String identifier) {
+        this(component, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
     }
 
-    public ToolboxButton(ComponentView component, String title, int padding, int width, int height) {
+    public ToolboxButton(ComponentView component, String title, String identifier, int padding, int width, int height) {
         this.component = component;
         this.title = title;
         this.padding = padding;
+        this.identifier = identifier;
         setPreferredSize(new Dimension(width, height));
         initialize();
     }
@@ -93,6 +94,10 @@ public class ToolboxButton extends JComponent {
     public void setPadding(int padding) {
         this.padding = padding;
         resizeComponentView();
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     private void resizeComponentView() {
