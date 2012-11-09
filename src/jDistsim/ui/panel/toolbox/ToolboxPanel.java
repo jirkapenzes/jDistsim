@@ -47,7 +47,10 @@ public class ToolboxPanel extends InternalPanel {
 
     public void setModel(ToolboxModel toolboxModel) {
         this.toolboxModel = toolboxModel;
+        buildToolbox();
+    }
 
+    public void buildToolbox() {
         controls.removeAll();
         for (ToolboxModelItem item : toolboxModel.getItems()) {
             ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), "Create");
