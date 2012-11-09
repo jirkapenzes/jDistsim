@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -22,9 +24,12 @@ public class ToolboxPanel extends InternalPanel {
 
     private JPanel controls;
     private ToolboxModel toolboxModel;
+    private List<ToolboxListener> listeners;
 
     public ToolboxPanel() {
         super(TextResources.TOOLBAR_EVENT_PANEL_TITLE);
+        listeners = new ArrayList<>();
+
         Logger.log("Initialize event toolbox panel");
         initializeComponents();
     }
@@ -53,17 +58,28 @@ public class ToolboxPanel extends InternalPanel {
     public void buildToolbox() {
         controls.removeAll();
         for (ToolboxModelItem item : toolboxModel.getItems()) {
-            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), "Create");
+            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), "Create", item.getIdentifier());
             toolboxButton.setMouseEnteredMode(true);
             toolboxButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     ToolboxButton source = (ToolboxButton) event.getSource();
                     source.setActive(!source.isActive());
+                    notifySelectedComponent(toolboxModel.getItemByIdentifier(source.getIdentifier()));
                 }
             });
             toolboxButton.setPreferredSize(new Dimension(75, 65));
             controls.add(toolboxButton);
+        }
+    }
+
+    public void addListener(ToolboxListener toolboxListener) {
+        listeners.add(toolboxListener);
+    }
+
+    private void notifySelectedComponent(ToolboxModelItem toolboxModelItem) {
+        for (ToolboxListener listener : listeners) {
+            listener.componentSelected(toolboxModelItem);
         }
     }
 }
