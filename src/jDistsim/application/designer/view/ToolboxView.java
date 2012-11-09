@@ -1,5 +1,6 @@
 package jDistsim.application.designer.view;
 
+import jDistsim.ui.panel.toolbox.ToolboxListener;
 import jDistsim.ui.panel.toolbox.ToolboxPanel;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractView;
@@ -20,6 +21,7 @@ public class ToolboxView extends AbstractView<ToolboxPanel> {
         return new ToolboxPanel();
     }
 
-    public void addMouseListener() {
+    public void addMouseListener(ToolboxListener toolboxListener) {
+        getContentPane().addListener(toolboxListener);
     }
 }

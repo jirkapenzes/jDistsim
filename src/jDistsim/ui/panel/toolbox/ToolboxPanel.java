@@ -2,6 +2,7 @@ package jDistsim.ui.panel.toolbox;
 
 import jDistsim.application.designer.model.ToolboxModel;
 import jDistsim.application.designer.model.ToolboxModelItem;
+import jDistsim.core.simulation.event.description.IEventDescription;
 import jDistsim.ui.panel.InternalPanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
@@ -25,6 +26,7 @@ public class ToolboxPanel extends InternalPanel {
     private JPanel controls;
     private ToolboxModel toolboxModel;
     private List<ToolboxListener> listeners;
+    private ToolboxDescriptionPanel descriptionPanel;
 
     public ToolboxPanel() {
         super(TextResources.TOOLBAR_EVENT_PANEL_TITLE);
@@ -47,7 +49,8 @@ public class ToolboxPanel extends InternalPanel {
 
         scrollPane.setViewportView(controls);
         add(scrollPane, BorderLayout.CENTER);
-        add(new ToolboxDescriptionPanel(), BorderLayout.SOUTH);
+        descriptionPanel = new ToolboxDescriptionPanel();
+        add(descriptionPanel, BorderLayout.SOUTH);
     }
 
     public void setModel(ToolboxModel toolboxModel) {
@@ -71,6 +74,10 @@ public class ToolboxPanel extends InternalPanel {
             toolboxButton.setPreferredSize(new Dimension(75, 65));
             controls.add(toolboxButton);
         }
+    }
+
+    public void setDescriptionText(IEventDescription description) {
+        descriptionPanel.setEventDescription(description);
     }
 
     public void addListener(ToolboxListener toolboxListener) {
