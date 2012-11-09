@@ -52,7 +52,6 @@ public class ToolboxDescriptionPanel extends JPanel {
 
         labelTitle.setText(getEventDescription().getTitle());
         labelDescription.setText(getEventDescription().getDescription());
-
     }
 
     @Override

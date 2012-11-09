@@ -8,7 +8,4 @@ import jDistsim.utils.pattern.observer.Observable;
  * Time: 0:20
  */
 public abstract class AbstractModel extends Observable {
-
-
-
 }
