@@ -2,8 +2,7 @@ package jDistsim.application.designer.model;
 
 import jDistsim.utils.pattern.mvc.AbstractModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Author: Jirka Pénzeš
@@ -12,18 +11,22 @@ import java.util.List;
  */
 public class ToolboxModel extends AbstractModel {
 
-    private List<ToolboxModelItem> items;
+    private HashMap<String, ToolboxModelItem> items;
 
     public ToolboxModel() {
-        this.items = new ArrayList<ToolboxModelItem>();
+        this.items = new HashMap<>();
     }
 
     public ToolboxModel addToolboxModelItem(ToolboxModelItem toolboxModelItem) {
-        items.add(toolboxModelItem);
+        items.put(toolboxModelItem.getIdentifier(), toolboxModelItem);
         return this;
     }
 
-    public List<ToolboxModelItem> getItems() {
-        return items;
+    public Collection<ToolboxModelItem> getItems() {
+        return items.values();
+    }
+
+    public ToolboxModelItem getItemByIdentifier(String identifier) {
+        return items.get(identifier);
     }
 }
