@@ -1,4 +1,4 @@
-package jDistsim.utils.event;
+package jDistsim.utils.action;
 
 import java.util.ArrayList;
 import java.util.List;

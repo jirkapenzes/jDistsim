@@ -1,6 +1,6 @@
 package jDistsim.utils.gc;
 
-import jDistsim.utils.event.ActionObject;
+import jDistsim.utils.action.ActionObject;
 import jDistsim.utils.logging.Logger;
 
 /**

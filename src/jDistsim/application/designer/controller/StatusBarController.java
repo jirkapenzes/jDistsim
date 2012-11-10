@@ -2,8 +2,8 @@ package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.model.StatusBarModel;
 import jDistsim.application.designer.view.StatusBarView;
-import jDistsim.utils.event.ActionArgument;
-import jDistsim.utils.event.ActionObjectListener;
+import jDistsim.utils.action.ActionArgument;
+import jDistsim.utils.action.ActionObjectListener;
 import jDistsim.utils.gc.MemoryMonitoring;
 import jDistsim.utils.logging.LogMessage;
 import jDistsim.utils.logging.Logger;
