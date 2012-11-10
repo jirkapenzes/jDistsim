@@ -23,14 +23,17 @@ import java.util.List;
  */
 public class ToolboxPanel extends InternalPanel {
 
-    private JPanel controls;
     private ToolboxModel toolboxModel;
+    private JPanel toolboxPanel;
+    private List<ToolboxButton> controls;
     private List<ToolboxListener> listeners;
     private ToolboxDescriptionPanel descriptionPanel;
+    private ToolboxButton currentActiveButton;
 
     public ToolboxPanel() {
         super(TextResources.TOOLBAR_EVENT_PANEL_TITLE);
         listeners = new ArrayList<>();
+        controls = new ArrayList<>();
 
         Logger.log("Initialize event toolbox panel");
         initializeComponents();
@@ -42,15 +45,22 @@ public class ToolboxPanel extends InternalPanel {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-        controls = new JPanel();
-        controls.setLayout(new WrapLayout(FlowLayout.LEFT, 10, 0));
-        controls.setBackground(Color.white);
-        controls.setBorder(new EmptyBorder(2, 0, 0, 0));
+        toolboxPanel = new JPanel();
+        toolboxPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 10, 0));
+        toolboxPanel.setBackground(Color.white);
+        toolboxPanel.setBorder(new EmptyBorder(2, 0, 0, 0));
 
-        scrollPane.setViewportView(controls);
+        scrollPane.setViewportView(toolboxPanel);
         add(scrollPane, BorderLayout.CENTER);
         descriptionPanel = new ToolboxDescriptionPanel();
         add(descriptionPanel, BorderLayout.SOUTH);
+
+        toolboxPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                notifyUnselectedComponent();
+            }
+        });
     }
 
     public void setModel(ToolboxModel toolboxModel) {
@@ -59,21 +69,44 @@ public class ToolboxPanel extends InternalPanel {
     }
 
     public void buildToolbox() {
-        controls.removeAll();
+        toolboxPanel.removeAll();
         for (ToolboxModelItem item : toolboxModel.getItems()) {
-            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), "Create", item.getIdentifier());
+            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), item.getEventDescription().getTitle(), item.getIdentifier());
             toolboxButton.setMouseEnteredMode(true);
             toolboxButton.addMouseListener(new MouseAdapter() {
+
                 @Override
                 public void mouseClicked(MouseEvent event) {
                     ToolboxButton source = (ToolboxButton) event.getSource();
                     source.setActive(!source.isActive());
                     notifySelectedComponent(toolboxModel.getItemByIdentifier(source.getIdentifier()));
+                    if (currentActiveButton != null) {
+                        if (currentActiveButton != source) {
+                            resetButtonState(currentActiveButton);
+                        } else {
+                            currentActiveButton = null;
+                            notifyUnselectedComponent();
+                            return;
+                        }
+                    }
+                    currentActiveButton = source;
                 }
             });
             toolboxButton.setPreferredSize(new Dimension(75, 65));
+            toolboxPanel.add(toolboxButton);
             controls.add(toolboxButton);
         }
+    }
+
+    public void resetButtonsState() {
+        for (ToolboxButton toolboxButton : controls) {
+            resetButtonState(toolboxButton);
+        }
+    }
+
+    private void resetButtonState(ToolboxButton toolboxButton) {
+        toolboxButton.setActive(false);
+        // toolboxButton.setMouseEnteredMode(false);
     }
 
     public void setDescriptionText(IEventDescription description) {
@@ -87,6 +120,12 @@ public class ToolboxPanel extends InternalPanel {
     private void notifySelectedComponent(ToolboxModelItem toolboxModelItem) {
         for (ToolboxListener listener : listeners) {
             listener.componentSelected(toolboxModelItem);
+        }
+    }
+
+    private void notifyUnselectedComponent() {
+        for (ToolboxListener listener : listeners) {
+            listener.componentUnselected();
         }
     }
 }

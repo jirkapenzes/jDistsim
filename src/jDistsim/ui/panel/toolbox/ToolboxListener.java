@@ -11,4 +11,6 @@ public interface ToolboxListener {
 
     public void componentSelected(ToolboxModelItem modelItem);
 
+    public void componentUnselected();
+
 }
