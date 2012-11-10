@@ -1,6 +1,5 @@
 package jDistsim.core.simulation.event.description;
 
-import jDistsim.core.simulation.event.library.dispose.IDisposeDescription;
 import jDistsim.utils.resource.EventTextResource;
 
 /**
@@ -8,7 +7,7 @@ import jDistsim.utils.resource.EventTextResource;
  * Date: 29.9.12
  * Time: 17:50
  */
-public class DisposeDescription implements IDisposeDescription {
+public class DisposeDescription implements IEventDescription {
 
     @Override
     public String getTitle() {

@@ -1,6 +1,5 @@
 package jDistsim.core.simulation.event.description;
 
-import jDistsim.core.simulation.event.library.create.ICreateDescription;
 import jDistsim.utils.resource.EventTextResource;
 
 /**
@@ -8,7 +7,7 @@ import jDistsim.utils.resource.EventTextResource;
  * Date: 6.10.12
  * Time: 20:29
  */
-public class CreateDescription implements ICreateDescription {
+public class CreateDescription implements IEventDescription {
 
     @Override
     public String getTitle() {
