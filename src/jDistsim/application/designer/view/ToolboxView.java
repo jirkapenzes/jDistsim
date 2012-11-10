@@ -21,7 +21,7 @@ public class ToolboxView extends AbstractView<ToolboxPanel> {
         return new ToolboxPanel();
     }
 
-    public void addMouseListener(ToolboxListener toolboxListener) {
+    public void addToolboxListener(ToolboxListener toolboxListener) {
         getContentPane().addListener(toolboxListener);
     }
 }

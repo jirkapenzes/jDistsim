@@ -27,7 +27,7 @@ public class ToolboxController extends AbstractController<ToolboxModel> implemen
 
         ToolboxView view = getMainFrame().getView(ToolboxView.class);
         view.getContentPane().setModel(buildToolboxModel());
-        view.addMouseListener(this);
+        view.addToolboxListener(this);
     }
 
     private ToolboxModel buildToolboxModel() {
