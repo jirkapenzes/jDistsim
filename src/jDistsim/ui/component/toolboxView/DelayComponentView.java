@@ -34,7 +34,7 @@ public class DelayComponentView extends ComponentView {
             polygon.addPoint(1, 1);
             polygon.addPoint(getWidth() - 1, 1);
             polygon.addPoint(getWidth() - 1, getHeight() - 1);
-            polygon.addPoint(1, getHeight());
+            polygon.addPoint(1, getHeight() - 1);
 
             graphics2D.setColor(getBackgroundColor());
             graphics2D.fillPolygon(polygon);
