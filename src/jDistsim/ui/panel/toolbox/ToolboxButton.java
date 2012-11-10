@@ -1,6 +1,6 @@
 package jDistsim.ui.panel.toolbox;
 
-import jDistsim.ui.component.ComponentView;
+import jDistsim.ui.component.IComponentView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class ToolboxButton extends JComponent {
     private static final int DefaultPadding = 5;
     private static final int FontIndentation = 15;
 
-    private ComponentView component;
+    private IComponentView IComponent;
     private boolean active = false;
     private boolean mouseEntered = false;
     private boolean mouseEnteredMode = true;
@@ -31,12 +31,12 @@ public class ToolboxButton extends JComponent {
     private String title;
     private String identifier;
 
-    public ToolboxButton(ComponentView component, String title, String identifier) {
-        this(component, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
+    public ToolboxButton(IComponentView IComponent, String title, String identifier) {
+        this(IComponent, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
     }
 
-    public ToolboxButton(ComponentView component, String title, String identifier, int padding, int width, int height) {
-        this.component = component;
+    public ToolboxButton(IComponentView IComponent, String title, String identifier, int padding, int width, int height) {
+        this.IComponent = IComponent;
         this.title = title;
         this.padding = padding;
         this.identifier = identifier;
@@ -46,7 +46,7 @@ public class ToolboxButton extends JComponent {
 
     private void initialize() {
         resizeComponentView();
-        add(component.getView());
+        add(IComponent.getView());
         addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -101,8 +101,8 @@ public class ToolboxButton extends JComponent {
     }
 
     private void resizeComponentView() {
-        component.getView().setLocation(getPadding(), getPadding());
-        component.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
+        IComponent.getView().setLocation(getPadding(), getPadding());
+        IComponent.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
     }
 
     @Override

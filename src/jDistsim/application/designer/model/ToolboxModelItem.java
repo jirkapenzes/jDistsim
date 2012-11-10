@@ -1,7 +1,7 @@
 package jDistsim.application.designer.model;
 
 import jDistsim.core.simulation.event.description.IEventDescription;
-import jDistsim.ui.component.ComponentView;
+import jDistsim.ui.component.IComponentView;
 
 /**
  * Author: Jirka Pénzeš
@@ -11,17 +11,17 @@ import jDistsim.ui.component.ComponentView;
 public class ToolboxModelItem {
 
     private String identifier;
-    private ComponentView componentView;
+    private IComponentView IComponentView;
     private IEventDescription eventDescription;
 
-    public ToolboxModelItem(ComponentView componentView, IEventDescription eventDescription, String identifier) {
-        this.componentView = componentView;
+    public ToolboxModelItem(IComponentView IComponentView, IEventDescription eventDescription, String identifier) {
+        this.IComponentView = IComponentView;
         this.eventDescription = eventDescription;
         this.identifier = identifier;
     }
 
-    public ComponentView getComponentView() {
-        return componentView;
+    public IComponentView getComponentView() {
+        return IComponentView;
     }
 
     public IEventDescription getEventDescription() {
