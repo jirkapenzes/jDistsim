@@ -113,7 +113,7 @@ public class ToolboxPanel extends InternalPanel {
         descriptionPanel.setEventDescription(description);
     }
 
-    public void addListener(ToolboxListener toolboxListener) {
+    public void addToolboxListener(ToolboxListener toolboxListener) {
         listeners.add(toolboxListener);
     }
 
