@@ -18,7 +18,8 @@ public class MainApplication {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             new DesignerGuiApplication().Start();
-        } catch (Exception ex) {
+        } catch (Exception exception) {
+            Logger.log(exception);
         }
     }
 }
