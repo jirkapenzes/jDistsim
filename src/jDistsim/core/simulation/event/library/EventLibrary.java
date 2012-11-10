@@ -4,8 +4,10 @@ import jDistsim.core.simulation.event.description.CreateDescription;
 import jDistsim.core.simulation.event.description.DisposeDescription;
 import jDistsim.ui.component.toolboxView.CreateComponentView;
 import jDistsim.ui.component.toolboxView.DisposeComponentView;
+import jDistsim.utils.ioc.ObjectContainer;
 
-import java.util.HashMap;
+import java.util.AbstractMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,23 +18,27 @@ import java.util.Set;
  */
 public class EventLibrary implements IEventLibrary {
 
-    private HashMap<String, EventContainer> containerHashMap;
+    private ObjectContainer<String> container;
 
     public EventLibrary() {
-        containerHashMap = new HashMap<>();
+        container = new ObjectContainer<>();
         configure();
     }
 
     private void configure() {
-        containerHashMap.put("create", new EventContainer())
+        container.bind("create", new EventContainer())
                 .toView(new CreateComponentView())
                 .toDescription(new CreateDescription());
-        containerHashMap.put("dispose", new EventContainer())
+        container.bind("dispose", new EventContainer())
                 .toView(new DisposeComponentView())
                 .toDescription(new DisposeDescription());
     }
 
     public Set<Map.Entry<String, EventContainer>> entrySet() {
-        return containerHashMap.entrySet();
+        Set<Map.Entry<String, EventContainer>> entries = new HashSet<>();
+        for (Map.Entry<String, Object> entry : container.entrySet()) {
+            entries.add(new AbstractMap.SimpleEntry<>(entry.getKey(), (EventContainer) entry.getValue()));
+        }
+        return entries;
     }
 }
