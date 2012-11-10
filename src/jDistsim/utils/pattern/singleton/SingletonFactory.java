@@ -35,4 +35,10 @@ public class SingletonFactory {
         }
         return instance;
     }
+
+    public static synchronized <TInstance> void register(TInstance singletonClass) {
+        synchronized (lock) {
+            instanceMap.put(singletonClass.getClass(), singletonClass);
+        }
+    }
 }
