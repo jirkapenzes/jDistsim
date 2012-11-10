@@ -29,7 +29,8 @@ public class DisposeComponentView extends ComponentView {
             super.paintComponent(graphics);
 
             Graphics2D graphics2D = (Graphics2D) graphics;
-            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            setDefaultRenderingMode(graphics2D);
+            setDefaultBasicStroke(graphics2D);
 
             Polygon polygon = new Polygon();
             polygon.addPoint(0, getHeight() / 2 - 1);
@@ -37,12 +38,10 @@ public class DisposeComponentView extends ComponentView {
             polygon.addPoint(getWidth() - 1, 1);
             polygon.addPoint(getWidth() - 1, getHeight() - 1);
             polygon.addPoint(PointUtilities.byPercentageOnLine(40, getWidth()), getHeight() - 1);
-            graphics2D.setColor(new Color(67, 201, 224));
-            graphics2D.fillPolygon(polygon);
 
-            BasicStroke lineStroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-            graphics2D.setColor(new Color(70, 127, 137));
-            graphics2D.setStroke(lineStroke);
+            graphics2D.setColor(getBackgroundColor());
+            graphics2D.fillPolygon(polygon);
+            graphics2D.setColor(getBorderColor());
             graphics2D.drawPolygon(polygon);
         }
     }
