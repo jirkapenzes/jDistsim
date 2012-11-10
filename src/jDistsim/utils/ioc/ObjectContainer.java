@@ -1,34 +1,35 @@
 package jDistsim.utils.ioc;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 26.10.12
  * Time: 22:41
  */
-public class ObjectContainer<TObject> implements IObjectContainer<TObject> {
+public class ObjectContainer<Identifier> implements IObjectContainer<Identifier> {
 
-    private final Map<Class<TObject>, TObject> objectMap;
+    private final Map<Identifier, Object> objectMap;
 
     public ObjectContainer() {
-        objectMap = new HashMap<Class<TObject>, TObject>();
+        objectMap = new HashMap<>();
     }
 
     @Override
-    public  <V extends TObject> void bind(Class<V> classType, TObject object) {
-        objectMap.put((Class<TObject>) classType, object);
+    public <TClass> TClass bind(Identifier identifier, TClass object) {
+        objectMap.put(identifier, object);
+        return object;
     }
 
     @Override
-    public <V extends TObject> V get(Class<V> classType) {
-        return (V) objectMap.get(classType);
+    public <TClass> TClass get(Identifier identifier) {
+        return (TClass) objectMap.get(identifier);
     }
 
     @Override
-    public Iterator<TObject> listObjects() {
-        return objectMap.values().iterator();
+    public Set<Map.Entry<Identifier, Object>> entrySet() {
+        return objectMap.entrySet();
     }
 }

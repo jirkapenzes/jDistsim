@@ -13,14 +13,14 @@ import javax.swing.*;
 public abstract class AbstractFrame {
 
     protected JFrame frame;
-    protected final IObjectContainer<AbstractView<? extends JComponent>> views;
-    protected final IObjectContainer<AbstractController> controllers;
+    protected final IObjectContainer<Class> views;
+    protected final IObjectContainer<Class> controllers;
     protected IComponentFactory componentFactory;
 
     public AbstractFrame(IComponentFactory componentFactory) {
         this.componentFactory = componentFactory;
-        this.views = new ObjectContainer<AbstractView<? extends JComponent>>();
-        this.controllers = new ObjectContainer<AbstractController>();
+        this.views = new ObjectContainer<>();
+        this.controllers = new ObjectContainer<>();
         registerAllViews();
         registerAllControllers();
     }

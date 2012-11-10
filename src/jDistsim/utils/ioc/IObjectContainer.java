@@ -1,17 +1,18 @@
 package jDistsim.utils.ioc;
 
-import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 26.10.12
  * Time: 23:45
  */
-public interface IObjectContainer<TObject> {
+public interface IObjectContainer<Identifier> {
 
-    <Type extends TObject> void bind(Class<Type> classType, TObject object);
+    <TClass> TClass bind(Identifier identifier, TClass object);
 
-    <Type extends TObject> Type get(Class<Type> classType);
+    <TClass> TClass get(Identifier identifier);
 
-    Iterator<TObject> listObjects();
+    Set<Map.Entry<Identifier, Object>> entrySet();
 }
