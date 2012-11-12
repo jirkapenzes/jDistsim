@@ -1,5 +1,6 @@
 package jDistsim.application.designer.view;
 
+import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractView;
 
@@ -19,8 +20,7 @@ public class DesignerView extends AbstractView<JPanel> {
 
     @Override
     protected JPanel layout() {
-        JPanel contentPane = new JPanel();
-        contentPane.setLayout(new BorderLayout());
+        JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(getMainFrame().getView(ToolbarView.class).getContentPane(), BorderLayout.NORTH);
         contentPane.add(getMainFrame().getView(StatusBarView.class).getContentPane(), BorderLayout.SOUTH);
         contentPane.add(getMainFrame().getView(PropertiesView.class).getContentPane(), BorderLayout.EAST);
