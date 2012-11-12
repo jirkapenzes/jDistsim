@@ -4,10 +4,7 @@ import jDistsim.ui.component.IComponentView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -23,7 +20,7 @@ public class ToolboxButton extends JComponent {
     private static final int DefaultPadding = 5;
     private static final int FontIndentation = 15;
 
-    private IComponentView IComponent;
+    private IComponentView componentView;
     private boolean active = false;
     private boolean mouseEntered = false;
     private boolean mouseEnteredMode = true;
@@ -31,12 +28,12 @@ public class ToolboxButton extends JComponent {
     private String title;
     private String identifier;
 
-    public ToolboxButton(IComponentView IComponent, String title, String identifier) {
-        this(IComponent, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
+    public ToolboxButton(IComponentView componentView, String title, String identifier) {
+        this(componentView, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
     }
 
-    public ToolboxButton(IComponentView IComponent, String title, String identifier, int padding, int width, int height) {
-        this.IComponent = IComponent;
+    public ToolboxButton(IComponentView componentView, String title, String identifier, int padding, int width, int height) {
+        this.componentView = componentView;
         this.title = title;
         this.padding = padding;
         this.identifier = identifier;
@@ -46,32 +43,58 @@ public class ToolboxButton extends JComponent {
 
     private void initialize() {
         resizeComponentView();
-        add(IComponent.getView());
-        addComponentListener(new ComponentAdapter() {
+        add(componentView.getView());
+        componentView.getView().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                MouseEvent mouseEvent = new MouseEvent(ToolboxButton.this, event.getID(), event.getWhen(), event.getModifiers(), event.getX(), event.getY(), event.getClickCount(), event.isPopupTrigger());
+                for (MouseListener listener : ToolboxButton.this.getMouseListeners()) {
+                    listener.mouseClicked(mouseEvent);
+                }
+            }
 
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ToolboxButton.this.mouseEntered();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ToolboxButton.this.mouseExited();
+            }
+        });
+        addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 resizeComponentView();
             }
         });
-
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (mouseEnteredMode) {
-                    mouseEntered = true;
-                    repaint();
-                }
+                ToolboxButton.this.mouseEntered();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (mouseEnteredMode) {
-                    mouseEntered = false;
-                    repaint();
-                }
+                ToolboxButton.this.mouseExited();
             }
+
         });
+    }
+
+    private void mouseEntered() {
+        if (mouseEnteredMode) {
+            mouseEntered = true;
+            repaint();
+        }
+    }
+
+    private void mouseExited() {
+        if (mouseEnteredMode) {
+            mouseEntered = false;
+            repaint();
+        }
     }
 
     public void setMouseEnteredMode(boolean mouseEnteredMode) {
@@ -101,8 +124,8 @@ public class ToolboxButton extends JComponent {
     }
 
     private void resizeComponentView() {
-        IComponent.getView().setLocation(getPadding(), getPadding());
-        IComponent.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
+        componentView.getView().setLocation(getPadding(), getPadding());
+        componentView.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
     }
 
     @Override
