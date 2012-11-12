@@ -11,7 +11,6 @@ import java.awt.*;
 public abstract class ComponentView implements IComponentView {
 
     private JComponent componentView;
-    private final Dimension DefaultDimension = new Dimension(10, 10);
 
     protected ComponentView() {
         componentView = makeView();
