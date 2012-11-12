@@ -13,4 +13,7 @@ public interface ToolboxListener {
 
     public void componentUnselected();
 
+    void componentPressed(ToolboxModelItem toolboxModelItem);
+
+    void componentReleased(ToolboxModelItem toolboxModelItem);
 }

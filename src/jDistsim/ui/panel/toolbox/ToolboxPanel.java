@@ -91,6 +91,18 @@ public class ToolboxPanel extends InternalPanel {
                     }
                     currentActiveButton = source;
                 }
+
+                @Override
+                public void mousePressed(MouseEvent event) {
+                    ToolboxButton source = (ToolboxButton) event.getSource();
+                    notifyPressedComponent(toolboxModel.getItemByIdentifier(source.getIdentifier()));
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent event) {
+                    ToolboxButton source = (ToolboxButton) event.getSource();
+                    notifyReleasedComponent(toolboxModel.getItemByIdentifier(source.getIdentifier()));
+                }
             });
             toolboxButton.setPreferredSize(new Dimension(75, 65));
             toolboxPanel.add(toolboxButton);
@@ -126,6 +138,18 @@ public class ToolboxPanel extends InternalPanel {
     private void notifyUnselectedComponent() {
         for (ToolboxListener listener : listeners) {
             listener.componentUnselected();
+        }
+    }
+
+    private void notifyPressedComponent(ToolboxModelItem toolboxModelItem) {
+        for (ToolboxListener listener : listeners) {
+            listener.componentPressed(toolboxModelItem);
+        }
+    }
+
+    private void notifyReleasedComponent(ToolboxModelItem toolboxModelItem) {
+        for (ToolboxListener listener : listeners) {
+            listener.componentReleased(toolboxModelItem);
         }
     }
 }
