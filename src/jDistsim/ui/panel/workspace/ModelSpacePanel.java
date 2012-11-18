@@ -1,5 +1,6 @@
 package jDistsim.ui.panel.workspace;
 
+import jDistsim.SampleControl;
 import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
@@ -14,11 +15,39 @@ public class ModelSpacePanel extends JPanel {
 
     public ModelSpacePanel() {
         Logger.log("Initialize model space");
+        initialize();
+        setSize(1000, 1000);
+        SampleControl sampleControl = new SampleControl(Color.yellow);
+        sampleControl.setLocation(20, 20);
+        add(sampleControl);
+    }
+
+    private void initialize() {
+        Logger.log(getWidth() + "x" + getHeight());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1000, Short.MAX_VALUE)
+        );
+
+        //GroupLayout layout = new GroupLayout(this);
+        //setLayout(layout);
+        //layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING));
+        //layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING));
+
+        // layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.DEFAULT_SIZE).add(0, this.getPreferredSize().width, Short.MAX_VALUE));
+        // layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.LEADING).add(0, this.getPreferredSize().height, Short.MAX_VALUE));
+
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(2000, 2000);
+        return new Dimension(1000, 1000);
     }
 
     @Override

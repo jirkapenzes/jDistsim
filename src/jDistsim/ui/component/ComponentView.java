@@ -80,7 +80,7 @@ public abstract class ComponentView implements IComponentView, DragGestureListen
     public void dragDropEnd(DragSourceDropEvent dragSourceDropEvent) {
         MouseEvent mouseEvent = new MouseEvent(componentView, 0, 0, 0, dragSourceDropEvent.getX(), dragSourceDropEvent.getY(), 0, false);
         for (MouseListener listener : componentView.getMouseListeners()) {
-            listener.mouseExited(gmouseEvent);
+            listener.mouseExited(mouseEvent);
         }
     }
 }

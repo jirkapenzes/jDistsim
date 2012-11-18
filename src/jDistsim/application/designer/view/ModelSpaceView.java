@@ -1,10 +1,12 @@
 package jDistsim.application.designer.view;
 
+import jDistsim.SampleControl;
 import jDistsim.ui.panel.workspace.ModelSpacePanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractView;
 
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -18,6 +20,8 @@ import java.io.IOException;
  */
 public class ModelSpaceView extends AbstractView<ModelSpacePanel> implements DropTargetListener {
 
+    SampleControl currentSampleControl;
+
     public ModelSpaceView(AbstractFrame mainFrame) {
         super(mainFrame);
         new DropTarget(getContentPane(), this);
@@ -29,8 +33,10 @@ public class ModelSpaceView extends AbstractView<ModelSpacePanel> implements Dro
     }
 
     @Override
-    public void dragEnter(DropTargetDragEvent dtde) {
-        Logger.log();
+    public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
+        currentSampleControl = new SampleControl(Color.red);
+        currentSampleControl.setLocation(dropTargetDragEvent.getLocation());
+        getContentPane().add(currentSampleControl);
     }
 
     @Override
@@ -59,6 +65,13 @@ public class ModelSpaceView extends AbstractView<ModelSpacePanel> implements Dro
                 String dragContents = (String) transferable.getTransferData(DataFlavor.stringFlavor);
                 evt.getDropTargetContext().dropComplete(true);
                 Logger.log(dragContents);
+                SampleControl control = new SampleControl(Color.green);
+                Logger.log("EVT location: " + evt.getLocation());
+                control.setLocation(evt.getLocation());
+                getContentPane().add(control);
+                getContentPane().repaint();
+                Logger.log(evt.getLocation());
+                Logger.log("Complete");
             } else {
                 evt.rejectDrop();
             }
@@ -67,5 +80,9 @@ public class ModelSpaceView extends AbstractView<ModelSpacePanel> implements Dro
         } catch (UnsupportedFlavorException e) {
             evt.rejectDrop();
         }
+
     }
 }
+
+
+
