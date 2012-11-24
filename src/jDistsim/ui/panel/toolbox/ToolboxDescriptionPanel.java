@@ -2,7 +2,7 @@ package jDistsim.ui.panel.toolbox;
 
 import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.core.simulation.event.description.EmptyDescription;
-import jDistsim.core.simulation.event.description.IEventDescription;
+import jDistsim.core.simulation.event.description.IModuleDescription;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class ToolboxDescriptionPanel extends JPanel {
 
-    private IEventDescription eventDescription;
+    private IModuleDescription moduleDescription;
     private JLabel labelTitle;
     private JLabel labelDescription;
 
@@ -23,9 +23,9 @@ public class ToolboxDescriptionPanel extends JPanel {
         this(new EmptyDescription());
     }
 
-    public ToolboxDescriptionPanel(IEventDescription eventDescription) {
+    public ToolboxDescriptionPanel(IModuleDescription moduleDescription) {
         initializeComponents();
-        setEventDescription(eventDescription);
+        setModuleDescription(moduleDescription);
     }
 
     private void initializeComponents() {
@@ -43,15 +43,15 @@ public class ToolboxDescriptionPanel extends JPanel {
         add(labelDescription);
     }
 
-    public IEventDescription getEventDescription() {
-        return eventDescription;
+    public IModuleDescription getModuleDescription() {
+        return moduleDescription;
     }
 
-    public void setEventDescription(IEventDescription eventDescription) {
-        this.eventDescription = eventDescription;
+    public void setModuleDescription(IModuleDescription moduleDescription) {
+        this.moduleDescription = moduleDescription;
 
-        labelTitle.setText(getEventDescription().getTitle());
-        labelDescription.setText(getEventDescription().getDescription());
+        labelTitle.setText(getModuleDescription().getTitle());
+        labelDescription.setText(getModuleDescription().getDescription());
     }
 
     @Override

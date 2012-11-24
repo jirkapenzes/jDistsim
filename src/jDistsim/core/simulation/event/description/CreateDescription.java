@@ -7,7 +7,7 @@ import jDistsim.utils.resource.EventTextResource;
  * Date: 6.10.12
  * Time: 20:29
  */
-public class CreateDescription implements IEventDescription {
+public class CreateDescription implements IModuleDescription {
 
     @Override
     public String getTitle() {

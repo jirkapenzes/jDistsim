@@ -2,7 +2,7 @@ package jDistsim.ui.panel.toolbox;
 
 import jDistsim.application.designer.model.ToolboxModel;
 import jDistsim.application.designer.model.ToolboxModelItem;
-import jDistsim.core.simulation.event.description.IEventDescription;
+import jDistsim.core.simulation.event.description.IModuleDescription;
 import jDistsim.ui.panel.InternalPanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
@@ -71,7 +71,7 @@ public class ToolboxPanel extends InternalPanel {
     public void buildToolbox() {
         toolboxPanel.removeAll();
         for (ToolboxModelItem item : toolboxModel.getItems()) {
-            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), item.getEventDescription().getTitle(), item.getIdentifier());
+            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), item.getModuleDescription().getTitle(), item.getIdentifier());
             toolboxButton.setMouseEnteredMode(true);
             toolboxButton.addMouseListener(new MouseAdapter() {
 
@@ -121,8 +121,8 @@ public class ToolboxPanel extends InternalPanel {
         // toolboxButton.setMouseEnteredMode(false);
     }
 
-    public void setDescriptionText(IEventDescription description) {
-        descriptionPanel.setEventDescription(description);
+    public void setDescriptionText(IModuleDescription description) {
+        descriptionPanel.setModuleDescription(description);
     }
 
     public void addToolboxListener(ToolboxListener toolboxListener) {

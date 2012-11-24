@@ -5,7 +5,7 @@ package jDistsim.core.simulation.event.description;
  * Date: 29.9.12
  * Time: 17:49
  */
-public interface IEventDescription {
+public interface IModuleDescription {
 
     public String getTitle();
 

@@ -46,7 +46,7 @@ public class ToolboxController extends AbstractController<ToolboxModel> implemen
     @Override
     public void componentSelected(ToolboxModelItem modelItem) {
         ToolboxView view = getMainFrame().getView(ToolboxView.class);
-        view.getContentPane().setDescriptionText(modelItem.getEventDescription());
+        view.getContentPane().setDescriptionText(modelItem.getModuleDescription());
     }
 
     @Override
