@@ -3,9 +3,9 @@ package jDistsim.core.simulation.event.library;
 import jDistsim.core.simulation.event.description.CreateDescription;
 import jDistsim.core.simulation.event.description.DelayDescription;
 import jDistsim.core.simulation.event.description.DisposeDescription;
-import jDistsim.ui.component.toolboxView.CreateComponentView;
-import jDistsim.ui.component.toolboxView.DelayComponentView;
-import jDistsim.ui.component.toolboxView.DisposeComponentView;
+import jDistsim.ui.component.toolboxView.CreateModuleView;
+import jDistsim.ui.component.toolboxView.DelayModuleView;
+import jDistsim.ui.component.toolboxView.DisposeModuleView;
 import jDistsim.utils.ioc.ObjectContainer;
 
 import java.util.AbstractMap;
@@ -29,13 +29,13 @@ public class EventLibrary implements IEventLibrary {
 
     private void configure() {
         container.bind("create", new EventContainer())
-                .toView(new CreateComponentView())
+                .toView(new CreateModuleView())
                 .toDescription(new CreateDescription());
         container.bind("dispose", new EventContainer())
-                .toView(new DisposeComponentView())
+                .toView(new DisposeModuleView())
                 .toDescription(new DisposeDescription());
         container.bind("delay", new EventContainer())
-                .toView(new DelayComponentView())
+                .toView(new DelayModuleView())
                 .toDescription(new DelayDescription());
     }
 
