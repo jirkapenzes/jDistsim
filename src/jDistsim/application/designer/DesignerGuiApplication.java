@@ -2,8 +2,8 @@ package jDistsim.application.designer;
 
 import jDistsim.ServiceLocator;
 import jDistsim.application.designer.common.ComponentFactory;
-import jDistsim.core.simulation.event.library.EventLibrary;
-import jDistsim.core.simulation.event.library.IEventLibrary;
+import jDistsim.core.simulation.event.library.ModuleLibrary;
+import jDistsim.core.simulation.event.library.IModuleLibrary;
 import jDistsim.main.IGuiApplication;
 import jDistsim.utils.logging.Logger;
 
@@ -31,6 +31,6 @@ public class DesignerGuiApplication implements IGuiApplication {
 
     private void registerDependencies() {
         Logger.log("Register dependencies");
-        ServiceLocator.getInstance().bind(IEventLibrary.class, new EventLibrary());
+        ServiceLocator.getInstance().bind(IModuleLibrary.class, new ModuleLibrary());
     }
 }

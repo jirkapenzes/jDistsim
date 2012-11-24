@@ -3,16 +3,14 @@ package jDistsim.application.designer.controller;
 import jDistsim.ServiceLocator;
 import jDistsim.application.designer.model.ToolboxModel;
 import jDistsim.application.designer.model.ToolboxModelItem;
-import jDistsim.application.designer.view.DesignerView;
 import jDistsim.application.designer.view.ToolboxView;
 import jDistsim.core.simulation.event.description.EmptyDescription;
 import jDistsim.core.simulation.event.library.EventContainer;
-import jDistsim.core.simulation.event.library.IEventLibrary;
+import jDistsim.core.simulation.event.library.IModuleLibrary;
 import jDistsim.ui.panel.toolbox.ToolboxListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
-import jDistsim.utils.pattern.mvc.AbstractView;
 
 import java.util.Map;
 
@@ -34,10 +32,10 @@ public class ToolboxController extends AbstractController<ToolboxModel> implemen
     }
 
     private ToolboxModel buildToolboxModel() {
-        IEventLibrary eventLibrary = ServiceLocator.getInstance().get(IEventLibrary.class);
+        IModuleLibrary moduleLibrary = ServiceLocator.getInstance().get(IModuleLibrary.class);
 
         ToolboxModel toolboxModel = new ToolboxModel();
-        for (Map.Entry<String, EventContainer> entry : eventLibrary.entrySet()) {
+        for (Map.Entry<String, EventContainer> entry : moduleLibrary.entrySet()) {
             EventContainer eventContainer = entry.getValue();
             ToolboxModelItem item = new ToolboxModelItem(eventContainer.getComponentView(), eventContainer.getDescription(), entry.getKey());
             toolboxModel.addToolboxModelItem(item);
