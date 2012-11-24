@@ -1,8 +1,8 @@
 package jDistsim.core.simulation.event.library;
 
 import jDistsim.core.simulation.event.description.IEventDescription;
+import jDistsim.ui.component.IModuleView;
 import jDistsim.ui.component.ModuleView;
-import jDistsim.ui.component.IComponentView;
 import jDistsim.utils.ioc.IObjectContainer;
 import jDistsim.utils.ioc.ObjectContainer;
 
@@ -20,7 +20,7 @@ public class EventContainer {
     }
 
     public EventContainer toView(ModuleView view) {
-        objectContainer.bind(IComponentView.class, view);
+        objectContainer.bind(IModuleView.class, view);
         return this;
     }
 
@@ -29,8 +29,8 @@ public class EventContainer {
         return this;
     }
 
-    public IComponentView getComponentView() {
-        return (IComponentView) objectContainer.get(IComponentView.class);
+    public IModuleView getComponentView() {
+        return (IModuleView) objectContainer.get(IModuleView.class);
     }
 
     public IEventDescription getDescription() {

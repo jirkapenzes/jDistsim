@@ -15,7 +15,7 @@ import java.awt.event.MouseListener;
  * Date: 2.11.12
  * Time: 12:41
  */
-public abstract class ModuleView implements IComponentView, DragGestureListener, DragSourceListener {
+public abstract class ModuleView implements IModuleView, DragGestureListener, DragSourceListener {
 
     private JComponent componentView;
     private DragSource dragSource;

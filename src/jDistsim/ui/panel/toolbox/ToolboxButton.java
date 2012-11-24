@@ -1,6 +1,6 @@
 package jDistsim.ui.panel.toolbox;
 
-import jDistsim.ui.component.IComponentView;
+import jDistsim.ui.component.IModuleView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,7 @@ public class ToolboxButton extends JComponent {
     private static final int DefaultPadding = 5;
     private static final int FontIndentation = 15;
 
-    private IComponentView componentView;
+    private IModuleView moduleView;
     private boolean active = false;
     private boolean mouseEntered = false;
     private boolean mouseEnteredMode = true;
@@ -28,12 +28,12 @@ public class ToolboxButton extends JComponent {
     private String title;
     private String identifier;
 
-    public ToolboxButton(IComponentView componentView, String title, String identifier) {
-        this(componentView, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
+    public ToolboxButton(IModuleView moduleView, String title, String identifier) {
+        this(moduleView, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
     }
 
-    public ToolboxButton(IComponentView componentView, String title, String identifier, int padding, int width, int height) {
-        this.componentView = componentView;
+    public ToolboxButton(IModuleView moduleView, String title, String identifier, int padding, int width, int height) {
+        this.moduleView = moduleView;
         this.title = title;
         this.padding = padding;
         this.identifier = identifier;
@@ -43,8 +43,8 @@ public class ToolboxButton extends JComponent {
 
     private void initialize() {
         resizeComponentView();
-        add(componentView.getView());
-        componentView.getView().addMouseListener(new MouseAdapter() {
+        add(moduleView.getView());
+        moduleView.getView().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
                 MouseEvent mouseEvent = new MouseEvent(ToolboxButton.this, event.getID(), event.getWhen(), event.getModifiers(), event.getX(), event.getY(), event.getClickCount(), event.isPopupTrigger());
@@ -124,8 +124,8 @@ public class ToolboxButton extends JComponent {
     }
 
     private void resizeComponentView() {
-        componentView.getView().setLocation(getPadding(), getPadding());
-        componentView.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
+        moduleView.getView().setLocation(getPadding(), getPadding());
+        moduleView.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
     }
 
     @Override
