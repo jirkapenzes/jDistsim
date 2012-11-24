@@ -3,9 +3,9 @@ package jDistsim.core.simulation.event.library;
 import jDistsim.core.simulation.event.description.CreateDescription;
 import jDistsim.core.simulation.event.description.DelayDescription;
 import jDistsim.core.simulation.event.description.DisposeDescription;
-import jDistsim.ui.component.toolboxView.CreateModuleView;
-import jDistsim.ui.component.toolboxView.DelayModuleView;
-import jDistsim.ui.component.toolboxView.DisposeModuleView;
+import jDistsim.ui.module.moduleView.CreateModuleView;
+import jDistsim.ui.module.moduleView.DelayModuleView;
+import jDistsim.ui.module.moduleView.DisposeModuleView;
 import jDistsim.utils.ioc.ObjectContainer;
 
 import java.util.AbstractMap;

@@ -9,10 +9,7 @@ public abstract class Module {
 
     private IModuleView view;
 
-    public Module(IModuleView view) {
+    protected Module(IModuleView view) {
         this.view = view;
     }
-
-
-
 }

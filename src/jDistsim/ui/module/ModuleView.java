@@ -1,5 +1,6 @@
-package jDistsim.ui.component;
+package jDistsim.ui.module;
 
+import jDistsim.core.modules.IModuleView;
 import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
