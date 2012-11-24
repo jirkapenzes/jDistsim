@@ -10,5 +10,5 @@ import java.util.Set;
  */
 public interface IModuleLibrary {
 
-    public Set<Map.Entry<String, EventContainer>> entrySet();
+    public Set<Map.Entry<String, ModuleContainer>> entrySet();
 }

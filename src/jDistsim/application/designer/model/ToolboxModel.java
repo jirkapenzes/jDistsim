@@ -12,14 +12,14 @@ import java.util.*;
  */
 public class ToolboxModel extends AbstractModel {
 
-    private HashMap<IModuleFactory, ToolboxModelItem> items;
+    private HashMap<String, ToolboxModelItem> items;
 
     public ToolboxModel() {
         this.items = new HashMap<>();
     }
 
-    public ToolboxModel addToolboxModelItem(ToolboxModelItem toolboxModelItem) {
-        items.put(toolboxModelItem.getIdentifier(), toolboxModelItem);
+    public ToolboxModel add(String identifier, ToolboxModelItem toolboxModelItem) {
+        items.put(identifier, toolboxModelItem);
         return this;
     }
 

@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.event.library;
 
+import jDistsim.core.modules.factory.CreateModuleFactory;
 import jDistsim.core.simulation.event.description.CreateDescription;
 import jDistsim.core.simulation.event.description.DelayDescription;
 import jDistsim.core.simulation.event.description.DisposeDescription;
@@ -28,21 +29,16 @@ public class ModuleLibrary implements IModuleLibrary {
     }
 
     private void configure() {
-        container.bind("create", new EventContainer())
+        container.bind("create", new ModuleContainer())
                 .toView(new CreateModuleView())
-                .toDescription(new CreateDescription());
-        container.bind("dispose", new EventContainer())
-                .toView(new DisposeModuleView())
-                .toDescription(new DisposeDescription());
-        container.bind("delay", new EventContainer())
-                .toView(new DelayModuleView())
-                .toDescription(new DelayDescription());
+                .toDescription(new CreateDescription())
+                .toFactory(new CreateModuleFactory());
     }
 
-    public Set<Map.Entry<String, EventContainer>> entrySet() {
-        Set<Map.Entry<String, EventContainer>> entries = new HashSet<>();
+    public Set<Map.Entry<String, ModuleContainer>> entrySet() {
+        Set<Map.Entry<String, ModuleContainer>> entries = new HashSet<>();
         for (Map.Entry<String, Object> entry : container.entrySet()) {
-            entries.add(new AbstractMap.SimpleEntry<>(entry.getKey(), (EventContainer) entry.getValue()));
+            entries.add(new AbstractMap.SimpleEntry<>(entry.getKey(), (ModuleContainer) entry.getValue()));
         }
         return entries;
     }

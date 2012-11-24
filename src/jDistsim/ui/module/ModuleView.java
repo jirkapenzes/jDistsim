@@ -16,21 +16,18 @@ import java.awt.event.MouseListener;
  * Date: 2.11.12
  * Time: 12:41
  */
-public abstract class ModuleView implements IModuleView, DragGestureListener, DragSourceListener {
+public abstract class ModuleView implements IModuleView {
 
     private JComponent componentView;
-    private DragSource dragSource;
 
     protected ModuleView() {
         componentView = makeView();
-        dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(componentView, DnDConstants.ACTION_COPY_OR_MOVE, this);
     }
 
     protected abstract JComponent makeView();
 
     @Override
-    public JComponent getView() {
+    public JComponent getContentPane() {
         return componentView;
     }
 
@@ -48,40 +45,5 @@ public abstract class ModuleView implements IModuleView, DragGestureListener, Dr
 
     protected Color getBorderColor() {
         return new Color(70, 127, 137);
-    }
-
-    @Override
-    public void dragGestureRecognized(DragGestureEvent dragGestureEvent) {
-        Logger.log();
-        Transferable transferable = new StringSelection("Hello!");
-        dragSource.startDrag(dragGestureEvent, DragSource.DefaultCopyDrop, transferable, this);
-    }
-
-    @Override
-    public void dragEnter(DragSourceDragEvent dragSourceDragEvent) {
-        Logger.log();
-    }
-
-    @Override
-    public void dragOver(DragSourceDragEvent dragSourceDragEvent) {
-        Logger.log();
-    }
-
-    @Override
-    public void dropActionChanged(DragSourceDragEvent dragSourceDragEvent) {
-        Logger.log();
-    }
-
-    @Override
-    public void dragExit(DragSourceEvent dragSourceEvent) {
-        Logger.log();
-    }
-
-    @Override
-    public void dragDropEnd(DragSourceDropEvent dragSourceDropEvent) {
-        MouseEvent mouseEvent = new MouseEvent(componentView, 0, 0, 0, dragSourceDropEvent.getX(), dragSourceDropEvent.getY(), 0, false);
-        for (MouseListener listener : componentView.getMouseListeners()) {
-            listener.mouseExited(mouseEvent);
-        }
     }
 }

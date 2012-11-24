@@ -7,9 +7,13 @@ package jDistsim.core.modules;
  */
 public abstract class Module {
 
-    private IModuleView view;
+    private ModuleUI moduleUI;
 
-    protected Module(IModuleView view) {
-        this.view = view;
+    protected Module(ModuleUI moduleUI) {
+        this.moduleUI = moduleUI;
+    }
+
+    public ModuleUI getUI() {
+        return moduleUI;
     }
 }

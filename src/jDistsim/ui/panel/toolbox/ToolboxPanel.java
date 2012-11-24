@@ -71,7 +71,7 @@ public class ToolboxPanel extends InternalPanel {
     public void buildToolbox() {
         toolboxPanel.removeAll();
         for (ToolboxModelItem item : toolboxModel.getItems()) {
-            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), item.getModuleDescription().getTitle(), item.getIdentifier());
+            ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), item.getModuleFactory(), item.getModuleDescription().getTitle(), item.getIdentifier());
             toolboxButton.setMouseEnteredMode(true);
             toolboxButton.addMouseListener(new MouseAdapter() {
 

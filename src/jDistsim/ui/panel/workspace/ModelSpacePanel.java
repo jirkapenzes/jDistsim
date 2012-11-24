@@ -17,9 +17,6 @@ public class ModelSpacePanel extends JPanel {
         Logger.log("Initialize model space");
         initialize();
         setSize(1000, 1000);
-        SampleControl sampleControl = new SampleControl(Color.yellow);
-        sampleControl.setLocation(20, 20);
-        add(sampleControl);
     }
 
     private void initialize() {

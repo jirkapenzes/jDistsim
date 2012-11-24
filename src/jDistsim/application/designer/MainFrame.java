@@ -1,7 +1,9 @@
 package jDistsim.application.designer;
 
+import jDistsim.application.designer.controller.ModelSpaceController;
 import jDistsim.application.designer.controller.StatusBarController;
 import jDistsim.application.designer.controller.ToolboxController;
+import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.model.StatusBarModel;
 import jDistsim.application.designer.model.ToolboxModel;
 import jDistsim.application.designer.view.*;
@@ -43,6 +45,7 @@ public class MainFrame extends AbstractFrame {
         Logger.log("Register all controllers");
         controllers.bind(StatusBarController.class, new StatusBarController(this, new StatusBarModel()));
         controllers.bind(ToolboxController.class, new ToolboxController(this, new ToolboxModel()));
+        controllers.bind(ModelSpaceController.class, new ModelSpaceController(this, new ModelSpaceModel()));
     }
 
     @Override
