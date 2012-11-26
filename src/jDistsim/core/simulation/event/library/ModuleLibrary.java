@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.event.library;
 
+import jDistsim.core.modules.ModuleConfiguration;
 import jDistsim.core.modules.factory.CreateModuleFactory;
 import jDistsim.core.simulation.event.description.CreateDescription;
 import jDistsim.core.simulation.event.description.DelayDescription;
@@ -9,6 +10,7 @@ import jDistsim.ui.module.moduleView.DelayModuleView;
 import jDistsim.ui.module.moduleView.DisposeModuleView;
 import jDistsim.utils.ioc.ObjectContainer;
 
+import java.awt.*;
 import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class ModuleLibrary implements IModuleLibrary {
         container.bind("create", new ModuleContainer())
                 .toView(new CreateModuleView())
                 .toDescription(new CreateDescription())
-                .toFactory(new CreateModuleFactory());
+                .toFactory(new CreateModuleFactory(new ModuleConfiguration("create", new Dimension(80, 50))));
     }
 
     public Set<Map.Entry<String, ModuleContainer>> entrySet() {
