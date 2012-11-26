@@ -1,9 +1,15 @@
 package jDistsim.ui.panel.toolbox;
 
-import jDistsim.ui.component.IModuleView;
+import jDistsim.SampleControl;
+import jDistsim.core.modules.IModuleFactory;
+import jDistsim.core.modules.IModuleView;
+import jDistsim.utils.common.TransferableObject;
+import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
@@ -14,7 +20,7 @@ import java.awt.geom.Rectangle2D;
  * Date: 4.11.12
  * Time: 15:38
  */
-public class ToolboxButton extends JComponent {
+public class ToolboxButton extends JComponent implements DragGestureListener, DragSourceListener {
 
     private static final int DefaultSize = 50;
     private static final int DefaultPadding = 5;
@@ -28,23 +34,30 @@ public class ToolboxButton extends JComponent {
     private String title;
     private String identifier;
 
-    public ToolboxButton(IModuleView moduleView, String title, String identifier) {
-        this(moduleView, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
+    private DragSource dragSource;
+    private IModuleFactory moduleFactory;
+
+    public ToolboxButton(IModuleView moduleView, IModuleFactory moduleFactory, String title, String identifier) {
+        this(moduleView, moduleFactory, title, identifier, DefaultPadding, DefaultSize, DefaultSize);
     }
 
-    public ToolboxButton(IModuleView moduleView, String title, String identifier, int padding, int width, int height) {
+    public ToolboxButton(IModuleView moduleView, IModuleFactory moduleFactory, String title, String identifier, int padding, int width, int height) {
         this.moduleView = moduleView;
         this.title = title;
         this.padding = padding;
         this.identifier = identifier;
+        this.moduleFactory = moduleFactory;
         setPreferredSize(new Dimension(width, height));
         initialize();
+
+        dragSource = new DragSource();
+        dragSource.createDefaultDragGestureRecognizer(moduleView.getContentPane(), DnDConstants.ACTION_COPY_OR_MOVE, this);
     }
 
     private void initialize() {
         resizeComponentView();
-        add(moduleView.getView());
-        moduleView.getView().addMouseListener(new MouseAdapter() {
+        add(moduleView.getContentPane());
+        moduleView.getContentPane().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
                 MouseEvent mouseEvent = new MouseEvent(ToolboxButton.this, event.getID(), event.getWhen(), event.getModifiers(), event.getX(), event.getY(), event.getClickCount(), event.isPopupTrigger());
@@ -124,8 +137,8 @@ public class ToolboxButton extends JComponent {
     }
 
     private void resizeComponentView() {
-        moduleView.getView().setLocation(getPadding(), getPadding());
-        moduleView.getView().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
+        moduleView.getContentPane().setLocation(getPadding(), getPadding());
+        moduleView.getContentPane().setSize(new Dimension(getWidth() - (getPadding() * 2), getHeight() - (getPadding() * 2) - FontIndentation));
     }
 
     @Override
@@ -157,4 +170,38 @@ public class ToolboxButton extends JComponent {
         graphics2D.drawString(title, (int) ((getWidth() - bounds.getWidth()) / 2.0), getHeight() - 6);
     }
 
+    @Override
+    public void dragGestureRecognized(DragGestureEvent dragGestureEvent) {
+        Logger.log();
+        Transferable transferable = new TransferableObject(moduleFactory);
+        dragGestureEvent.startDrag(DragSource.DefaultCopyDrop, transferable, this);
+    }
+
+    @Override
+    public void dragEnter(DragSourceDragEvent dragSourceDragEvent) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void dragOver(DragSourceDragEvent dragSourceDragEvent) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void dropActionChanged(DragSourceDragEvent dragSourceDragEvent) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void dragExit(DragSourceEvent dragSourceEvent) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void dragDropEnd(DragSourceDropEvent dragSourceDropEvent) {
+        MouseEvent mouseEvent = new MouseEvent(moduleView.getContentPane(), 0, 0, 0, dragSourceDropEvent.getX(), dragSourceDropEvent.getY(), 0, false);
+        for (MouseListener listener : moduleView.getContentPane().getMouseListeners()) {
+            listener.mouseExited(mouseEvent);
+        }
+    }
 }
