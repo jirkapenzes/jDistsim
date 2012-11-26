@@ -4,6 +4,7 @@ import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.Module;
+import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
@@ -11,6 +12,9 @@ import jDistsim.utils.pattern.mvc.AbstractFrame;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 /**
  * Author: Jirka Pénzeš
@@ -21,12 +25,36 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     private ModelSpaceView view;
     private Module currentDragModule;
+    private Module currentActiveModule;
+    private HashMap<String, Module> moduleList;
 
     public ModelSpaceController(AbstractFrame mainFrame, ModelSpaceModel model) {
         super(mainFrame, model);
         view = getMainFrame().getView(ModelSpaceView.class);
+        moduleList = new HashMap<>();
 
         new DropTarget(view.getContentPane(), this);
+
+        view.getContentPane().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                unselectedActiveModule();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+        });
+    }
+
+    private void unselectedActiveModule() {
+        if (currentActiveModule != null)
+            currentActiveModule.getUI().setActive(false);
     }
 
     @Override
@@ -35,8 +63,8 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         try {
             IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
             currentDragModule = moduleFactory.create();
-            currentDragModule.getUI().getView().getContentPane().setLocation(calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getUI().getView().getContentPane().getSize()));
-            view.getContentPane().add(currentDragModule.getUI().getView().getContentPane());
+            currentDragModule.getUI().setLocation(calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getUI().getSize()));
+            view.getContentPane().add(currentDragModule.getUI());
             view.getContentPane().repaint();
         } catch (Exception exception) {
             Logger.log(exception);
@@ -51,8 +79,8 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
-        Point location = calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getUI().getView().getContentPane().getSize());
-        currentDragModule.getUI().getView().getContentPane().setLocation(location);
+        Point location = calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getUI().getSize());
+        currentDragModule.getUI().setLocation(location);
     }
 
     @Override
@@ -61,38 +89,36 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void dragExit(DropTargetEvent dte) {
-        view.getContentPane().remove(currentDragModule.getUI().getView().getContentPane());
+        view.getContentPane().remove(currentDragModule.getUI());
         view.getContentPane().repaint();
-        currentDragModule = null;
     }
 
     @Override
     public void drop(DropTargetDropEvent dropTargetDropEvent) {
-        Logger.log();
-        /*
         try {
-            //Transferable transferable = dropTargetDropEvent.getTransferable();
-            //SampleControl sampleControl = (SampleControl) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
-            //view.getContentPane().add(sampleControl);
+            Transferable transferable = dropTargetDropEvent.getTransferable();
+            IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
 
-            if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-                dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-                String dragContents = (String) transferable.getTransferData(DataFlavor.stringFlavor);
-                dropTargetDropEvent.getDropTargetContext().dropComplete(true);
-                Logger.log(dragContents);
-                SampleControl control = new SampleControl(Color.green);
-                control.setLocation(dropTargetDropEvent.getLocation());
-                view.getContentPane().add(control);
-                view.getContentPane().repaint();
-                Logger.log(dropTargetDropEvent.getLocation());
+            String identifier = moduleFactory.createIdentifier();
+            currentDragModule.setIdentifier(identifier);
+            moduleList.put(identifier, currentDragModule);
+            currentDragModule.getUI().addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent mouseEvent) {
+                    ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
+                    Module module = moduleList.get(moduleUI.getIdentifier());
+                    if (module == currentActiveModule && module.getUI().getActive()) {
+                        moduleUI.setActive(false);
+                        return;
+                    }
 
-
-            } else {
-                dropTargetDropEvent.rejectDrop();
-            }
-        } catch (Exception e) {
-            dropTargetDropEvent.rejectDrop();
+                    unselectedActiveModule();
+                    moduleUI.setActive(true);
+                    currentActiveModule = moduleList.get(moduleUI.getIdentifier());
+                }
+            });
+        } catch (Exception exception) {
+            Logger.log(exception);
         }
-        */
     }
 }
