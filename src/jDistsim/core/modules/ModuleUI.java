@@ -3,9 +3,6 @@ package jDistsim.core.modules;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 /**
  * Author: Jirka Pénzeš
@@ -17,7 +14,6 @@ public class ModuleUI extends JComponent {
     private boolean active;
     private IModuleView moduleView;
     private String identifier;
-    private Point mousePositionDown;
 
     public ModuleUI(IModuleView moduleView, String identifier) {
         this.moduleView = moduleView;
@@ -27,33 +23,6 @@ public class ModuleUI extends JComponent {
 
     private void initializeUI() {
         setSize(80, 50);
-
-        addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-                Point newPosition = getLocation();
-                newPosition.translate(mouseEvent.getX() - mousePositionDown.x, mouseEvent.getY() - mousePositionDown.y);
-                setLocation(newPosition);
-                repaint();
-            }
-        });
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                switch (e.getButton()) {
-                    case MouseEvent.BUTTON1:
-                        mousePositionDown = new Point(e.getX(), e.getY());
-                        repaint();
-                        break;
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-            }
-        });
     }
 
     public void setActive(boolean active) {

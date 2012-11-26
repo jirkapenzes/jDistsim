@@ -14,6 +14,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.HashMap;
 
 /**
@@ -27,6 +28,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     private Module currentDragModule;
     private Module currentActiveModule;
     private HashMap<String, Module> moduleList;
+    private Point mousePositionDown;
 
     public ModelSpaceController(AbstractFrame mainFrame, ModelSpaceModel model) {
         super(mainFrame, model);
@@ -55,6 +57,15 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     private void unselectedActiveModule() {
         if (currentActiveModule != null)
             currentActiveModule.getUI().setActive(false);
+    }
+
+    private void selectedActiveModule(Module module) {
+        module.getUI().setActive(true);
+        currentActiveModule = module;
+    }
+
+    private void selectedActiveModule(ModuleUI moduleUI) {
+        selectedActiveModule(moduleList.get(moduleUI.getIdentifier()));
     }
 
     @Override
@@ -103,6 +114,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             currentDragModule.setIdentifier(identifier);
             moduleList.put(identifier, currentDragModule);
             currentDragModule.getUI().addMouseListener(new MouseAdapter() {
+
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
@@ -115,6 +127,36 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
                     unselectedActiveModule();
                     moduleUI.setActive(true);
                     currentActiveModule = moduleList.get(moduleUI.getIdentifier());
+                }
+
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
+                    switch (mouseEvent.getButton()) {
+                        case MouseEvent.BUTTON1:
+                            mousePositionDown = new Point(mouseEvent.getX(), mouseEvent.getY());
+                            moduleUI.repaint();
+                            break;
+                    }
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    super.mouseReleased(e);
+                }
+            });
+
+            currentDragModule.getUI().addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent mouseEvent) {
+                    ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
+                    unselectedActiveModule();
+                    selectedActiveModule(moduleUI);
+
+                    Point newPosition = moduleUI.getLocation();
+                    newPosition.translate(mouseEvent.getX() - mousePositionDown.x, mouseEvent.getY() - mousePositionDown.y);
+                    moduleUI.setLocation(newPosition);
+                    moduleUI.repaint();
                 }
             });
         } catch (Exception exception) {
