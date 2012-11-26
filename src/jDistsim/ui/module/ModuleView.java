@@ -1,15 +1,9 @@
 package jDistsim.ui.module;
 
 import jDistsim.core.modules.IModuleView;
-import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * Author: Jirka Pénzeš
@@ -18,18 +12,30 @@ import java.awt.event.MouseListener;
  */
 public abstract class ModuleView implements IModuleView {
 
-    private JComponent componentView;
+    private JComponent view;
 
     protected ModuleView() {
-        componentView = makeView();
+        view = new ModuleViewComponent();
     }
-
-    protected abstract JComponent makeView();
 
     @Override
     public JComponent getContentPane() {
-        return componentView;
+        return view;
     }
+
+    @Override
+    public void draw(Graphics2D graphics, int width, int height) {
+        Graphics2D graphics2D = graphics;
+        setDefaultRenderingMode(graphics2D);
+        setDefaultBasicStroke(graphics2D);
+
+        Polygon polygon = getBounds(width, height);
+        graphics2D.setColor(getBackgroundColor());
+        graphics2D.fillPolygon(polygon);
+        graphics2D.setColor(getBorderColor());
+        graphics2D.drawPolygon(polygon);
+    }
+
 
     protected void setDefaultRenderingMode(Graphics2D graphics2D) {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -45,5 +51,18 @@ public abstract class ModuleView implements IModuleView {
 
     protected Color getBorderColor() {
         return new Color(70, 127, 137);
+    }
+
+    private class ModuleViewComponent extends JComponent {
+
+        public ModuleViewComponent() {
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            draw((Graphics2D) graphics, getWidth(), getHeight());
+        }
     }
 }

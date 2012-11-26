@@ -14,35 +14,13 @@ import java.awt.*;
 public class DisposeModuleView extends ModuleView {
 
     @Override
-    protected JComponent makeView() {
-        return new DisposeComponent();
-    }
-
-    private class DisposeComponent extends JComponent {
-
-        public DisposeComponent() {
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics graphics) {
-            super.paintComponent(graphics);
-
-            Graphics2D graphics2D = (Graphics2D) graphics;
-            setDefaultRenderingMode(graphics2D);
-            setDefaultBasicStroke(graphics2D);
-
-            Polygon polygon = new Polygon();
-            polygon.addPoint(0, getHeight() / 2 - 1);
-            polygon.addPoint(PointUtilities.byPercentageOnLine(40, getWidth()), 1);
-            polygon.addPoint(getWidth() - 1, 1);
-            polygon.addPoint(getWidth() - 1, getHeight() - 1);
-            polygon.addPoint(PointUtilities.byPercentageOnLine(40, getWidth()), getHeight() - 1);
-
-            graphics2D.setColor(getBackgroundColor());
-            graphics2D.fillPolygon(polygon);
-            graphics2D.setColor(getBorderColor());
-            graphics2D.drawPolygon(polygon);
-        }
+    public Polygon getBounds(int width, int height) {
+        Polygon polygon = new Polygon();
+        polygon.addPoint(0, height / 2 - 1);
+        polygon.addPoint(PointUtilities.byPercentageOnLine(40, width), 1);
+        polygon.addPoint(width - 1, 1);
+        polygon.addPoint(width - 1, height - 1);
+        polygon.addPoint(PointUtilities.byPercentageOnLine(40, width), height - 1);
+        return polygon;
     }
 }
