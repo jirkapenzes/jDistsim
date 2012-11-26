@@ -9,4 +9,6 @@ public interface IModuleFactory {
 
     public Module create();
 
+    public String createIdentifier();
+
 }
