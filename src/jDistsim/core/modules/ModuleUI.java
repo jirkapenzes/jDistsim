@@ -12,12 +12,10 @@ import java.awt.*;
 public class ModuleUI extends JComponent {
 
     private boolean active;
-    private IModuleView moduleView;
-    private String identifier;
+    private Module module;
 
-    public ModuleUI(IModuleView moduleView, String identifier) {
-        this.moduleView = moduleView;
-        this.identifier = identifier;
+    public ModuleUI(Module module) {
+        this.module = module;
         initializeUI();
     }
 
@@ -34,7 +32,7 @@ public class ModuleUI extends JComponent {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
-        moduleView.draw(graphics2D, getWidth(), getHeight());
+        module.getView().draw(graphics2D, getWidth(), getHeight());
 
         if (active) {
             graphics2D.setColor(new Color(160, 160, 160));
@@ -57,7 +55,7 @@ public class ModuleUI extends JComponent {
         Font titleFont = new Font("Calibri", Font.PLAIN, 12);
         graphics2D.setFont(titleFont);
         graphics2D.setColor(new Color(58, 58, 58));
-        drawCenteredString(identifier, getWidth(), getHeight(), graphics2D);
+        drawCenteredString(module.getIdentifier(), getWidth(), getHeight(), graphics2D);
     }
 
     public void drawCenteredString(String s, int w, int h, Graphics g) {
@@ -68,12 +66,12 @@ public class ModuleUI extends JComponent {
     }
 
     public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+        module.setIdentifier(identifier);
         repaint();
     }
 
     public String getIdentifier() {
-        return identifier;
+        return module.getIdentifier();
     }
 
     public boolean getActive() {
@@ -82,6 +80,6 @@ public class ModuleUI extends JComponent {
 
     @Override
     public boolean contains(int x, int y) {
-        return moduleView.getBounds(getWidth(), getHeight()).contains(x, y);
+        return module.getView().getBounds(getWidth(), getHeight()).contains(x, y);
     }
 }

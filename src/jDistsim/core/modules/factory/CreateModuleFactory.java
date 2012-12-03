@@ -3,7 +3,6 @@ package jDistsim.core.modules.factory;
 import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.Module;
 import jDistsim.core.modules.ModuleConfiguration;
-import jDistsim.core.modules.ModuleUI;
 import jDistsim.ui.module.moduleView.CreateModuleView;
 
 /**
@@ -26,6 +25,6 @@ public class CreateModuleFactory implements IModuleFactory {
 
     @Override
     public Module create() {
-        return new Module(new ModuleUI(new CreateModuleView(), moduleConfiguration.getBaseIdentifier()), moduleConfiguration);
+        return new Module(new CreateModuleView(), moduleConfiguration);
     }
 }

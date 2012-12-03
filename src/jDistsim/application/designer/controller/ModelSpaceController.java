@@ -25,9 +25,9 @@ import java.util.HashMap;
 public class ModelSpaceController extends AbstractController<ModelSpaceModel> implements DropTargetListener {
 
     private ModelSpaceView view;
-    private Module currentDragModule;
-    private Module currentActiveModule;
-    private HashMap<String, Module> moduleList;
+    private ModuleUI currentDragModule;
+    private ModuleUI currentActiveModule;
+    private HashMap<String, ModuleUI> moduleList;
     private Point mousePositionDown;
 
     public ModelSpaceController(AbstractFrame mainFrame, ModelSpaceModel model) {
@@ -56,16 +56,12 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     private void unselectedActiveModule() {
         if (currentActiveModule != null)
-            currentActiveModule.getUI().setActive(false);
+            currentActiveModule.setActive(false);
     }
 
-    private void selectedActiveModule(Module module) {
-        module.getUI().setActive(true);
+    private void selectedActiveModule(ModuleUI module) {
+        module.setActive(true);
         currentActiveModule = module;
-    }
-
-    private void selectedActiveModule(ModuleUI moduleUI) {
-        selectedActiveModule(moduleList.get(moduleUI.getIdentifier()));
     }
 
     @Override
@@ -73,9 +69,11 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         Transferable transferable = dropTargetDragEvent.getTransferable();
         try {
             IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
-            currentDragModule = moduleFactory.create();
-            currentDragModule.getUI().setLocation(calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getUI().getSize()));
-            view.getContentPane().add(currentDragModule.getUI());
+            Module module = moduleFactory.create();
+
+            currentDragModule = new ModuleUI(module);
+            currentDragModule.setLocation(calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize()));
+            view.getContentPane().add(currentDragModule);
             view.getContentPane().repaint();
         } catch (Exception exception) {
             Logger.log(exception);
@@ -90,8 +88,8 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
-        Point location = calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getUI().getSize());
-        currentDragModule.getUI().setLocation(location);
+        Point location = calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize());
+        currentDragModule.setLocation(location);
     }
 
     @Override
@@ -100,7 +98,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void dragExit(DropTargetEvent dte) {
-        view.getContentPane().remove(currentDragModule.getUI());
+        view.getContentPane().remove(currentDragModule);
         view.getContentPane().repaint();
     }
 
@@ -113,20 +111,19 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             String identifier = moduleFactory.createIdentifier();
             currentDragModule.setIdentifier(identifier);
             moduleList.put(identifier, currentDragModule);
-            currentDragModule.getUI().addMouseListener(new MouseAdapter() {
+            currentDragModule.addMouseListener(new MouseAdapter() {
 
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
-                    ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
-                    Module module = moduleList.get(moduleUI.getIdentifier());
-                    if (module == currentActiveModule && module.getUI().getActive()) {
-                        moduleUI.setActive(false);
+                    ModuleUI module = (ModuleUI) mouseEvent.getSource();
+                    if (module == currentActiveModule && module.getActive()) {
+                        module.setActive(false);
                         return;
                     }
 
                     unselectedActiveModule();
-                    moduleUI.setActive(true);
-                    currentActiveModule = moduleList.get(moduleUI.getIdentifier());
+                    module.setActive(true);
+                    currentActiveModule = moduleList.get(module.getIdentifier());
                 }
 
                 @Override
@@ -146,7 +143,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
                 }
             });
 
-            currentDragModule.getUI().addMouseMotionListener(new MouseMotionAdapter() {
+            currentDragModule.addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent mouseEvent) {
                     ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();

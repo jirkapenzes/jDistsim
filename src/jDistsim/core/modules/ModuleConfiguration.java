@@ -1,6 +1,7 @@
 package jDistsim.core.modules;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Author: Jirka Pénzeš
@@ -11,10 +12,14 @@ public class ModuleConfiguration {
 
     private String baseIdentifier;
     private Dimension moduleSize;
+    private ArrayList<ModulePoint> connectingInputPoints;
+    private ArrayList<ModulePoint> connectingOutputPoints;
 
     public ModuleConfiguration(String baseIdentifier, Dimension moduleSize) {
         this.baseIdentifier = baseIdentifier;
         this.moduleSize = moduleSize;
+        connectingInputPoints = new ArrayList<>();
+        connectingOutputPoints = new ArrayList<>();
     }
 
     public String getBaseIdentifier() {
@@ -23,5 +28,13 @@ public class ModuleConfiguration {
 
     public Dimension getModuleSize() {
         return moduleSize;
+    }
+
+    public ArrayList<ModulePoint> getConnectingInputPoints() {
+        return connectingInputPoints;
+    }
+
+    public ArrayList<ModulePoint> getConnectingOutputPoints() {
+        return connectingOutputPoints;
     }
 }

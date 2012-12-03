@@ -1,30 +1,34 @@
 package jDistsim.core.modules;
 
+import jDistsim.ui.module.ModuleView;
+import jDistsim.utils.pattern.observer.Observable;
+
+
 /**
  * Author: Jirka Pénzeš
  * Date: 24.11.12
  * Time: 12:16
  */
-public class Module {
+public class Module extends Observable {
 
     private String identifier;
-    private ModuleUI moduleUI;
+    private ModuleView view;
 
-    public Module(ModuleUI moduleUI, ModuleConfiguration moduleConfiguration) {
-        this.moduleUI = moduleUI;
-        this.identifier = identifier;
-    }
-
-    public ModuleUI getUI() {
-        return moduleUI;
+    public Module(ModuleView view, ModuleConfiguration moduleConfiguration) {
+        this.identifier = moduleConfiguration.getBaseIdentifier();
+        this.view = view;
     }
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
-        moduleUI.setIdentifier(identifier);
+        notifyObservers("identifier");
     }
 
     public String getIdentifier() {
         return identifier;
+    }
+
+    public ModuleView getView() {
+        return view;
     }
 }
