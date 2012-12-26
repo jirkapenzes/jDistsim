@@ -29,8 +29,12 @@ public class Observable {
     }
 
     public void notifyObservers() {
+        notifyObservers(null);
+    }
+
+    public void notifyObservers(Object argument) {
         for (IObserver observer : observers) {
-            observer.update();
+            observer.update(this, argument);
         }
     }
 }

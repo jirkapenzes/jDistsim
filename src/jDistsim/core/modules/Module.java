@@ -3,6 +3,9 @@ package jDistsim.core.modules;
 import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.pattern.observer.Observable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Author: Jirka Pénzeš
@@ -12,11 +15,15 @@ import jDistsim.utils.pattern.observer.Observable;
 public class Module extends Observable {
 
     private String identifier;
-    private ModuleView view;
+    private final ModuleView view;
+    private final List<ModuleConnectedPoint> inputConnectedPoints;
+    private final List<ModuleConnectedPoint> outputConnectedPoints;
 
     public Module(ModuleView view, ModuleConfiguration moduleConfiguration) {
         this.identifier = moduleConfiguration.getBaseIdentifier();
         this.view = view;
+        inputConnectedPoints = new ArrayList<>();
+        outputConnectedPoints = new ArrayList<>();
     }
 
     public void setIdentifier(String identifier) {
@@ -30,5 +37,13 @@ public class Module extends Observable {
 
     public ModuleView getView() {
         return view;
+    }
+
+    public List<ModuleConnectedPoint> getInputConnectedPoints() {
+        return inputConnectedPoints;
+    }
+
+    public List<ModuleConnectedPoint> getOutputConnectedPoints() {
+        return outputConnectedPoints;
     }
 }

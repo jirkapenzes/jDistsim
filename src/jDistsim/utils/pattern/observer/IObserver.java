@@ -7,6 +7,6 @@ package jDistsim.utils.pattern.observer;
  */
 public interface IObserver {
 
-    public void update();
+    public void update(Observable observable, Object arguments);
 
 }

@@ -1,8 +1,12 @@
 package jDistsim.core.modules;
 
 
+import jDistsim.ui.module.ModuleView;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -13,19 +17,50 @@ public class ModuleUI extends JComponent {
 
     private boolean active;
     private Module module;
+    private final List<ModuleConnectedPointUI> inputPointsUI;
+    private final List<ModuleConnectedPointUI> outputPointsUI;
 
     public ModuleUI(Module module) {
         this.module = module;
+        this.inputPointsUI = new ArrayList<>();
+        this.outputPointsUI = new ArrayList<>();
         initializeUI();
     }
 
     private void initializeUI() {
         setSize(80, 50);
+
+        ModuleView view = module.getView();
+        view.invalidateConnectedPoints(80, 50);
+        for (int i = 0; i < module.getInputConnectedPoints().size(); i++) {
+            inputPointsUI.add(new ModuleConnectedPointUI(module.getInputConnectedPoints().get(i), view.getInputPoints().get(i)));
+        }
+        for (int i = 0; i < module.getOutputConnectedPoints().size(); i++) {
+            outputPointsUI.add(new ModuleConnectedPointUI(module.getOutputConnectedPoints().get(i), view.getOutputPoints().get(i)));
+        }
+    }
+
+    public List<ModuleConnectedPointUI> getInputPointsUI() {
+        return inputPointsUI;
+    }
+
+    public List<ModuleConnectedPointUI> getOutputPointsUI() {
+        return outputPointsUI;
     }
 
     public void setActive(boolean active) {
         this.active = active;
+        for(ModuleConnectedPointUI connectedPoint : getInputPointsUI()) {
+            connectedPoint.setState(isActive() ? ModuleConnectedPointUI.State.Active : ModuleConnectedPointUI.State.Show);
+        }
+        for(ModuleConnectedPointUI connectedPoint : getOutputPointsUI()) {
+            connectedPoint.setState(isActive() ? ModuleConnectedPointUI.State.Active : ModuleConnectedPointUI.State.Show);
+        }
         repaint();
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     @Override

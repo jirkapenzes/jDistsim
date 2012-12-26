@@ -17,6 +17,8 @@ import java.awt.*;
  */
 public class ToolbarPanel extends JPanel {
 
+    private Component relationsButton;
+
     public ToolbarPanel() {
         Logger.log("Initialize toolbox panel");
         initializeComponents();
@@ -24,12 +26,17 @@ public class ToolbarPanel extends JPanel {
 
     private void initializeComponents() {
         setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
-
         setBorder(new EmptyBorder(0, 0, 0, 0));
-        add(new ImageButton(Resources.getImage("system/toolbar-icon-new.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
-        add(new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
-        add(new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 5));
+
+        IconBackgroundColorHoverStyle hoverStyle = new IconBackgroundColorHoverStyle();
+        Dimension iconDimension = new Dimension(16, 16);
+        int padding = 5;
+
+        add(new ImageButton(Resources.getImage("system/toolbar-icon-new.png"), hoverStyle, new Dimension(16, 16), padding));
+        add(new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), hoverStyle, iconDimension, padding));
+        add(new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), hoverStyle, iconDimension, padding));
         add(new MenuSeparator());
+        relationsButton = add(new ImageButton(Resources.getImage("system/toolbar-icon-relationship.png"), hoverStyle, iconDimension, padding, true));
     }
 
     @Override
@@ -52,5 +59,9 @@ public class ToolbarPanel extends JPanel {
 
         graphics.setColor((new Color(165, 165, 165)));
         graphics.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+    }
+
+    public Component getRelationsButton() {
+        return relationsButton;
     }
 }

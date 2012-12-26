@@ -2,7 +2,6 @@ package jDistsim.ui.module.moduleView;
 
 import jDistsim.ui.module.ModuleView;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -20,5 +19,10 @@ public class DelayModuleView extends ModuleView {
         polygon.addPoint(width - 1, height - 1);
         polygon.addPoint(1, height - 1);
         return polygon;
+    }
+
+    @Override
+    protected void initializeConnectedPoints(int width, int height) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

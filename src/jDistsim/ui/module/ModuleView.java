@@ -4,6 +4,10 @@ import jDistsim.core.modules.IModuleView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -13,10 +17,33 @@ import java.awt.*;
 public abstract class ModuleView implements IModuleView {
 
     private JComponent view;
+    protected final List<Point> inputPoints;
+    protected final List<Point> outputPoints;
 
-    protected ModuleView() {
+    public ModuleView() {
         view = new ModuleViewComponent();
+        inputPoints = new ArrayList<>();
+        outputPoints = new ArrayList<>();
+
+        view.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent componentEvent) {
+                invalidateConnectedPoints();
+            }
+        });
     }
+
+    public void invalidateConnectedPoints() {
+        invalidateConnectedPoints(view.getWidth(), view.getHeight());
+    }
+
+    public void invalidateConnectedPoints(int width, int height) {
+        inputPoints.clear();
+        outputPoints.clear();
+        initializeConnectedPoints(width, height);
+    }
+
+    protected abstract void initializeConnectedPoints(int width, int height);
 
     @Override
     public JComponent getContentPane() {
@@ -51,6 +78,16 @@ public abstract class ModuleView implements IModuleView {
 
     protected Color getBorderColor() {
         return new Color(70, 127, 137);
+    }
+
+    @Override
+    public List<Point> getInputPoints() {
+        return inputPoints;
+    }
+
+    @Override
+    public List<Point> getOutputPoints() {
+        return outputPoints;
     }
 
     private class ModuleViewComponent extends JComponent {

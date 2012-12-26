@@ -3,17 +3,15 @@ package jDistsim.application.designer.controller;
 import jDistsim.ServiceLocator;
 import jDistsim.application.designer.model.ToolboxModel;
 import jDistsim.application.designer.model.ToolboxModelItem;
-import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.application.designer.view.ToolboxView;
 import jDistsim.core.simulation.event.description.EmptyDescription;
-import jDistsim.core.simulation.event.library.ModuleContainer;
 import jDistsim.core.simulation.event.library.IModuleLibrary;
+import jDistsim.core.simulation.event.library.ModuleContainer;
 import jDistsim.ui.panel.toolbox.ToolboxListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 
-import java.awt.dnd.*;
 import java.util.Map;
 
 /**
@@ -34,7 +32,6 @@ public class ToolboxController extends AbstractController<ToolboxModel> implemen
 
     private ToolboxModel buildToolboxModel() {
         IModuleLibrary moduleLibrary = ServiceLocator.getInstance().get(IModuleLibrary.class);
-
         ToolboxModel toolboxModel = new ToolboxModel();
         for (Map.Entry<String, ModuleContainer> entry : moduleLibrary.entrySet()) {
             ModuleContainer container = entry.getValue();

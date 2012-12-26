@@ -1,9 +1,8 @@
 package jDistsim.core.modules;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -17,4 +16,8 @@ public interface IModuleView {
     void draw(Graphics2D graphics, int width, int height);
 
     Polygon getBounds(int width, int height);
+
+    List<Point> getInputPoints();
+
+    List<Point> getOutputPoints();
 }

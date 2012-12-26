@@ -3,7 +3,6 @@ package jDistsim.ui.module.moduleView;
 import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.math.PointUtilities;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -22,5 +21,10 @@ public class DisposeModuleView extends ModuleView {
         polygon.addPoint(width - 1, height - 1);
         polygon.addPoint(PointUtilities.byPercentageOnLine(40, width), height - 1);
         return polygon;
+    }
+
+    @Override
+    protected void initializeConnectedPoints(int width, int height) {
+      inputPoints.add(new Point(0, height / 2));
     }
 }

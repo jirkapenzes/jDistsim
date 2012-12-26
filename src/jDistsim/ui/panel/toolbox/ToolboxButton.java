@@ -1,6 +1,5 @@
 package jDistsim.ui.panel.toolbox;
 
-import jDistsim.SampleControl;
 import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.IModuleView;
 import jDistsim.utils.common.TransferableObject;
@@ -179,22 +178,18 @@ public class ToolboxButton extends JComponent implements DragGestureListener, Dr
 
     @Override
     public void dragEnter(DragSourceDragEvent dragSourceDragEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void dragOver(DragSourceDragEvent dragSourceDragEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void dropActionChanged(DragSourceDragEvent dragSourceDragEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void dragExit(DragSourceEvent dragSourceEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

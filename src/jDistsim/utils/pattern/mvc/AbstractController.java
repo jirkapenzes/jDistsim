@@ -19,7 +19,7 @@ public class AbstractController<TModel extends AbstractModel> {
         return mainFrame;
     }
 
-    protected  TModel getModel() {
-        return  model;
+    public TModel getModel() {
+        return model;
     }
 }

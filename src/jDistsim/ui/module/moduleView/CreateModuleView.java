@@ -13,6 +13,11 @@ import java.awt.*;
 public class CreateModuleView extends ModuleView {
 
     @Override
+    protected void initializeConnectedPoints(int width, int height) {
+        outputPoints.add(new Point(width, height / 2));
+    }
+
+    @Override
     public Polygon getBounds(int width, int height) {
         Polygon polygon = new Polygon();
         polygon.addPoint(1, 1);

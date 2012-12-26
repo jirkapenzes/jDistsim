@@ -11,6 +11,7 @@ import jDistsim.utils.logging.handlers.ILoggerHandler;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.observer.IObserver;
+import jDistsim.utils.pattern.observer.Observable;
 
 
 /**
@@ -43,7 +44,7 @@ public class StatusBarController extends AbstractController<StatusBarModel> impl
     }
 
     @Override
-    public void update() {
+    public void update(Observable observable, Object arguments) {
         StatusBarView view = getMainFrame().getView(StatusBarView.class);
         view.getContentPane().setLabelLeftText(getModel().getLeftContentText());
         view.getContentPane().setLabelRightText(getModel().getRightContentText());

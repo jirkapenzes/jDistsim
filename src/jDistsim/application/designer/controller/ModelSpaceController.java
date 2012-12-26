@@ -4,10 +4,13 @@ import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.Module;
+import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
+import jDistsim.utils.pattern.observer.IObserver;
+import jDistsim.utils.pattern.observer.Observable;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -15,41 +18,36 @@ import java.awt.dnd.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 24.11.12
  * Time: 15:01
  */
-public class ModelSpaceController extends AbstractController<ModelSpaceModel> implements DropTargetListener {
+public class ModelSpaceController extends AbstractController<ModelSpaceModel> implements DropTargetListener, IObserver {
 
     private ModelSpaceView view;
     private ModuleUI currentDragModule;
     private ModuleUI currentActiveModule;
     private HashMap<String, ModuleUI> moduleList;
     private Point mousePositionDown;
+    private List<ModuleConnectedPointUI> currentShowPoints;
 
     public ModelSpaceController(AbstractFrame mainFrame, ModelSpaceModel model) {
         super(mainFrame, model);
         view = getMainFrame().getView(ModelSpaceView.class);
         moduleList = new HashMap<>();
+        currentShowPoints = new ArrayList<>();
+        getModel().addObserver(this);
 
         new DropTarget(view.getContentPane(), this);
-
         view.getContentPane().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 unselectedActiveModule();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-
             }
         });
     }
@@ -73,7 +71,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
             currentDragModule = new ModuleUI(module);
             currentDragModule.setLocation(calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize()));
-            view.getContentPane().add(currentDragModule);
+            view.getContentPane().add(currentDragModule, 0);
             view.getContentPane().repaint();
         } catch (Exception exception) {
             Logger.log(exception);
@@ -140,6 +138,41 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     super.mouseReleased(e);
+                    ModuleUI moduleUI = (ModuleUI) e.getSource();
+
+                    for(ModuleConnectedPointUI connectedPointUI : currentShowPoints)         {
+                        connectedPointUI.setLocation(calculatePointPosition(connectedPointUI,  moduleUI));
+                        connectedPointUI.setVisible(true);
+                    }
+                    view.getContentPane().repaint();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (getModel().isRelations()) {
+                        ModuleUI moduleUI = (ModuleUI) e.getSource();
+                        ModelSpaceView view = getMainFrame().getView(ModelSpaceView.class);
+
+                        for (ModuleConnectedPointUI connectedPointUI : moduleUI.getInputPointsUI()) {
+                            connectedPointUI.setLocation(calculatePointPosition(connectedPointUI,  moduleUI));
+                            view.getContentPane().add(connectedPointUI, 0);
+                        }
+                        currentShowPoints.addAll(moduleUI.getInputPointsUI());
+                        for (ModuleConnectedPointUI connectedPointUI : moduleUI.getOutputPointsUI()) {
+                            connectedPointUI.setLocation(calculatePointPosition(connectedPointUI,  moduleUI));
+                            view.getContentPane().add(connectedPointUI, 0);
+                        }
+                        currentShowPoints.addAll(moduleUI.getOutputPointsUI());
+                        view.getContentPane().repaint();
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    for (ModuleConnectedPointUI connectedPointUI : currentShowPoints) {
+                        view.getContentPane().remove(connectedPointUI);
+                    }
+                    view.getContentPane().repaint();
                 }
             });
 
@@ -154,10 +187,30 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
                     newPosition.translate(mouseEvent.getX() - mousePositionDown.x, mouseEvent.getY() - mousePositionDown.y);
                     moduleUI.setLocation(newPosition);
                     moduleUI.repaint();
+
+                    for(ModuleConnectedPointUI connectedPointUI : currentShowPoints)
+                        connectedPointUI.setVisible(false);
                 }
             });
         } catch (Exception exception) {
             Logger.log(exception);
         }
+    }
+
+    private Point calculatePointPosition(ModuleConnectedPointUI connectedPointUI, ModuleUI moduleUI)
+    {
+        int offset = connectedPointUI.getSize().width / 2;
+        return  new Point(
+                (int) ((int) moduleUI.getLocation().getX() + connectedPointUI.getComponentOffset().getX() - offset),
+                (int) ((int) moduleUI.getLocation().getY() + connectedPointUI.getComponentOffset().getY() - offset));
+    }
+
+    @Override
+    public void update(Observable observable, Object arguments) {
+        if (arguments.equals("relations")) relations();
+    }
+
+    private void relations() {
+
     }
 }
