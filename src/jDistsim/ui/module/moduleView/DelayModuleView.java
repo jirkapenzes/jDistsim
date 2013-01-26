@@ -12,6 +12,12 @@ import java.awt.*;
 public class DelayModuleView extends ModuleView {
 
     @Override
+    protected void initializeConnectedPoints(int width, int height) {
+        inputPoints.add(new Point(0, height / 2));
+        outputPoints.add(new Point(width, height / 2));
+    }
+
+    @Override
     public Polygon getBounds(int width, int height) {
         Polygon polygon = new Polygon();
         polygon.addPoint(1, 1);
@@ -19,10 +25,5 @@ public class DelayModuleView extends ModuleView {
         polygon.addPoint(width - 1, height - 1);
         polygon.addPoint(1, height - 1);
         return polygon;
-    }
-
-    @Override
-    protected void initializeConnectedPoints(int width, int height) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -13,6 +13,11 @@ import java.awt.*;
 public class DisposeModuleView extends ModuleView {
 
     @Override
+    protected void initializeConnectedPoints(int width, int height) {
+        inputPoints.add(new Point(0, height / 2));
+    }
+
+    @Override
     public Polygon getBounds(int width, int height) {
         Polygon polygon = new Polygon();
         polygon.addPoint(0, height / 2 - 1);
@@ -21,10 +26,5 @@ public class DisposeModuleView extends ModuleView {
         polygon.addPoint(width - 1, height - 1);
         polygon.addPoint(PointUtilities.byPercentageOnLine(40, width), height - 1);
         return polygon;
-    }
-
-    @Override
-    protected void initializeConnectedPoints(int width, int height) {
-      inputPoints.add(new Point(0, height / 2));
     }
 }

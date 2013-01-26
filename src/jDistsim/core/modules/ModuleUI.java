@@ -17,13 +17,11 @@ public class ModuleUI extends JComponent {
 
     private boolean active;
     private Module module;
-    private final List<ModuleConnectedPointUI> inputPointsUI;
-    private final List<ModuleConnectedPointUI> outputPointsUI;
+    private final List<ModuleConnectedPointUI> connectedPoints;
 
     public ModuleUI(Module module) {
         this.module = module;
-        this.inputPointsUI = new ArrayList<>();
-        this.outputPointsUI = new ArrayList<>();
+        this.connectedPoints = new ArrayList<>();
         initializeUI();
     }
 
@@ -32,30 +30,21 @@ public class ModuleUI extends JComponent {
 
         ModuleView view = module.getView();
         view.invalidateConnectedPoints(80, 50);
-        for (int i = 0; i < module.getInputConnectedPoints().size(); i++) {
-            inputPointsUI.add(new ModuleConnectedPointUI(module.getInputConnectedPoints().get(i), view.getInputPoints().get(i)));
+
+        for (int index = 0; index < module.getInputConnectedPoints().size(); index++) {
+            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index)));
         }
-        for (int i = 0; i < module.getOutputConnectedPoints().size(); i++) {
-            outputPointsUI.add(new ModuleConnectedPointUI(module.getOutputConnectedPoints().get(i), view.getOutputPoints().get(i)));
+        for (int index = 0; index < module.getOutputConnectedPoints().size(); index++) {
+            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index)));
         }
     }
 
-    public List<ModuleConnectedPointUI> getInputPointsUI() {
-        return inputPointsUI;
-    }
-
-    public List<ModuleConnectedPointUI> getOutputPointsUI() {
-        return outputPointsUI;
+    public List<ModuleConnectedPointUI> getConnectedPoints() {
+        return connectedPoints;
     }
 
     public void setActive(boolean active) {
         this.active = active;
-        for(ModuleConnectedPointUI connectedPoint : getInputPointsUI()) {
-            connectedPoint.setState(isActive() ? ModuleConnectedPointUI.State.Active : ModuleConnectedPointUI.State.Show);
-        }
-        for(ModuleConnectedPointUI connectedPoint : getOutputPointsUI()) {
-            connectedPoint.setState(isActive() ? ModuleConnectedPointUI.State.Active : ModuleConnectedPointUI.State.Show);
-        }
         repaint();
     }
 

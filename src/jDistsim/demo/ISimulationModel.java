@@ -1,7 +1,5 @@
 package jDistsim.demo;
 
-import java.util.List;
-
 /**
  * Author: Jirka Pénzeš
  * Date: 23.12.12
@@ -9,11 +7,9 @@ import java.util.List;
  */
 public interface ISimulationModel {
 
-    public List<SimulationModule> getStartedModules();
+    public void addRootModule(RootModule rootModule);
 
-    public List<SimulationModule> getModules();
+    public Iterable<RootModule> getRootModules();
 
-    public void addSimulationModule(SimulationModule simulationModule);
 
-    public void removeSimulationModule(SimulationModule simulationModule);
 }

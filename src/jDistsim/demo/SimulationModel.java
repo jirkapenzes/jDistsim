@@ -1,6 +1,6 @@
 package jDistsim.demo;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Author: Jirka Pénzeš
@@ -8,23 +8,35 @@ import java.util.List;
  * Time: 22:19
  */
 public class SimulationModel implements ISimulationModel {
-    @Override
-    public List<SimulationModule> getStartedModules() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+    private List<RootModule> rootModules;
+    private HashMap<String, Module> modules;
+
+    public SimulationModel() {
+        rootModules = new ArrayList<>();
+        modules = new HashMap<>();
     }
 
     @Override
-    public List<SimulationModule> getModules() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public void addRootModule(RootModule rootModule) {
+        add(rootModule);
+        rootModules.add(rootModule);
+    }
+
+    private void add(Module module) {
+        for (Module dependencyModule : module.getAllDependencies()) {
+            add(dependencyModule);
+        }
+        modules.put(module.getIdentifier(), module);
     }
 
     @Override
-    public void addSimulationModule(SimulationModule simulationModule) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Iterable<RootModule> getRootModules() {
+        return rootModules;
     }
 
     @Override
-    public void removeSimulationModule(SimulationModule simulationModule) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public String toString() {
+        return modules.toString();
     }
 }

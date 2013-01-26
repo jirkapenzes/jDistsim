@@ -1,11 +1,12 @@
 package jDistsim.application.designer.controller;
 
+import jDistsim.application.designer.controller.modelSpaceFeature.*;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.Module;
-import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
+import jDistsim.utils.common.ModelSpaceListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
@@ -18,6 +19,7 @@ import java.awt.dnd.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,35 +33,58 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     private ModelSpaceView view;
     private ModuleUI currentDragModule;
-    private ModuleUI currentActiveModule;
+
     private HashMap<String, ModuleUI> moduleList;
-    private Point mousePositionDown;
-    private List<ModuleConnectedPointUI> currentShowPoints;
+    private List<ModelSpaceListener> modelSpaceListeners;
 
     public ModelSpaceController(AbstractFrame mainFrame, ModelSpaceModel model) {
         super(mainFrame, model);
         view = getMainFrame().getView(ModelSpaceView.class);
         moduleList = new HashMap<>();
-        currentShowPoints = new ArrayList<>();
+        modelSpaceListeners = new ArrayList<>();
+        initialize();
+    }
+
+    private void initialize() {
         getModel().addObserver(this);
 
+        //modelSpaceListeners.add(new ModuleDependencyAction());
+        modelSpaceListeners.add(new Demo());
+        modelSpaceListeners.add(new ModuleMovingAction());
+        modelSpaceListeners.add(new SelectedActiveModuleAction());
+
         new DropTarget(view.getContentPane(), this);
-        view.getContentPane().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                unselectedActiveModule();
-            }
-        });
+        view.getContentPane().addMouseListener(new ModelSpaceMouseAdapter());
+        view.getContentPane().addMouseMotionListener(new ModelSpaceMouseMotionAdapter());
     }
 
-    private void unselectedActiveModule() {
-        if (currentActiveModule != null)
-            currentActiveModule.setActive(false);
+    public void unselectedActiveModule() {
+        if (getModel().getCurrentActiveModule() != null) {
+            getModel().getCurrentActiveModule().setActive(false);
+
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.onModelUnselectedActiveModule(getModel().getCurrentActiveModule(), this);
+
+            repaint();
+        }
     }
 
-    private void selectedActiveModule(ModuleUI module) {
+    public void selectedActiveModule(ModuleUI module) {
         module.setActive(true);
-        currentActiveModule = module;
+        getModel().setCurrentActiveModule(module);
+
+        for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+            modelSpaceListener.onModelSelectedActiveModule(module, this);
+
+        repaint();
+    }
+
+    public ModelSpaceView getView() {
+        return view;
+    }
+
+    public HashMap<String, ModuleUI> getModuleList() {
+        return moduleList;
     }
 
     @Override
@@ -70,7 +95,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             Module module = moduleFactory.create();
 
             currentDragModule = new ModuleUI(module);
-            currentDragModule.setLocation(calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize()));
+            currentDragModule.setLocation(ModelSpaceHelper.calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize()));
             view.getContentPane().add(currentDragModule, 0);
             view.getContentPane().repaint();
         } catch (Exception exception) {
@@ -78,15 +103,9 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         }
     }
 
-    private Point calculateDragLocation(Point location, Dimension dimension) {
-        Point point = new Point();
-        point.setLocation(location.getX() - (dimension.width / 2), location.getY() - (dimension.height / 2));
-        return point;
-    }
-
     @Override
     public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
-        Point location = calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize());
+        Point location = ModelSpaceHelper.calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize());
         currentDragModule.setLocation(location);
     }
 
@@ -102,115 +121,173 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void drop(DropTargetDropEvent dropTargetDropEvent) {
+        unselectedActiveModule();
+
         try {
             Transferable transferable = dropTargetDropEvent.getTransferable();
             IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
-
-            String identifier = moduleFactory.createIdentifier();
-            currentDragModule.setIdentifier(identifier);
-            moduleList.put(identifier, currentDragModule);
-            currentDragModule.addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mouseClicked(MouseEvent mouseEvent) {
-                    ModuleUI module = (ModuleUI) mouseEvent.getSource();
-                    if (module == currentActiveModule && module.getActive()) {
-                        module.setActive(false);
-                        return;
-                    }
-
-                    unselectedActiveModule();
-                    module.setActive(true);
-                    currentActiveModule = moduleList.get(module.getIdentifier());
-                }
-
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-                    ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
-                    switch (mouseEvent.getButton()) {
-                        case MouseEvent.BUTTON1:
-                            mousePositionDown = new Point(mouseEvent.getX(), mouseEvent.getY());
-                            moduleUI.repaint();
-                            break;
-                    }
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    super.mouseReleased(e);
-                    ModuleUI moduleUI = (ModuleUI) e.getSource();
-
-                    for(ModuleConnectedPointUI connectedPointUI : currentShowPoints)         {
-                        connectedPointUI.setLocation(calculatePointPosition(connectedPointUI,  moduleUI));
-                        connectedPointUI.setVisible(true);
-                    }
-                    view.getContentPane().repaint();
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    if (getModel().isRelations()) {
-                        ModuleUI moduleUI = (ModuleUI) e.getSource();
-                        ModelSpaceView view = getMainFrame().getView(ModelSpaceView.class);
-
-                        for (ModuleConnectedPointUI connectedPointUI : moduleUI.getInputPointsUI()) {
-                            connectedPointUI.setLocation(calculatePointPosition(connectedPointUI,  moduleUI));
-                            view.getContentPane().add(connectedPointUI, 0);
-                        }
-                        currentShowPoints.addAll(moduleUI.getInputPointsUI());
-                        for (ModuleConnectedPointUI connectedPointUI : moduleUI.getOutputPointsUI()) {
-                            connectedPointUI.setLocation(calculatePointPosition(connectedPointUI,  moduleUI));
-                            view.getContentPane().add(connectedPointUI, 0);
-                        }
-                        currentShowPoints.addAll(moduleUI.getOutputPointsUI());
-                        view.getContentPane().repaint();
-                    }
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    for (ModuleConnectedPointUI connectedPointUI : currentShowPoints) {
-                        view.getContentPane().remove(connectedPointUI);
-                    }
-                    view.getContentPane().repaint();
-                }
-            });
-
-            currentDragModule.addMouseMotionListener(new MouseMotionAdapter() {
-                @Override
-                public void mouseDragged(MouseEvent mouseEvent) {
-                    ModuleUI moduleUI = (ModuleUI) mouseEvent.getSource();
-                    unselectedActiveModule();
-                    selectedActiveModule(moduleUI);
-
-                    Point newPosition = moduleUI.getLocation();
-                    newPosition.translate(mouseEvent.getX() - mousePositionDown.x, mouseEvent.getY() - mousePositionDown.y);
-                    moduleUI.setLocation(newPosition);
-                    moduleUI.repaint();
-
-                    for(ModuleConnectedPointUI connectedPointUI : currentShowPoints)
-                        connectedPointUI.setVisible(false);
-                }
-            });
+            currentDragModule.setIdentifier(moduleFactory.createIdentifier());
+            currentDragModule.addMouseListener(new ModelSpaceModuleMouseAdapter());
+            currentDragModule.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
+            moduleList.put(currentDragModule.getIdentifier(), currentDragModule);
         } catch (Exception exception) {
             Logger.log(exception);
         }
     }
 
-    private Point calculatePointPosition(ModuleConnectedPointUI connectedPointUI, ModuleUI moduleUI)
-    {
-        int offset = connectedPointUI.getSize().width / 2;
-        return  new Point(
-                (int) ((int) moduleUI.getLocation().getX() + connectedPointUI.getComponentOffset().getX() - offset),
-                (int) ((int) moduleUI.getLocation().getY() + connectedPointUI.getComponentOffset().getY() - offset));
-    }
-
     @Override
     public void update(Observable observable, Object arguments) {
-        if (arguments.equals("relations")) relations();
     }
 
-    private void relations() {
+    private void repaint() {
+        getView().getContentPane().repaint();
+    }
 
+    private class ModelSpaceModuleMouseAdapter extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleClicked(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMousePressed(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMouseReleased(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMouseEntered(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMouseExited(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMouseWheelMoved(mouseWheelEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMouseDragged(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMouseMoved(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+    }
+
+    private class ModelSpaceMouseAdapter extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseClicked(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMousePressed(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseReleased(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseEntered(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseExited(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseWheelMoved(mouseWheelEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseDragged(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMouseMoved(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+    }
+
+    private class ModelSpaceModuleMouseMotionAdapter extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMotionMouseDragged(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.moduleMotionMouseMoved(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+    }
+
+    private class ModelSpaceMouseMotionAdapter extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMotionMouseDragged(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.modelSpaceMotionMouseMoved(mouseEvent, ModelSpaceController.this);
+            repaint();
+        }
     }
 }
