@@ -51,7 +51,7 @@ public class InternalPanel extends JComponent {
         g.setColor(Color.white);
         g.fillRect(panelThickness, 0, getWidth() - (2 * panelThickness), getHeight());
 
-        // g.setColor(new Color(192, 192, 192));
+        // g.setBackgroundColor(new Color(192, 192, 192));
         // g.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight());
     }
 }
