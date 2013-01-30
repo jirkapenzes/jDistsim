@@ -47,6 +47,7 @@ public class Demo extends ModelSpaceListener {
 
         public void setBackgroundColor(Color color) {
             this.color = color;
+            repaint();
         }
 
         public void setDefaultColor() {
@@ -159,6 +160,7 @@ public class Demo extends ModelSpaceListener {
         for (ConnectPointHelper pointHelper : connectPointHelperList) {
             controller.getView().getContentPane().remove(pointHelper);
         }
+        connectPointHelperList.clear();
     }
 
     private void addConnectedPointHelper(ModuleUI moduleUI, ModelSpaceController modelSpaceController, ModuleConnectedPointUI connectedPointUI) {
@@ -167,7 +169,6 @@ public class Demo extends ModelSpaceListener {
         int moduleIndex = SwingUtil.getComponentIndex(moduleUI);
         modelSpaceController.getView().getContentPane().add(connectPointHelper, moduleIndex);
         connectPointHelperList.add(connectPointHelper);
-
         ConnectorDrawerAdapter connectorDrawerAdapter = new ConnectorDrawerAdapter(modelSpaceController.getView().getContentPane(), ModelSpaceHelper.calculatePointPosition(0, connectedPointUI, moduleUI), new ArrayList<>(modelSpaceController.getModuleList().values()));
         connectPointHelper.addMouseMotionListener(connectorDrawerAdapter.getMouseMotionAdapter());
         connectPointHelper.addMouseListener(connectorDrawerAdapter.getMouseAdapter());
@@ -205,16 +206,16 @@ public class Demo extends ModelSpaceListener {
                     box.setLocation(connectorLocation);
                     box.setPoints(startPosition, currentCanvasPosition);
 
+                    if (currentPointHelpler != null)
+                        currentPointHelpler.setDefaultColor();
 
                     for (ConnectPointHelper pointHelper : connectPointHelperList) {
-                        if (pointHelper.contains(currentCanvasPosition)) {
-                            if (currentPointHelpler != null) currentPointHelpler.setDefaultColor();
+                        if (pointHelper.contains(currentCanvasPosition.x - pointHelper.getX(), currentCanvasPosition.y - pointHelper.getY())) {
                             currentPointHelpler = pointHelper;
-                            currentPointHelpler.setBackground(Color.red);
+                            currentPointHelpler.setBackgroundColor(Color.red);
                             break;
                         }
                     }
-
                 }
             };
 
