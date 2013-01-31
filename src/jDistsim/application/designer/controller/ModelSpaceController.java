@@ -1,7 +1,7 @@
 package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.controller.modelSpaceFeature.*;
-import jDistsim.application.designer.controller.modelSpaceFeature.util.ModuleConnector;
+import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
@@ -154,19 +154,19 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         Point pointA = new Point(moduleA.getLocation().x + modulePointA.getLocation().x, moduleA.getLocation().y + modulePointA.getLocation().y);
         Point pointB = new Point(moduleB.getLocation().x + modulePointB.getLocation().x, moduleB.getLocation().y + modulePointB.getLocation().y);
 
-        ModuleConnector moduleConnector = new ModuleConnector();
-        moduleConnector.setDrawingMode(false);
+        ConnectorLine connectorLine = new ConnectorLine();
+        connectorLine.setDrawingMode(false);
 
         Dimension dimension = new Dimension(Math.abs(pointA.x - pointB.x), Math.abs(pointA.y - pointB.y));
 
-        moduleConnector.setSize(dimension);
-        moduleConnector.setLocation(Math.min(pointA.x, pointB.x), Math.min(pointA.y, pointB.y));
-        moduleConnector.setPoints(pointA, pointB);
+        connectorLine.setSize(dimension);
+        connectorLine.setLocation(Math.min(pointA.x, pointB.x), Math.min(pointA.y, pointB.y));
+        connectorLine.setPoints(pointA, pointB);
 
-        System.out.println(moduleConnector.getLocation());
-        System.out.println(moduleConnector.getSize());
+        System.out.println(connectorLine.getLocation());
+        System.out.println(connectorLine.getSize());
 
-        view.getContentPane().add(moduleConnector);
+        view.getContentPane().add(connectorLine);
         view.getContentPane().repaint();
     }
 

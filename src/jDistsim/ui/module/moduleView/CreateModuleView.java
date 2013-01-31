@@ -14,7 +14,7 @@ public class CreateModuleView extends ModuleView {
 
     @Override
     protected void initializeConnectedPoints(int width, int height) {
-        outputPoints.add(new Point(width, height / 2));
+        outputPoints.add(new Point(width - 1, height / 2));
     }
 
     @Override

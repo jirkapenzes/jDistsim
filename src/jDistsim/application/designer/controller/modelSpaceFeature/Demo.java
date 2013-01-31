@@ -1,7 +1,7 @@
 package jDistsim.application.designer.controller.modelSpaceFeature;
 
 import jDistsim.application.designer.controller.ModelSpaceController;
-import jDistsim.application.designer.controller.modelSpaceFeature.util.ModuleConnector;
+import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
@@ -195,7 +195,7 @@ public class Demo extends ModelSpaceListener {
     }
 
     public class ConnectorDrawerAdapterFactory {
-        private ModuleConnector moduleConnector;
+        private ConnectorLine connectorLine;
         private Point initialPosition;
         private Point currentPosition;
         private ModuleUI parentModule;
@@ -230,9 +230,9 @@ public class Demo extends ModelSpaceListener {
                 dimension = new Dimension(dimension.width, 2);
             }
 
-            moduleConnector.setSize(dimension);
-            moduleConnector.setLocation(connectorLocation);
-            moduleConnector.setPoints(initialPosition, currentCanvasPosition);
+            connectorLine.setSize(dimension);
+            connectorLine.setLocation(connectorLocation);
+            connectorLine.setPoints(initialPosition, currentCanvasPosition);
 
             if (currentSelectedConnectPoint != null) {
                 currentSelectedConnectPoint.setDefaultBackgroundColor();
@@ -279,12 +279,12 @@ public class Demo extends ModelSpaceListener {
                 public void mousePressed(MouseEvent e) {
                     showPossibleDependecies(controller);
                     connectedMode = true;
-                    moduleConnector = new ModuleConnector();
-                    moduleConnector.setDrawingMode(true);
-                    moduleConnector.setLocation(initialPosition.x, initialPosition.y);
+                    connectorLine = new ConnectorLine();
+                    connectorLine.setDrawingMode(true);
+                    connectorLine.setLocation(initialPosition.x, initialPosition.y);
 
                     JComponent contentPane = controller.getView().getContentPane();
-                    contentPane.add(moduleConnector);
+                    contentPane.add(connectorLine);
                     contentPane.repaint();
                 }
 
@@ -301,7 +301,7 @@ public class Demo extends ModelSpaceListener {
                     }
 
                     JComponent contentPane = controller.getView().getContentPane();
-                    contentPane.remove(moduleConnector);
+                    contentPane.remove(connectorLine);
                     contentPane.repaint();
                 }
             };

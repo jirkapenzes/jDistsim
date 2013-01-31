@@ -9,14 +9,14 @@ import java.util.*;
  * Date: 31.1.13
  * Time: 15:29
  */
-public class ModuleConnector extends JComponent {
+public class ConnectorLine extends JComponent {
 
     private java.util.List<Point> points;
     private Point pointA;
     private Point pointB;
     private boolean drawingMode = false;
 
-    public ModuleConnector() {
+    public ConnectorLine() {
         points = new ArrayList<>();
     }
 
