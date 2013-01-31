@@ -1,7 +1,9 @@
 package jDistsim.application.designer.controller;
 
-import jDistsim.application.designer.controller.modelSpaceFeature.*;
-import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
+import jDistsim.application.designer.controller.modelSpaceFeature.Demo;
+import jDistsim.application.designer.controller.modelSpaceFeature.ModelSpaceHelper;
+import jDistsim.application.designer.controller.modelSpaceFeature.ModuleMovingAction;
+import jDistsim.application.designer.controller.modelSpaceFeature.SelectedActiveModuleAction;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
@@ -151,22 +153,8 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     }
 
     public void connect(ModuleUI moduleA, ModuleConnectedPointUI modulePointA, ModuleUI moduleB, ModuleConnectedPointUI modulePointB) {
-        Point pointA = new Point(moduleA.getLocation().x + modulePointA.getLocation().x, moduleA.getLocation().y + modulePointA.getLocation().y);
-        Point pointB = new Point(moduleB.getLocation().x + modulePointB.getLocation().x, moduleB.getLocation().y + modulePointB.getLocation().y);
-
-        ConnectorLine connectorLine = new ConnectorLine();
-        connectorLine.setDrawingMode(false);
-
-        Dimension dimension = new Dimension(Math.abs(pointA.x - pointB.x), Math.abs(pointA.y - pointB.y));
-
-        connectorLine.setSize(dimension);
-        connectorLine.setLocation(Math.min(pointA.x, pointB.x), Math.min(pointA.y, pointB.y));
-        connectorLine.setPoints(pointA, pointB);
-
-        System.out.println(connectorLine.getLocation());
-        System.out.println(connectorLine.getSize());
-
-        view.getContentPane().add(connectorLine);
+        final ModuleConnector moduleConnector = new ModuleConnector(moduleA, modulePointA, moduleB, modulePointB);
+        view.getContentPane().add(moduleConnector.getConnectorLine());
         view.getContentPane().repaint();
     }
 
