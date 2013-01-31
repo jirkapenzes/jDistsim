@@ -20,7 +20,13 @@ public abstract class ModuleView implements IModuleView {
     protected final List<Point> inputPoints;
     protected final List<Point> outputPoints;
 
+    private Color backgroundColor;
+    private Color borderColor;
+
     public ModuleView() {
+        setDefaultBackgroundColor();
+        setDefaultBorderColor();
+
         view = new ModuleViewComponent();
         inputPoints = new ArrayList<>();
         outputPoints = new ArrayList<>();
@@ -72,12 +78,28 @@ public abstract class ModuleView implements IModuleView {
         graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
     }
 
-    protected Color getBackgroundColor() {
-        return new Color(67, 201, 224);
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
 
-    protected Color getBorderColor() {
-        return new Color(70, 127, 137);
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public void setDefaultBackgroundColor() {
+        setBackgroundColor(new Color(67, 201, 224));
+    }
+
+    public void setDefaultBorderColor() {
+        setBorderColor(new Color(70, 127, 137));
     }
 
     @Override

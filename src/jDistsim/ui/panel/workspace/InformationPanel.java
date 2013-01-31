@@ -50,6 +50,7 @@ public class InformationPanel extends JPanel {
         tabControl.addTabItem(new TabItem("Application logs", panel3));
         tabControl.addTabItem(new TabItem("Remote models", panel3));
         tabControl.addTabItem(new TabItem("Notes", panel3));
+        tabControl.addTabItem(new TabItem("Output", panel3));
 
         panel.add(tabControl, BorderLayout.CENTER);
         add(panel, BorderLayout.CENTER);

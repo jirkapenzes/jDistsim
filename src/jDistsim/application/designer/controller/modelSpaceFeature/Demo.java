@@ -1,6 +1,7 @@
 package jDistsim.application.designer.controller.modelSpaceFeature;
 
 import jDistsim.application.designer.controller.ModelSpaceController;
+import jDistsim.application.designer.controller.modelSpaceFeature.util.ModuleConnector;
 import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
@@ -22,6 +23,7 @@ import java.util.List;
 public class Demo extends ModelSpaceListener {
 
     private final int pointSize = 12;
+    private boolean connectedMode = false;
 
     private class ConnectPointHelper extends JComponent {
 
@@ -32,11 +34,7 @@ public class Demo extends ModelSpaceListener {
             this.moduleConnectedPointUI = moduleConnectedPointUI;
             setLocation(location);
             setSize(size, size);
-            setDefaultColor();
-        }
-
-        public ModuleConnectedPointUI getModuleConnectedPointUI() {
-            return moduleConnectedPointUI;
+            setDefaultBackgroundColor();
         }
 
         @Override
@@ -44,14 +42,25 @@ public class Demo extends ModelSpaceListener {
             return new Dimension(getSize().width, getSize().height);
         }
 
+        public ModuleUI getOwner() {
+            return moduleConnectedPointUI.getOwner();
+        }
 
         public void setBackgroundColor(Color color) {
             this.color = color;
             repaint();
         }
 
-        public void setDefaultColor() {
-            setBackgroundColor(new Color(62, 109, 0));
+        public void setActiveBackgroundColor() {
+            setBackgroundColor(new Color(197, 42, 43));
+        }
+
+        public void setDefaultBackgroundColor() {
+            setBackgroundColor(new Color(188, 246, 47));
+        }
+
+        public ModuleConnectedPointUI getModuleConnectedPointUI() {
+            return moduleConnectedPointUI;
         }
 
         @Override
@@ -60,10 +69,10 @@ public class Demo extends ModelSpaceListener {
             Graphics2D graphics2D = (Graphics2D) graphics;
             graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            graphics2D.setColor(new Color(188, 246, 47));
-            graphics2D.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+            graphics2D.setColor(new Color(62, 109, 0));
+            graphics2D.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
             graphics2D.setColor(color);
-            graphics2D.fillRect(2, 2, getWidth() - 5, getHeight() - 5);
+            graphics2D.fillOval(2, 2, getWidth() - 5, getHeight() - 5);
         }
     }
 
@@ -117,6 +126,9 @@ public class Demo extends ModelSpaceListener {
     // Pokud najedu mysi na modul -> zobrazi se pripojny body (pouze pokud neni nejaky modul aktivni)
     @Override
     public void moduleMouseEntered(MouseEvent mouseEvent, ModelSpaceController modelSpaceController) {
+        if (connectedMode)
+            return;
+
         // pokud je modul aktivni -> body jsou videt trvale a neni potreba je zobrazovat znovu
         if (currentActiveModule != null && currentActiveModule.isActive())
             return;
@@ -169,202 +181,130 @@ public class Demo extends ModelSpaceListener {
         int moduleIndex = SwingUtil.getComponentIndex(moduleUI);
         modelSpaceController.getView().getContentPane().add(connectPointHelper, moduleIndex);
         connectPointHelperList.add(connectPointHelper);
-        ConnectorDrawerAdapter connectorDrawerAdapter = new ConnectorDrawerAdapter(modelSpaceController.getView().getContentPane(), ModelSpaceHelper.calculatePointPosition(0, connectedPointUI, moduleUI), new ArrayList<>(modelSpaceController.getModuleList().values()));
-        connectPointHelper.addMouseMotionListener(connectorDrawerAdapter.getMouseMotionAdapter());
-        connectPointHelper.addMouseListener(connectorDrawerAdapter.getMouseAdapter());
+
+        ConnectorDrawerAdapterFactory connectorDrawerAdapterFactory =
+                new ConnectorDrawerAdapterFactory(
+                        connectedPointUI,
+                        ModelSpaceHelper.calculatePointPosition(0, connectedPointUI, moduleUI),
+                        moduleUI,
+                        new ArrayList<>(modelSpaceController.getModuleList().values()),
+                        modelSpaceController);
+
+        connectPointHelper.addMouseMotionListener(connectorDrawerAdapterFactory.getMouseMotionAdapter());
+        connectPointHelper.addMouseListener(connectorDrawerAdapterFactory.getMouseAdapter());
     }
 
-    private class ConnectorDrawerAdapter {
-
-        private JComponent canvas;
-        private SampleBox box;
-        private Point startPosition;
-        private ArrayList<ModuleUI> modules;
+    public class ConnectorDrawerAdapterFactory {
+        private ModuleConnector moduleConnector;
+        private Point initialPosition;
         private Point currentPosition;
-        private MouseMotionAdapter mouseMotionAdapter;
-        private MouseAdapter mouseAdapter;
-        private ConnectPointHelper currentPointHelpler;
+        private ModuleUI parentModule;
+        private ModuleUI currentSelectedModule;
+        private ConnectPointHelper currentSelectedConnectPoint;
+        private ModuleConnectedPointUI parentConnectedPoint;
+        private ModelSpaceController controller;
 
-        public ConnectorDrawerAdapter(JComponent container, Point initialPosition, ArrayList<ModuleUI> modulesList) {
-            this.canvas = container;
-            this.startPosition = initialPosition;
-            this.modules = modulesList;
+        public ConnectorDrawerAdapterFactory(ModuleConnectedPointUI parentConnectedPoint, Point initialPosition, ModuleUI module, ArrayList<ModuleUI> modules, ModelSpaceController modelSpaceController) {
+            this.parentConnectedPoint = parentConnectedPoint;
+            this.controller = modelSpaceController;
+            this.initialPosition = initialPosition;
+            this.parentModule = module;
+        }
 
-            mouseMotionAdapter = new MouseMotionAdapter() {
+        public MouseMotionAdapter getMouseMotionAdapter() {
+            return new MouseMotionAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent mouseEvent) {
-                    currentPosition = mouseEvent.getPoint();
-                    currentPosition.setLocation(currentPosition.x - pointSize / 2, currentPosition.y - pointSize / 2);
-                    Point currentCanvasPosition = new Point(startPosition.x + currentPosition.x, startPosition.y + currentPosition.y);
-                    Point connectorLocation = new Point(Math.min(startPosition.x, currentCanvasPosition.x), Math.min(startPosition.y, currentCanvasPosition.y));
-                    Dimension dimension = new Dimension(Math.abs(currentCanvasPosition.x - startPosition.x), Math.abs(currentCanvasPosition.y - startPosition.y));
-                    if (dimension.getSize().height < 2) {
-                        dimension = new Dimension(dimension.width, 2);
-                    }
-
-                    box.setSize(dimension);
-                    box.setLocation(connectorLocation);
-                    box.setPoints(startPosition, currentCanvasPosition);
-
-                    if (currentPointHelpler != null)
-                        currentPointHelpler.setDefaultColor();
-
-                    for (ConnectPointHelper pointHelper : connectPointHelperList) {
-                        if (pointHelper.contains(currentCanvasPosition.x - pointHelper.getX(), currentCanvasPosition.y - pointHelper.getY())) {
-                            currentPointHelpler = pointHelper;
-                            currentPointHelpler.setBackgroundColor(Color.red);
-                            break;
-                        }
-                    }
+                    onMouseDragged(mouseEvent);
                 }
             };
+        }
 
-            mouseAdapter = new MouseAdapter() {
+        private void onMouseDragged(MouseEvent mouseEvent) {
+            currentPosition = mouseEvent.getPoint();
+            currentPosition.setLocation(currentPosition.x - pointSize / 2, currentPosition.y - pointSize / 2);
+            Point currentCanvasPosition = new Point(initialPosition.x + currentPosition.x, initialPosition.y + currentPosition.y);
+            Point connectorLocation = new Point(Math.min(initialPosition.x, currentCanvasPosition.x), Math.min(initialPosition.y, currentCanvasPosition.y));
+            Dimension dimension = new Dimension(Math.abs(currentCanvasPosition.x - initialPosition.x), Math.abs(currentCanvasPosition.y - initialPosition.y));
+            if (dimension.getSize().height < 2) {
+                dimension = new Dimension(dimension.width, 2);
+            }
+
+            moduleConnector.setSize(dimension);
+            moduleConnector.setLocation(connectorLocation);
+            moduleConnector.setPoints(initialPosition, currentCanvasPosition);
+
+            if (currentSelectedConnectPoint != null) {
+                currentSelectedConnectPoint.setDefaultBackgroundColor();
+                currentSelectedConnectPoint.getOwner().setActiveBackgroundColor();
+                currentSelectedConnectPoint = null;
+            }
+
+            for (ConnectPointHelper pointHelper : connectPointHelperList) {
+                if (pointHelper.getOwner().getIdentifier().equals(parentModule.getIdentifier()))
+                    continue;
+
+                if (pointHelper.contains(currentCanvasPosition.x - pointHelper.getX(), currentCanvasPosition.y - pointHelper.getY())) {
+                    currentSelectedConnectPoint = pointHelper;
+                    currentSelectedConnectPoint.setActiveBackgroundColor();
+                    break;
+                }
+            }
+
+            if (currentSelectedModule != null)
+                currentSelectedModule.setDefaultBackgroundColor();
+
+            if (currentSelectedConnectPoint != null) {
+                currentSelectedModule = currentSelectedConnectPoint.getOwner();
+                currentSelectedModule.setActiveBackgroundColor();
+            } else {
+                ArrayList<ModuleUI> modules = new ArrayList<>(controller.getModuleList().values());
+                for (ModuleUI moduleUI : modules) {
+                    if (moduleUI.getIdentifier().equals(parentModule.getIdentifier()))
+                        continue;
+
+                    if (moduleUI.contains(currentCanvasPosition.x - moduleUI.getX(), currentCanvasPosition.y - moduleUI.getY())) {
+                        currentSelectedModule = moduleUI;
+                        currentSelectedModule.setActiveBackgroundColor();
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        public MouseAdapter getMouseAdapter() {
+            return new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    box = new SampleBox();
-                    box.setDrawingMode(true);
-                    box.setLocation(startPosition.x, startPosition.y);
-                    canvas.add(box);
-                    canvas.repaint();
+                    showPossibleDependecies(controller);
+                    connectedMode = true;
+                    moduleConnector = new ModuleConnector();
+                    moduleConnector.setDrawingMode(true);
+                    moduleConnector.setLocation(initialPosition.x, initialPosition.y);
+
+                    JComponent contentPane = controller.getView().getContentPane();
+                    contentPane.add(moduleConnector);
+                    contentPane.repaint();
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    canvas.remove(box);
-                    canvas.repaint();
+                    removeAlCurrentHelperPoints(controller);
+                    controller.unselectedActiveModule();
+                    connectedMode = false;
+
+                    if (currentSelectedModule != null) currentSelectedModule.setDefaultBackgroundColor();
+                    if (currentSelectedConnectPoint != null) {
+                        currentSelectedConnectPoint.setDefaultBackgroundColor();
+                        controller.connect(parentModule, parentConnectedPoint, currentSelectedConnectPoint.getOwner(), currentSelectedConnectPoint.getModuleConnectedPointUI());
+                    }
+
+                    JComponent contentPane = controller.getView().getContentPane();
+                    contentPane.remove(moduleConnector);
+                    contentPane.repaint();
                 }
             };
-        }
-
-        public MouseMotionAdapter getMouseMotionAdapter() {
-            return mouseMotionAdapter;
-        }
-
-        public MouseAdapter getMouseAdapter() {
-            return mouseAdapter;
-        }
-
-        private class SampleBox extends JComponent {
-
-            private List<Point> points;
-            private Point pointA;
-            private Point pointB;
-            private boolean drawingMode = false;
-
-            private SampleBox() {
-                points = new ArrayList<>();
-            }
-
-            public boolean isDrawingMode() {
-                return drawingMode;
-            }
-
-            public void setDrawingMode(boolean drawingMode) {
-                this.drawingMode = drawingMode;
-                repaint();
-            }
-
-            public void setPoints(Point pointA, Point pointB) {
-                this.pointA = pointA;
-                this.pointB = pointB;
-                recalculatePointsCoordinates();
-                repaint();
-            }
-
-            private void recalculatePointsCoordinates() {
-                points.clear();
-
-                if (Math.abs(pointA.y - pointB.y) == 0) {
-                    points.add(new Point(0, 0));
-                    points.add(new Point(getWidth() - 1, getHeight() - 1));
-                    return;
-                }
-                if (pointA.y > pointB.y && pointA.x < pointB.x) {
-                    points.add(new Point(0, getHeight() - 1));
-                    points.add(new Point(getWidth() / 2, getHeight() - 1));
-                    points.add(new Point(getWidth() / 2, 0));
-                    points.add(new Point(getWidth() - 1, 0));
-                    return;
-                }
-                if (pointA.y < pointB.y && pointA.x < pointB.x) {
-                    points.add(new Point(0, 0));
-                    points.add(new Point(getWidth() / 2, 0));
-                    points.add(new Point(getWidth() / 2, getHeight() - 1));
-                    points.add(new Point(getWidth() - 1, getHeight() - 1));
-                    return;
-                }
-                if (pointA.y > pointB.y && pointA.x > pointB.x) {
-                    points.add(new Point(getWidth() - 1, getHeight() - 1));
-                    points.add(new Point(getWidth() - 1, getHeight() / 2));
-                    points.add(new Point(0, getHeight() / 2));
-                    points.add(new Point(0, 0));
-                    return;
-                }
-                if (pointA.y < pointB.y && pointA.x > pointB.x) {
-                    points.add(new Point(getWidth() - 1, 0));
-                    points.add(new Point(getWidth() - 1, getHeight() / 2));
-                    points.add(new Point(0, getHeight() / 2));
-                    points.add(new Point(0, getHeight() - 1));
-                    return;
-                }
-            }
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(30, 30);
-            }
-
-            @Override
-            protected void paintComponent(Graphics graphics) {
-                super.paintComponent(graphics);
-                Graphics2D graphics2D = (Graphics2D) graphics;
-                graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                if (isDrawingMode()) {
-                    graphics2D.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10, new float[]{5, 5}, 0));
-                } else {
-                    graphics2D.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                }
-                graphics.setColor(new Color(40, 40, 40));
-                for (int index = 0; index < points.size() - 1; index++) {
-                    Point p1 = points.get(index);
-                    Point p2 = points.get(index + 1);
-                    graphics2D.drawLine(p1.x, p1.y, p2.x, p2.y);
-                }
-            }
-        }
-
-        private class SuperRectangle {
-            private Point begin;
-            private Point end;
-            private Dimension size;
-
-            private SuperRectangle(Point begin, Point end) {
-                this.begin = new Point(Math.min(begin.x, end.x), Math.min(begin.y, end.y));
-                this.end = new Point(Math.max(begin.x, end.x), Math.max(begin.y, end.y));
-                this.size = new Dimension(Math.abs(end.x - begin.x), Math.abs(end.y - begin.y));
-            }
-
-            public Point getBegin() {
-                return begin;
-            }
-
-            public Point getEnd() {
-                return end;
-            }
-
-            public Dimension getSize() {
-                return size;
-            }
-
-            @Override
-            public String toString() {
-                return "SuperRectangle{" +
-                        "begin=" + begin +
-                        ", end=" + end +
-                        ", size=" + size +
-                        '}';
-            }
         }
     }
 }

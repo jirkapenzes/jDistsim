@@ -32,10 +32,10 @@ public class ModuleUI extends JComponent {
         view.invalidateConnectedPoints(80, 50);
 
         for (int index = 0; index < module.getInputConnectedPoints().size(); index++) {
-            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index)));
+            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index), this));
         }
         for (int index = 0; index < module.getOutputConnectedPoints().size(); index++) {
-            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index)));
+            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index), this));
         }
     }
 
@@ -91,6 +91,16 @@ public class ModuleUI extends JComponent {
 
     public void setIdentifier(String identifier) {
         module.setIdentifier(identifier);
+        repaint();
+    }
+
+    public void setActiveBackgroundColor() {
+        module.getView().setBackgroundColor(new Color(141, 210, 60));
+        repaint();
+    }
+
+    public void setDefaultBackgroundColor() {
+        module.getView().setDefaultBackgroundColor();
         repaint();
     }
 

@@ -1,10 +1,12 @@
 package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.controller.modelSpaceFeature.*;
+import jDistsim.application.designer.controller.modelSpaceFeature.util.ModuleConnector;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.Module;
+import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
 import jDistsim.utils.logging.Logger;
@@ -70,11 +72,16 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     }
 
     public void selectedActiveModule(ModuleUI module) {
+        selectedActiveModule(module, true);
+    }
+
+    public void selectedActiveModule(ModuleUI module, boolean notify) {
         module.setActive(true);
         getModel().setCurrentActiveModule(module);
 
-        for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
-            modelSpaceListener.onModelSelectedActiveModule(module, this);
+        if (notify)
+            for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
+                modelSpaceListener.onModelSelectedActiveModule(module, this);
 
         repaint();
     }
@@ -141,6 +148,26 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     private void repaint() {
         getView().getContentPane().repaint();
+    }
+
+    public void connect(ModuleUI moduleA, ModuleConnectedPointUI modulePointA, ModuleUI moduleB, ModuleConnectedPointUI modulePointB) {
+        Point pointA = new Point(moduleA.getLocation().x + modulePointA.getLocation().x, moduleA.getLocation().y + modulePointA.getLocation().y);
+        Point pointB = new Point(moduleB.getLocation().x + modulePointB.getLocation().x, moduleB.getLocation().y + modulePointB.getLocation().y);
+
+        ModuleConnector moduleConnector = new ModuleConnector();
+        moduleConnector.setDrawingMode(false);
+
+        Dimension dimension = new Dimension(Math.abs(pointA.x - pointB.x), Math.abs(pointA.y - pointB.y));
+
+        moduleConnector.setSize(dimension);
+        moduleConnector.setLocation(Math.min(pointA.x, pointB.x), Math.min(pointA.y, pointB.y));
+        moduleConnector.setPoints(pointA, pointB);
+
+        System.out.println(moduleConnector.getLocation());
+        System.out.println(moduleConnector.getSize());
+
+        view.getContentPane().add(moduleConnector);
+        view.getContentPane().repaint();
     }
 
     private class ModelSpaceModuleMouseAdapter extends MouseAdapter {
