@@ -46,4 +46,21 @@ public class Module extends Observable {
     public List<ModuleConnectedPoint> getOutputConnectedPoints() {
         return outputConnectedPoints;
     }
+
+
+    public boolean canInputConnected() {
+        for (ModuleConnectedPoint moduleConnectedPoint : inputConnectedPoints) {
+            if (moduleConnectedPoint.canBeConnected())
+                return true;
+        }
+        return false;
+    }
+
+    public boolean canOutputConnected() {
+        for (ModuleConnectedPoint moduleConnectedPoint : outputConnectedPoints) {
+            if (moduleConnectedPoint.canBeConnected())
+                return true;
+        }
+        return false;
+    }
 }

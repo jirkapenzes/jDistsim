@@ -13,14 +13,20 @@ public class ModuleConnectedPointUI {
         INPUT, OUTPUT
     }
 
+    private ModuleConnectedPoint connectedPoint;
     private Type type;
     private Point location;
     private ModuleUI owner;
 
-    public ModuleConnectedPointUI(Type type, Point location, ModuleUI owner) {
+    public ModuleConnectedPointUI(ModuleConnectedPoint parentConnectedPoint, Type type, Point location, ModuleUI owner) {
+        this.connectedPoint = parentConnectedPoint;
         this.type = type;
         this.location = location;
         this.owner = owner;
+    }
+
+    public ModuleConnectedPoint getParent() {
+        return connectedPoint;
     }
 
     public Type getType() {

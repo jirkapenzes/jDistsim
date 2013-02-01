@@ -6,10 +6,7 @@ import jDistsim.application.designer.controller.modelSpaceFeature.ModuleMovingAc
 import jDistsim.application.designer.controller.modelSpaceFeature.SelectedActiveModuleAction;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
-import jDistsim.core.modules.IModuleFactory;
-import jDistsim.core.modules.Module;
-import jDistsim.core.modules.ModuleConnectedPointUI;
-import jDistsim.core.modules.ModuleUI;
+import jDistsim.core.modules.*;
 import jDistsim.utils.common.ModelSpaceListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
@@ -153,6 +150,13 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     }
 
     public void connect(ModuleUI moduleA, ModuleConnectedPointUI modulePointA, ModuleUI moduleB, ModuleConnectedPointUI modulePointB) {
+        try {
+            modulePointA.getParent().addDependency(moduleB.getModule());
+            modulePointB.getParent().addDependency(moduleA.getModule());
+        } catch (Exception exception) {
+            Logger.log(exception);
+            return;
+        }
         final ModuleConnector moduleConnector = new ModuleConnector(moduleA, modulePointA, moduleB, modulePointB);
         view.getContentPane().add(moduleConnector.getConnectorLine());
         view.getContentPane().repaint();

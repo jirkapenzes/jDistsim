@@ -32,15 +32,41 @@ public class ModuleUI extends JComponent {
         view.invalidateConnectedPoints(80, 50);
 
         for (int index = 0; index < module.getInputConnectedPoints().size(); index++) {
-            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index), this));
+            ModuleConnectedPoint connectedPoint = module.getInputConnectedPoints().get(index);
+            connectedPoints.add(new ModuleConnectedPointUI(connectedPoint, ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index), this));
         }
+
         for (int index = 0; index < module.getOutputConnectedPoints().size(); index++) {
-            connectedPoints.add(new ModuleConnectedPointUI(ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index), this));
+            ModuleConnectedPoint connectedPoint = module.getOutputConnectedPoints().get(index);
+            connectedPoints.add(new ModuleConnectedPointUI(connectedPoint, ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index), this));
         }
+    }
+
+    public Module getModule() {
+        return module;
     }
 
     public List<ModuleConnectedPointUI> getConnectedPoints() {
         return connectedPoints;
+    }
+
+    public List<ModuleConnectedPointUI> getInputPoints() {
+        ArrayList<ModuleConnectedPointUI> result = new ArrayList<>();
+        for (ModuleConnectedPointUI connectedPointUI : connectedPoints) {
+            if (connectedPointUI.getType() == ModuleConnectedPointUI.Type.INPUT)
+                result.add(connectedPointUI);
+        }
+        return result;
+    }
+
+
+    public List<ModuleConnectedPointUI> getOutputPoints() {
+        ArrayList<ModuleConnectedPointUI> result = new ArrayList<>();
+        for (ModuleConnectedPointUI connectedPointUI : connectedPoints) {
+            if (connectedPointUI.getType() == ModuleConnectedPointUI.Type.OUTPUT)
+                result.add(connectedPointUI);
+        }
+        return result;
     }
 
     public void setActive(boolean active) {
@@ -115,5 +141,23 @@ public class ModuleUI extends JComponent {
     @Override
     public boolean contains(int x, int y) {
         return module.getView().getBounds(getWidth(), getHeight()).contains(x, y);
+    }
+
+    public ArrayList<ModuleConnectedPointUI> getModuleConnectedPointsForConnectWith(ModuleUI moduleUI) {
+        ArrayList<ModuleConnectedPointUI> possiblePoints = new ArrayList<>();
+        for (ModuleConnectedPointUI connectedPointUI : connectedPoints) {
+            if (getIdentifier().equals(moduleUI.getIdentifier()))
+                continue;
+
+            if (connectedPointUI.getType() == ModuleConnectedPointUI.Type.OUTPUT)
+                continue;
+
+            ModuleConnectedPoint connectedPoint = connectedPointUI.getParent();
+            if (connectedPoint.isFull())
+                continue;
+
+            possiblePoints.add(connectedPointUI);
+        }
+        return possiblePoints;
     }
 }

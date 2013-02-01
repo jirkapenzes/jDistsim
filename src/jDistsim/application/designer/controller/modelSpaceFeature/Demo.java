@@ -28,10 +28,17 @@ public class Demo extends ModelSpaceListener {
     private class ConnectPointHelper extends JComponent {
 
         private ModuleConnectedPointUI moduleConnectedPointUI;
-        private Color color;
+        private Color backgroundColor;
+        private Color defaultBackgroundColor;
 
-        private ConnectPointHelper(ModuleConnectedPointUI moduleConnectedPointUI, int size, Point location) {
-            this.moduleConnectedPointUI = moduleConnectedPointUI;
+
+        private ConnectPointHelper(ModuleConnectedPointUI parent, int size, Point location) {
+            this.moduleConnectedPointUI = parent;
+            if (parent.getType() == ModuleConnectedPointUI.Type.INPUT) {
+                defaultBackgroundColor = new Color(246, 147, 32);
+            } else {
+                defaultBackgroundColor = new Color(188, 246, 47);
+            }
             setLocation(location);
             setSize(size, size);
             setDefaultBackgroundColor();
@@ -47,7 +54,7 @@ public class Demo extends ModelSpaceListener {
         }
 
         public void setBackgroundColor(Color color) {
-            this.color = color;
+            this.backgroundColor = color;
             repaint();
         }
 
@@ -56,7 +63,7 @@ public class Demo extends ModelSpaceListener {
         }
 
         public void setDefaultBackgroundColor() {
-            setBackgroundColor(new Color(188, 246, 47));
+            setBackgroundColor(defaultBackgroundColor);
         }
 
         public ModuleConnectedPointUI getModuleConnectedPointUI() {
@@ -71,7 +78,7 @@ public class Demo extends ModelSpaceListener {
             graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             graphics2D.setColor(new Color(62, 109, 0));
             graphics2D.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
-            graphics2D.setColor(color);
+            graphics2D.setColor(backgroundColor);
             graphics2D.fillOval(2, 2, getWidth() - 5, getHeight() - 5);
         }
     }
@@ -156,11 +163,17 @@ public class Demo extends ModelSpaceListener {
     }
 
     private void showPossibleDependecies(ModelSpaceController modelSpaceController) {
+        if (!currentActiveModule.getModule().canOutputConnected())
+            return;
+
         for (ModuleUI moduleUI : modelSpaceController.getModuleList().values()) {
+            if (!moduleUI.getModule().canInputConnected())
+                continue;
+
             if (moduleUI.getIdentifier().equals(currentActiveModule.getIdentifier()))
                 continue;
 
-            for (ModuleConnectedPointUI connectedPointUI : moduleUI.getConnectedPoints()) {
+            for (ModuleConnectedPointUI connectedPointUI : moduleUI.getModuleConnectedPointsForConnectWith(currentActiveModule)) {
                 if (connectedPointUI.getType() == ModuleConnectedPointUI.Type.INPUT) {
                     addConnectedPointHelper(moduleUI, modelSpaceController, connectedPointUI);
                 }
@@ -178,23 +191,27 @@ public class Demo extends ModelSpaceListener {
     private void addConnectedPointHelper(ModuleUI moduleUI, ModelSpaceController modelSpaceController, ModuleConnectedPointUI connectedPointUI) {
         Point location = ModelSpaceHelper.calculatePointPosition(pointSize, connectedPointUI, moduleUI);
         ConnectPointHelper connectPointHelper = new ConnectPointHelper(connectedPointUI, pointSize, location);
+
         int moduleIndex = SwingUtil.getComponentIndex(moduleUI);
         modelSpaceController.getView().getContentPane().add(connectPointHelper, moduleIndex);
         connectPointHelperList.add(connectPointHelper);
 
-        ConnectorDrawerAdapterFactory connectorDrawerAdapterFactory =
-                new ConnectorDrawerAdapterFactory(
-                        connectedPointUI,
-                        ModelSpaceHelper.calculatePointPosition(0, connectedPointUI, moduleUI),
-                        moduleUI,
-                        new ArrayList<>(modelSpaceController.getModuleList().values()),
-                        modelSpaceController);
-
-        connectPointHelper.addMouseMotionListener(connectorDrawerAdapterFactory.getMouseMotionAdapter());
-        connectPointHelper.addMouseListener(connectorDrawerAdapterFactory.getMouseAdapter());
+        if (connectedPointUI.getParent().canBeConnected())
+            if (connectedPointUI.getType() == ModuleConnectedPointUI.Type.OUTPUT) {
+                ConnectorDrawerAdapterFactory connectorDrawerAdapterFactory =
+                        new ConnectorDrawerAdapterFactory(
+                                connectedPointUI,
+                                ModelSpaceHelper.calculatePointPosition(0, connectedPointUI, moduleUI),
+                                moduleUI,
+                                new ArrayList<>(modelSpaceController.getModuleList().values()),
+                                modelSpaceController);
+                connectPointHelper.addMouseMotionListener(connectorDrawerAdapterFactory.getMouseMotionAdapter());
+                connectPointHelper.addMouseListener(connectorDrawerAdapterFactory.getMouseAdapter());
+            }
     }
 
     public class ConnectorDrawerAdapterFactory {
+
         private ConnectorLine connectorLine;
         private Point initialPosition;
         private Point currentPosition;
@@ -272,7 +289,6 @@ public class Demo extends ModelSpaceListener {
             }
         }
 
-
         public MouseAdapter getMouseAdapter() {
             return new MouseAdapter() {
                 @Override
@@ -294,10 +310,17 @@ public class Demo extends ModelSpaceListener {
                     controller.unselectedActiveModule();
                     connectedMode = false;
 
-                    if (currentSelectedModule != null) currentSelectedModule.setDefaultBackgroundColor();
                     if (currentSelectedConnectPoint != null) {
                         currentSelectedConnectPoint.setDefaultBackgroundColor();
                         controller.connect(parentModule, parentConnectedPoint, currentSelectedConnectPoint.getOwner(), currentSelectedConnectPoint.getModuleConnectedPointUI());
+                    } else if (currentSelectedModule != null) {
+                        currentSelectedModule.setDefaultBackgroundColor();
+                        List<ModuleConnectedPointUI> points = currentSelectedModule.getInputPoints();
+                        for (ModuleConnectedPointUI pointUI : points) {
+                            if (pointUI.getParent().canBeConnected()) {
+                                controller.connect(parentModule, parentConnectedPoint, pointUI.getOwner(), pointUI);
+                            }
+                        }
                     }
 
                     JComponent contentPane = controller.getView().getContentPane();

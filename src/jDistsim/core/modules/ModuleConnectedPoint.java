@@ -23,9 +23,16 @@ public class ModuleConnectedPoint {
         return capacity;
     }
 
-    public void addDependency(Module module) throws ModuleConnectedPointFullCapacityException {
-        if (isFull()) throw new ModuleConnectedPointFullCapacityException("Capacity is full");
-        dependencies.add(module);
+    public void addDependency(Module dependencyModule) throws Exception {
+        for (Module module : dependencies) {
+            if (module.getIdentifier().equals(dependencyModule.getIdentifier())) {
+                throw new Exception("Dependency not created! -> is exist!!");
+            }
+        }
+
+        if (isFull())
+            throw new ModuleConnectedPointFullCapacityException("Capacity is full");
+        dependencies.add(dependencyModule);
     }
 
     public void removeDependency(Module module) {
@@ -43,5 +50,9 @@ public class ModuleConnectedPoint {
 
     public boolean isFull() {
         return dependencies.size() == capacity;
+    }
+
+    public boolean canBeConnected() {
+        return !isFull();
     }
 }
