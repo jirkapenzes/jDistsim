@@ -94,6 +94,8 @@ public class ModuleConnectorAction extends ModelSpaceListener {
     @Override
     public void onModelSelectedActiveModule(ModuleUI module, ModelSpaceController modelSpaceController) {
         removeAlCurrentHelperPoints(modelSpaceController);
+
+        currentActiveModule = module;
         showHelperPoints(module, modelSpaceController);
         showPossibleDependecies(modelSpaceController);
     }

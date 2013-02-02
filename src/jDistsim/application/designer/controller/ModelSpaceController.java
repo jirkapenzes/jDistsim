@@ -71,6 +71,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         if (getModel().getCurrentActiveModule() != null) {
             getModel().getCurrentActiveModule().setActive(false);
             getModel().getCurrentActiveModule().setDefaultBackgroundColor();
+            getModel().setCurrentActiveModule(null);
 
             for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
                 modelSpaceListener.onModelUnselectedActiveModule(getModel().getCurrentActiveModule(), this);
