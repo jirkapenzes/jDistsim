@@ -20,7 +20,7 @@ import java.util.List;
  * Date: 29.12.12
  * Time: 20:14
  */
-public class Demo extends ModelSpaceListener {
+public class ModuleConnectorAction extends ModelSpaceListener {
 
     private final int pointSize = 12;
     private boolean connectedMode = false;
@@ -86,7 +86,7 @@ public class Demo extends ModelSpaceListener {
     private List<ConnectPointHelper> connectPointHelperList;
     private ModuleUI currentActiveModule;
 
-    public Demo() {
+    public ModuleConnectorAction() {
         connectPointHelperList = new ArrayList<>();
         currentActiveModule = null;
     }
@@ -268,8 +268,10 @@ public class Demo extends ModelSpaceListener {
                 }
             }
 
-            if (currentSelectedModule != null)
+            if (currentSelectedModule != null) {
                 currentSelectedModule.setDefaultBackgroundColor();
+                currentSelectedModule = null;
+            }
 
             if (currentSelectedConnectPoint != null) {
                 currentSelectedModule = currentSelectedConnectPoint.getOwner();
@@ -279,6 +281,10 @@ public class Demo extends ModelSpaceListener {
                 for (ModuleUI moduleUI : modules) {
                     if (moduleUI.getIdentifier().equals(parentModule.getIdentifier()))
                         continue;
+
+                    if (!moduleUI.getModule().canInputConnected()) {
+                        continue;
+                    }
 
                     if (moduleUI.contains(currentCanvasPosition.x - moduleUI.getX(), currentCanvasPosition.y - moduleUI.getY())) {
                         currentSelectedModule = moduleUI;

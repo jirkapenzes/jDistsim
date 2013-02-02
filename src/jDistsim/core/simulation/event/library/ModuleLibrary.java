@@ -2,10 +2,13 @@ package jDistsim.core.simulation.event.library;
 
 import jDistsim.core.modules.ModuleConfiguration;
 import jDistsim.core.modules.factory.CreateModuleFactory;
+import jDistsim.core.modules.factory.DelayModuleFactory;
 import jDistsim.core.modules.factory.DisposeModuleFactory;
 import jDistsim.core.simulation.event.description.CreateDescription;
+import jDistsim.core.simulation.event.description.DelayDescription;
 import jDistsim.core.simulation.event.description.DisposeDescription;
 import jDistsim.ui.module.moduleView.CreateModuleView;
+import jDistsim.ui.module.moduleView.DelayModuleView;
 import jDistsim.ui.module.moduleView.DisposeModuleView;
 import jDistsim.utils.ioc.ObjectContainer;
 
@@ -39,6 +42,11 @@ public class ModuleLibrary implements IModuleLibrary {
                 .toView(new DisposeModuleView())
                 .toDescription(new DisposeDescription())
                 .toFactory(new DisposeModuleFactory(new ModuleConfiguration("dispose", new Dimension(80, 50))));
+
+        container.bind("delay", new ModuleContainer())
+                .toView(new DelayModuleView())
+                .toDescription(new DelayDescription())
+                .toFactory(new DelayModuleFactory(new ModuleConfiguration("delay", new Dimension(80, 50))));
     }
 
     public Set<Map.Entry<String, ModuleContainer>> entrySet() {

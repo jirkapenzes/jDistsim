@@ -1,12 +1,16 @@
 package jDistsim.application.designer.controller;
 
-import jDistsim.application.designer.controller.modelSpaceFeature.Demo;
+import jDistsim.application.designer.controller.modelSpaceFeature.ModuleConnectorAction;
 import jDistsim.application.designer.controller.modelSpaceFeature.ModelSpaceHelper;
 import jDistsim.application.designer.controller.modelSpaceFeature.ModuleMovingAction;
 import jDistsim.application.designer.controller.modelSpaceFeature.SelectedActiveModuleAction;
+import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
-import jDistsim.core.modules.*;
+import jDistsim.core.modules.IModuleFactory;
+import jDistsim.core.modules.Module;
+import jDistsim.core.modules.ModuleConnectedPointUI;
+import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
@@ -34,6 +38,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     private ModelSpaceView view;
     private ModuleUI currentDragModule;
+    private ConnectorLine currentSelectedLine;
 
     private HashMap<String, ModuleUI> moduleList;
     private List<ModelSpaceListener> modelSpaceListeners;
@@ -49,8 +54,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     private void initialize() {
         getModel().addObserver(this);
 
-        //modelSpaceListeners.add(new ModuleDependencyAction());
-        modelSpaceListeners.add(new Demo());
+        modelSpaceListeners.add(new ModuleConnectorAction());
         modelSpaceListeners.add(new ModuleMovingAction());
         modelSpaceListeners.add(new SelectedActiveModuleAction());
 
@@ -60,8 +64,13 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     }
 
     public void unselectedActiveModule() {
+        if (currentSelectedLine != null) {
+            currentSelectedLine.setActive(false);
+        }
+
         if (getModel().getCurrentActiveModule() != null) {
             getModel().getCurrentActiveModule().setActive(false);
+            getModel().getCurrentActiveModule().setDefaultBackgroundColor();
 
             for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
                 modelSpaceListener.onModelUnselectedActiveModule(getModel().getCurrentActiveModule(), this);
@@ -157,7 +166,22 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             Logger.log(exception);
             return;
         }
+
         final ModuleConnector moduleConnector = new ModuleConnector(moduleA, modulePointA, moduleB, modulePointB);
+        moduleConnector.getConnectorLine().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                unselectedActiveModule();
+
+                if (currentSelectedLine != null) {
+                    currentSelectedLine.setActive(false);
+                }
+
+                currentSelectedLine = moduleConnector.getConnectorLine();
+                currentSelectedLine.setActive(true);
+                // view.getContentPane().setComponentZOrder(currentSelectedLine, 0);
+            }
+        });
         view.getContentPane().add(moduleConnector.getConnectorLine());
         view.getContentPane().repaint();
     }

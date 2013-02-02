@@ -1,10 +1,8 @@
 package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
-import jDistsim.core.modules.ModuleConnectedPointFullCapacityException;
 import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
-import jDistsim.utils.logging.Logger;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
