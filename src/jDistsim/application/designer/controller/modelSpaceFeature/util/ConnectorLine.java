@@ -3,6 +3,7 @@ package jDistsim.application.designer.controller.modelSpaceFeature.util;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  */
 public class ConnectorLine extends JComponent {
 
-    private java.util.List<Point> points;
+    private List<Point> points;
     private Point pointA;
     private Point pointB;
     private boolean drawingMode = false;

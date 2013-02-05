@@ -55,4 +55,12 @@ public class ModuleConnectedPoint {
     public boolean canBeConnected() {
         return !isFull();
     }
+
+    public List<Module> getDependencies() {
+        return dependencies;
+    }
+
+    public void removeAllDependencies() {
+        dependencies.clear();
+    }
 }

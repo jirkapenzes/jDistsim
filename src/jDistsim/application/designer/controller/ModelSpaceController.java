@@ -1,9 +1,6 @@
 package jDistsim.application.designer.controller;
 
-import jDistsim.application.designer.controller.modelSpaceFeature.ModuleConnectorAction;
-import jDistsim.application.designer.controller.modelSpaceFeature.ModelSpaceHelper;
-import jDistsim.application.designer.controller.modelSpaceFeature.ModuleMovingAction;
-import jDistsim.application.designer.controller.modelSpaceFeature.SelectedActiveModuleAction;
+import jDistsim.application.designer.controller.modelSpaceFeature.*;
 import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
@@ -21,10 +18,7 @@ import jDistsim.utils.pattern.observer.Observable;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +51,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         modelSpaceListeners.add(new ModuleConnectorAction());
         modelSpaceListeners.add(new ModuleMovingAction());
         modelSpaceListeners.add(new SelectedActiveModuleAction());
+        modelSpaceListeners.add(new ModuleKeysAction());
 
         new DropTarget(view.getContentPane(), this);
         view.getContentPane().addMouseListener(new ModelSpaceMouseAdapter());
@@ -76,6 +71,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
                 modelSpaceListener.onModelUnselectedActiveModule(getModel().getCurrentActiveModule(), this);
 
+            getModel().setCurrentActiveModule(null);
             repaint();
         }
     }
@@ -146,6 +142,10 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             currentDragModule.addMouseListener(new ModelSpaceModuleMouseAdapter());
             currentDragModule.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
             moduleList.put(currentDragModule.getIdentifier(), currentDragModule);
+
+            for (ModelSpaceListener listener : modelSpaceListeners)
+                listener.onAddedModule(currentDragModule, this);
+
         } catch (Exception exception) {
             Logger.log(exception);
         }
@@ -159,16 +159,15 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         getView().getContentPane().repaint();
     }
 
-    public void connect(ModuleUI moduleA, ModuleConnectedPointUI modulePointA, ModuleUI moduleB, ModuleConnectedPointUI modulePointB) {
+    public void connect(final ModuleUI moduleA, final ModuleConnectedPointUI modulePointA, final ModuleUI moduleB, final ModuleConnectedPointUI modulePointB) {
+        final ModuleConnector moduleConnector;
         try {
-            modulePointA.getParent().addDependency(moduleB.getModule());
-            modulePointB.getParent().addDependency(moduleA.getModule());
+            moduleConnector = modulePointA.connect(modulePointB);
         } catch (Exception exception) {
             Logger.log(exception);
             return;
         }
 
-        final ModuleConnector moduleConnector = new ModuleConnector(moduleA, modulePointA, moduleB, modulePointB);
         moduleConnector.getConnectorLine().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -180,7 +179,20 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
                 currentSelectedLine = moduleConnector.getConnectorLine();
                 currentSelectedLine.setActive(true);
-                // view.getContentPane().setComponentZOrder(currentSelectedLine, 0);
+                currentSelectedLine.requestFocus();
+            }
+        });
+
+        moduleConnector.getConnectorLine().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE) {
+                    modulePointA.disconnect(modulePointB);
+
+                    view.getContentPane().remove(currentSelectedLine);
+                    view.getContentPane().repaint();
+                    view.getContentPane().requestFocus();
+                }
             }
         });
         view.getContentPane().add(moduleConnector.getConnectorLine());

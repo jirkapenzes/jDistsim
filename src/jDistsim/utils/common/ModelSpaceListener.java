@@ -82,4 +82,7 @@ public abstract class ModelSpaceListener {
 
     public void onModelUnselectedActiveModule(ModuleUI module, ModelSpaceController modelSpaceController) {
     }
+
+    public void onAddedModule(ModuleUI module, ModelSpaceController modelSpaceController) {
+    }
 }

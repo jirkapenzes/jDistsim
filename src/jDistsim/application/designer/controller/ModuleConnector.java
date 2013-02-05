@@ -14,6 +14,7 @@ import java.awt.event.MouseMotionAdapter;
  * Time: 0:47
  */
 public class ModuleConnector {
+
     private ModuleUI moduleA;
     private ModuleConnectedPointUI modulePointA;
     private ModuleUI moduleB;
@@ -32,6 +33,7 @@ public class ModuleConnector {
 
     private void initialize() {
         connectorLine = new ConnectorLine();
+        connectorLine.setFocusable(true);
         connectorLine.setDrawingMode(false);
 
         moduleA.addMouseMotionListener(new MouseMotionAdapter() {
@@ -60,5 +62,21 @@ public class ModuleConnector {
 
     public ConnectorLine getConnectorLine() {
         return connectorLine;
+    }
+
+    public ModuleUI getModuleA() {
+        return moduleA;
+    }
+
+    public ModuleConnectedPointUI getModulePointA() {
+        return modulePointA;
+    }
+
+    public ModuleUI getModuleB() {
+        return moduleB;
+    }
+
+    public ModuleConnectedPointUI getModulePointB() {
+        return modulePointB;
     }
 }

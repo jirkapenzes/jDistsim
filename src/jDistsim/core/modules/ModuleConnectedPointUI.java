@@ -1,6 +1,9 @@
 package jDistsim.core.modules;
 
+import jDistsim.application.designer.controller.ModuleConnector;
+
 import java.awt.*;
+import java.util.HashMap;
 
 /**
  * Author: Jirka Pénzeš
@@ -17,12 +20,14 @@ public class ModuleConnectedPointUI {
     private Type type;
     private Point location;
     private ModuleUI owner;
+    private HashMap<ModuleConnectedPointUI, ModuleConnector> dependencies;
 
     public ModuleConnectedPointUI(ModuleConnectedPoint parentConnectedPoint, Type type, Point location, ModuleUI owner) {
         this.connectedPoint = parentConnectedPoint;
         this.type = type;
         this.location = location;
         this.owner = owner;
+        dependencies = new HashMap<>();
     }
 
     public ModuleConnectedPoint getParent() {
@@ -39,5 +44,28 @@ public class ModuleConnectedPointUI {
 
     public ModuleUI getOwner() {
         return owner;
+    }
+
+    public ModuleConnector connect(ModuleConnectedPointUI connectedPointB) throws Exception {
+        connectedPoint.addDependency(connectedPointB.getOwner().getModule());
+        connectedPointB.getParent().addDependency(owner.getModule());
+        ModuleConnector moduleConnector = new ModuleConnector(owner, this, connectedPointB.getOwner(), connectedPointB);
+
+        dependencies.put(connectedPointB, moduleConnector);
+        connectedPointB.dependencies.put(this, moduleConnector);
+
+        return moduleConnector;
+    }
+
+    public void disconnect(ModuleConnectedPointUI modulePointB) {
+        connectedPoint.removeDependency(modulePointB.getOwner().getModule());
+        modulePointB.connectedPoint.removeDependency(this.getOwner().getModule());
+
+        dependencies.remove(modulePointB);
+        modulePointB.dependencies.remove(this);
+    }
+
+    public HashMap<ModuleConnectedPointUI, ModuleConnector> getDependencies() {
+        return dependencies;
     }
 }

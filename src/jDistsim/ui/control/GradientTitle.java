@@ -94,17 +94,20 @@ public class GradientTitle extends JComponent {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        Graphics2D g2 = (Graphics2D) graphics;
+        Graphics2D graphics2D = (Graphics2D) graphics;
 
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         GradientPaint gradientPaint = new GradientPaint(0, 0, color1, 0, getHeight(), color2);
-        g2.setPaint(gradientPaint);
-        g2.fill(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
-        graphics.setColor(new Color(192, 192, 192));
-        g2.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+        graphics2D.setPaint(gradientPaint);
+        graphics2D.fill(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
+        graphics2D.setColor(new Color(192, 192, 192));
+        graphics2D.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
 
-        g2.setColor(new Color(157, 157, 157));
-        g2.drawRect(5, 5, 8, 8);
+        graphics2D.setColor(new Color(245, 245, 245));
+        graphics2D.drawLine(0, 0, getWidth(), 0);
+
+        graphics2D.setColor(new Color(157, 157, 157));
+        graphics2D.drawRect(5, 5, 8, 8);
     }
 }
 

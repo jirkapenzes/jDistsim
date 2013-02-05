@@ -320,7 +320,11 @@ public class ModuleConnectorAction extends ModelSpaceListener {
 
                     if (currentSelectedConnectPoint != null) {
                         currentSelectedConnectPoint.setDefaultBackgroundColor();
+
+                        if (currentSelectedModule != null)
+                            currentSelectedModule.setDefaultBackgroundColor();
                         controller.connect(parentModule, parentConnectedPoint, currentSelectedConnectPoint.getOwner(), currentSelectedConnectPoint.getModuleConnectedPointUI());
+
                     } else if (currentSelectedModule != null) {
                         currentSelectedModule.setDefaultBackgroundColor();
                         List<ModuleConnectedPointUI> points = currentSelectedModule.getInputPoints();
