@@ -11,18 +11,28 @@ import java.awt.*;
 public class MenuSeparator extends JComponent {
 
     private Color color;
+    private int height;
 
     public MenuSeparator() {
-        this(new Color(183, 183, 183));
+        this(new Color(183, 183, 183), 20);
+    }
+
+    public MenuSeparator(int height) {
+        this(new Color(183, 183, 183), height);
     }
 
     public MenuSeparator(Color color) {
+        this(color, 20);
+    }
+
+    public MenuSeparator(Color color, int height) {
         this.color = color;
+        this.height = height;
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(3, 20);
+        return new Dimension(3, height);
     }
 
     @Override

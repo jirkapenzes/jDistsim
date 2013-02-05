@@ -1,8 +1,14 @@
 package jDistsim.ui.panel;
 
+import jDistsim.ui.control.MenuSeparator;
+import jDistsim.ui.control.button.ImageButton;
+import jDistsim.utils.resource.Resources;
+import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
 /**
@@ -15,48 +21,84 @@ public class ModulesPanel extends InternalPanel {
     private JTree tree;
 
     public ModulesPanel() {
-        super("Modules");
-
+        super("Modules on model");
         initialize();
     }
 
     private void initialize() {
+        JPanel contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.setBorder(null);
+
+        initializeControlPanel(contentPane);
+        initializeContentPanel(contentPane);
+        add(contentPane, BorderLayout.CENTER);
+    }
+
+    private void initializeControlPanel(JPanel contentPane) {
+        JPanel controlPanel = new JPanel();
+        controlPanel.setBackground(new Color(237, 237, 237));
+        controlPanel.setPreferredSize(new Dimension(getWidth(), 26));
+        controlPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(203, 203, 203)));
+        controlPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+
+        IconBackgroundColorHoverStyle hoverStyle = new IconBackgroundColorHoverStyle();
+        int padding = 3;
+
+        controlPanel.add(new ImageButton(Resources.getImage("system/panels/mp_controls_expand.png"), hoverStyle, new Dimension(16, 16), padding));
+        controlPanel.add(new ImageButton(Resources.getImage("system/panels/mp_controls_collapse.png"), hoverStyle, new Dimension(16, 16), padding));
+        controlPanel.add(new MenuSeparator(14));
+        controlPanel.add(new ImageButton(Resources.getImage("system/panels/mp_controls_list.png"), hoverStyle, new Dimension(16, 16), padding));
+        controlPanel.add(new ImageButton(Resources.getImage("system/panels/mp_controls_tree.png"), hoverStyle, new Dimension(16, 16), padding));
+
+        contentPane.add(controlPanel, BorderLayout.NORTH);
+    }
+
+    private void initializeContentPanel(JPanel contentPane) {
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("model1");
-        DefaultMutableTreeNode a = new DefaultMutableTreeNode("A");
-        top.add(a);
+        DefaultMutableTreeNode create_1 = new DefaultMutableTreeNode("create_1");
+        top.add(create_1);
 
-        a.add(new DefaultMutableTreeNode("A1"));
-        a.add(new DefaultMutableTreeNode("A2"));
 
-        DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode("B");
-        top.add(defaultMutableTreeNode);
+        DefaultMutableTreeNode delay = new DefaultMutableTreeNode("delay_1");
+        delay.add(new DefaultMutableTreeNode("dispose_1"));
+        create_1.add(delay);
 
-        defaultMutableTreeNode.add(new DefaultMutableTreeNode("B1"));
-        defaultMutableTreeNode.add(new DefaultMutableTreeNode("B2"));
-        for (int i = 0; i < 20; i++)
-            defaultMutableTreeNode.add(new DefaultMutableTreeNode("B3"));
+        DefaultMutableTreeNode create_2 = new DefaultMutableTreeNode("create_2");
+        top.add(create_2);
+
+        DefaultMutableTreeNode delay1 = new DefaultMutableTreeNode("delay_1");
+        delay1.add(new DefaultMutableTreeNode("dispose_1"));
+        create_2.add(delay1);
 
         tree = new JTree(top);
-        /*
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
-            private Border border = BorderFactory.createEmptyBorder(4, 4, 4, 4);
+            public Component getTreeCellRendererComponent(final JTree tree, Object value,
+                                                          boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-                label.setBorder(border);
+
+                if (((DefaultMutableTreeNode) value).isRoot())
+                    label.setIcon(new ImageIcon(Resources.getImage("system/t_icon_model.png")));
+                else {
+                    if (label.getText().contains("create")) {
+                        label.setIcon(new ImageIcon(Resources.getImage("system/t_icon_create.png")));
+                    } else {
+                        label.setIcon(new ImageIcon(Resources.getImage("system/t_icon_classic.png")));
+                    }
+                }
                 return label;
             }
         });
-        */
         tree.setDragEnabled(false);
         tree.setEditable(false);
-
 
         int verticalScrollbarAsNeeded = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
         int horizontalScrollbarAsNeeded = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
         JScrollPane jsp = new JScrollPane(tree, verticalScrollbarAsNeeded, horizontalScrollbarAsNeeded);
+        jsp.setBorder(BorderFactory.createEmptyBorder());
 
         tree.setBorder(new EmptyBorder(3, 3, 3, 3));
-        add(jsp, BorderLayout.CENTER);
+        contentPane.add(jsp, BorderLayout.CENTER);
     }
 }

@@ -26,10 +26,11 @@ public class PropertiesView extends AbstractView<JPanel> {
         contentPane.setLayout(new BorderLayout());
         InternalPanel internalPanel1 = new PropertiesPanel();
         InternalPanel internalPanel2 = new ModulesPanel();
-        internalPanel2.showNothing();
 
-        contentPane.add(internalPanel1, BorderLayout.NORTH);
-        contentPane.add(internalPanel2, BorderLayout.CENTER);
+        // internalPanel1.showNothing();
+
+        contentPane.add(internalPanel1, BorderLayout.CENTER);
+        contentPane.add(internalPanel2, BorderLayout.SOUTH);
         return contentPane;
     }
 }

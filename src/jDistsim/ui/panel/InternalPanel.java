@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class InternalPanel extends JComponent {
 
-    private int panelThickness = 3;
+    private int panelThickness = 2;
     private boolean visibleIconBar = false;
     private boolean showNothing = false;
     private boolean footerBorderLine = false;
