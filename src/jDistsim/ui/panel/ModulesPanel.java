@@ -18,10 +18,11 @@ import java.awt.*;
  */
 public class ModulesPanel extends InternalPanel {
 
-    private JTree tree;
+    private JTree jTree;
 
-    public ModulesPanel() {
+    public ModulesPanel(JTree jTree) {
         super("Modules on model");
+        this.jTree = jTree;
         initialize();
     }
 
@@ -71,8 +72,8 @@ public class ModulesPanel extends InternalPanel {
         delay1.add(new DefaultMutableTreeNode("dispose_1"));
         create_2.add(delay1);
 
-        tree = new JTree(top);
-        tree.setCellRenderer(new DefaultTreeCellRenderer() {
+        jTree = new JTree(top);
+        jTree.setCellRenderer(new DefaultTreeCellRenderer() {
             public Component getTreeCellRendererComponent(final JTree tree, Object value,
                                                           boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
@@ -90,15 +91,15 @@ public class ModulesPanel extends InternalPanel {
                 return label;
             }
         });
-        tree.setDragEnabled(false);
-        tree.setEditable(false);
+        jTree.setDragEnabled(false);
+        jTree.setEditable(false);
 
         int verticalScrollbarAsNeeded = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
         int horizontalScrollbarAsNeeded = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-        JScrollPane jsp = new JScrollPane(tree, verticalScrollbarAsNeeded, horizontalScrollbarAsNeeded);
+        JScrollPane jsp = new JScrollPane(jTree, verticalScrollbarAsNeeded, horizontalScrollbarAsNeeded);
         jsp.setBorder(BorderFactory.createEmptyBorder());
 
-        tree.setBorder(new EmptyBorder(3, 3, 3, 3));
+        jTree.setBorder(new EmptyBorder(3, 3, 3, 3));
         contentPane.add(jsp, BorderLayout.CENTER);
     }
 }
