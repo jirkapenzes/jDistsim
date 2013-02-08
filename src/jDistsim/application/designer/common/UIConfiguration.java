@@ -21,7 +21,19 @@ public final class UIConfiguration {
     }
 
     public Font getDefaultFont() {
-        return new Font("Calibri", Font.PLAIN, 11);
+        return getDefaultFont(false, 11);
+    }
+
+    public Font getDefaultFont(boolean bold) {
+        return getDefaultFont(bold, 11);
+    }
+
+    public Font getDefaultFont(int size) {
+        return getDefaultFont(false, size);
+    }
+
+    public Font getDefaultFont(boolean bold, int size) {
+        return new Font("Calibri", bold ? Font.BOLD : Font.PLAIN, size);
     }
 
     // Event controls
