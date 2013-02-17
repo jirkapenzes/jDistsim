@@ -1,18 +1,19 @@
 package jDistsim.core.modules;
 
+import jDistsim.utils.pattern.observer.Observable;
+
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 4.12.12
  * Time: 21:48
  */
-public class ModuleConnectedPoint {
+public class ModuleConnectedPoint extends Observable  {
 
     private int capacity;
 
-    private List<Module> dependencies;
+    private ArrayList<Module> dependencies;
 
     public ModuleConnectedPoint(int capacity) {
         this.capacity = capacity;
@@ -32,7 +33,9 @@ public class ModuleConnectedPoint {
 
         if (isFull())
             throw new ModuleConnectedPointFullCapacityException("Capacity is full");
+
         dependencies.add(dependencyModule);
+        notifyObservers("addDependency");
     }
 
     public void removeDependency(Module module) {
@@ -46,6 +49,7 @@ public class ModuleConnectedPoint {
                 return;
             }
         }
+        notifyObservers("removeDependency");
     }
 
     public boolean isFull() {
@@ -56,11 +60,12 @@ public class ModuleConnectedPoint {
         return !isFull();
     }
 
-    public List<Module> getDependencies() {
+    public ArrayList<Module> getDependencies() {
         return dependencies;
     }
 
     public void removeAllDependencies() {
         dependencies.clear();
+        notifyObservers("removeAllDependencies");
     }
 }
