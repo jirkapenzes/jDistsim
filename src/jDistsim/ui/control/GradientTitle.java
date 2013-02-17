@@ -26,6 +26,7 @@ public class GradientTitle extends JComponent {
     private JLabel labelTitle;
     private Color color1;
     private Color color2;
+    private boolean showTopBorderLine;
 
     public GradientTitle(JComponent parentControl) {
         this(parentControl, TextResources.NULL_TEXT);
@@ -36,9 +37,14 @@ public class GradientTitle extends JComponent {
     }
 
     public GradientTitle(JComponent parentControl, String titleText, Color color1, Color color2) {
+        this(parentControl, titleText, color1, color2, false);
+    }
+
+    public GradientTitle(JComponent parentControl, String titleText, Color color1, Color color2, boolean showTopBorderLine) {
         this.parentControl = parentControl;
         this.color1 = color1;
         this.color2 = color2;
+        this.showTopBorderLine = showTopBorderLine;
         initializeComponents(titleText);
     }
 
@@ -108,6 +114,11 @@ public class GradientTitle extends JComponent {
 
         graphics2D.setColor(new Color(157, 157, 157));
         graphics2D.drawRect(5, 5, 8, 8);
+
+        if (showTopBorderLine) {
+            graphics2D.setColor(new Color(192, 192, 192));
+            graphics2D.drawLine(0, 0, getWidth(), 0);
+        }
     }
 }
 
