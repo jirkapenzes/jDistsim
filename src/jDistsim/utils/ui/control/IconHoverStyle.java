@@ -23,4 +23,13 @@ public class IconHoverStyle implements IIconButtonHoverStyle {
         graphics.clearRect(0, 0, imageButton.getWidth(), imageButton.getHeight());
         graphics.drawImage(image, 0, 0, imageButton.getWidth(), imageButton.getHeight(), imageButton);
     }
+
+    @Override
+    public void applyPressedStyle(ImageButton imageButton) {
+    }
+
+    @Override
+    public void applyReleaseStyle(ImageButton imageButton) {
+        imageButton.repaint();
+    }
 }

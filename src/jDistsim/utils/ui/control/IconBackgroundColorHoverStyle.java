@@ -11,27 +11,48 @@ import java.awt.*;
  */
 public class IconBackgroundColorHoverStyle implements IIconButtonHoverStyle {
 
-    private Color color;
-    private Color borderColor;
+    private Color hoverBackgroundColor;
+    private Color hoverBorderColor;
+    private Color pressedBackgroundColor;
+    private Color pressedBorderColor;
 
     public IconBackgroundColorHoverStyle() {
         this(new Color(181, 190, 214));
     }
 
-    public IconBackgroundColorHoverStyle(Color color) {
-        this(color, new Color(8, 36, 107));
+    public IconBackgroundColorHoverStyle(Color hoverBackgroundColor) {
+        this(hoverBackgroundColor, new Color(8, 36, 107), new Color(142,224, 130), new Color(72, 122, 65));
     }
 
+    public IconBackgroundColorHoverStyle(Color hoverBackgroundColor, Color pressedBackgroundColor, Color pressedBorderColor) {
+        this(hoverBackgroundColor, new Color(8, 36, 107), pressedBackgroundColor, pressedBorderColor);
+    }
 
-    public IconBackgroundColorHoverStyle(Color color, Color borderColor) {
-        this.color = color;
-        this.borderColor = borderColor;
+    public IconBackgroundColorHoverStyle(Color hoverBackgroundColor, Color hoverBorderColor, Color pressedBackgroundColor, Color pressedBorderColor) {
+        this.hoverBackgroundColor = hoverBackgroundColor;
+        this.hoverBorderColor = hoverBorderColor;
+        this.pressedBackgroundColor = pressedBackgroundColor;
+        this.pressedBorderColor = pressedBorderColor;
     }
 
     @Override
     public void applyHoverStyle(ImageButton imageButton) {
+        applyBackgroundColor(imageButton, hoverBackgroundColor, hoverBorderColor);
+    }
+
+    @Override
+    public void applyPressedStyle(ImageButton imageButton) {
+        applyBackgroundColor(imageButton, pressedBackgroundColor, pressedBorderColor);
+    }
+
+    @Override
+    public void applyReleaseStyle(ImageButton imageButton) {
+        applyHoverStyle(imageButton);
+    }
+
+    private void applyBackgroundColor(ImageButton imageButton, Color backgroundColor, Color borderColor) {
         Graphics graphics = imageButton.getGraphics();
-        graphics.setColor(color);
+        graphics.setColor(backgroundColor);
         graphics.fillRect(0, 0, imageButton.getWidth(), imageButton.getHeight());
         graphics.setColor(borderColor);
         graphics.drawRect(0, 0, imageButton.getWidth() - 1, imageButton.getHeight() - 1);
