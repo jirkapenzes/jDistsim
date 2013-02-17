@@ -19,9 +19,17 @@ public class InternalPanel extends JComponent {
     private boolean visibleIconBar = false;
     private boolean showNothing = false;
     private boolean footerBorderLine = false;
+    private boolean topBorderLine = false;
 
     public InternalPanel(String titleName) {
+        this(titleName, false, false);
+    }
+
+    public InternalPanel(String titleName, boolean topBorderLine, boolean footerBorderLine) {
         Logger.log("Initialize internal panel -> " + titleName);
+        setTopBorderLine(topBorderLine);
+        setFooterBorderLine(footerBorderLine);
+
         initializeComponents(titleName);
     }
 
@@ -37,13 +45,19 @@ public class InternalPanel extends JComponent {
 
     public void setFooterBorderLine(boolean footerBorderLine) {
         this.footerBorderLine = footerBorderLine;
+        repaint();
+    }
+
+    public void setTopBorderLine(boolean topBorderLine) {
+        this.topBorderLine = topBorderLine;
+        repaint();
     }
 
     private void initializeComponents(String titleName) {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(0, panelThickness, 0, panelThickness));
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0));
-        titlePanel.add(new GradientTitle(this, titleName, new Color(236, 236, 236), new Color(228, 228, 228)));
+        titlePanel.add(new GradientTitle(this, titleName, new Color(236, 236, 236), new Color(228, 228, 228), topBorderLine));
 
         if (visibleIconBar)
             titlePanel.add(new IconBar());
@@ -78,6 +92,7 @@ public class InternalPanel extends JComponent {
             graphics2D.setColor(new Color(192, 192, 192));
             graphics2D.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
         }
+
         // g.setBackgroundColor(new Color(192, 192, 192));
         // g.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight());
     }
