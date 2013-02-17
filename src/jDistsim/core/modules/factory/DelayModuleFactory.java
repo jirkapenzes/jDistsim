@@ -26,9 +26,9 @@ public class DelayModuleFactory implements IModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Module(new DelayModuleView(), moduleConfiguration);
-        module.getOutputConnectedPoints().add(new ModuleConnectedPoint(1));
-        module.getInputConnectedPoints().add(new ModuleConnectedPoint(Integer.MAX_VALUE));
+        Module module = new Module(new DelayModuleView(), moduleConfiguration, false);
+        module.addOutputPoint(new ModuleConnectedPoint(1));
+        module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }
 }

@@ -26,8 +26,8 @@ public class DisposeModuleFactory implements IModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Module(new DisposeModuleView(), moduleConfiguration);
-        module.getInputConnectedPoints().add(new ModuleConnectedPoint(Integer.MAX_VALUE));
+        Module module = new Module(new DisposeModuleView(), moduleConfiguration, false);
+        module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }
 }

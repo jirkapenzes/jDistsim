@@ -26,8 +26,8 @@ public class CreateModuleFactory implements IModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Module(new CreateModuleView(), moduleConfiguration);
-        module.getOutputConnectedPoints().add(new ModuleConnectedPoint(1));
+        Module module = new Module(new CreateModuleView(), moduleConfiguration, true);
+        module.addOutputPoint(new ModuleConnectedPoint(1));
         return module;
     }
 }
