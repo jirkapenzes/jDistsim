@@ -19,7 +19,7 @@ public class TabGroupControl extends JComponent {
     private TabPanel tabPanel;
 
     public TabGroupControl(TabPanel tabPanel) {
-        tabItemsList = new ArrayList<TabTitleControl>();
+        tabItemsList = new ArrayList<>();
         this.tabPanel = tabPanel;
         setBorder(new EmptyBorder(0, 0, 0, 1));
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
