@@ -3,6 +3,8 @@ package jDistsim.ui.panel.workspace;
 import jDistsim.ui.control.GradientTitle;
 import jDistsim.ui.control.tabControl.TabControl;
 import jDistsim.ui.control.tabControl.TabItem;
+import jDistsim.ui.panel.LogTabPanel;
+import jDistsim.ui.panel.NotesTabPanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
 
@@ -16,6 +18,9 @@ import java.awt.*;
  * Time: 21:21
  */
 public class InformationPanel extends JPanel {
+
+    private LogTabPanel logTabPanel;
+    private NotesTabPanel notesTabPanel;
 
     public InformationPanel() {
         Logger.log("Initialize information panel");
@@ -33,24 +38,21 @@ public class InformationPanel extends JPanel {
         panel.setLayout(new BorderLayout());
 
         JPanel panel1 = new JPanel();
-        //panel1.setBackground(Color.red);
 
-        JPanel panel2 = new JPanel();
-        //panel2.setBackground(Color.blue);
-
-        JPanel panel3 = new JPanel();
-        //panel3.setBackground(Color.gray);
+        logTabPanel = new LogTabPanel();
+        notesTabPanel = new NotesTabPanel();
 
         JPanel panel4 = new JPanel();
         //panel4.setBackground(Color.yellow);
 
-        panel3.setBackground(new Color(231, 231, 231));
+        panel1.setBackground(new Color(231, 231, 231));
         TabControl tabControl = new TabControl();
-        tabControl.addTabItem(new TabItem("Entities", panel3));
-        tabControl.addTabItem(new TabItem("Application logs", panel3));
-        tabControl.addTabItem(new TabItem("Remote models", panel3));
-        tabControl.addTabItem(new TabItem("Notes", panel3));
-        tabControl.addTabItem(new TabItem("Output", panel3));
+        tabControl.addTabItem(new TabItem("Entities", panel1));
+        tabControl.addTabItem(new TabItem("Application logs", logTabPanel));
+        tabControl.addTabItem(new TabItem("Network", panel1));
+        tabControl.addTabItem(new TabItem("Remote models", panel1));
+        tabControl.addTabItem(new TabItem("Output", panel1));
+        tabControl.addTabItem(new TabItem("Notes", notesTabPanel));
 
         panel.add(tabControl, BorderLayout.CENTER);
         add(panel, BorderLayout.CENTER);
@@ -67,5 +69,9 @@ public class InformationPanel extends JPanel {
 
         g.setColor(new Color(192, 192, 192));
         g.drawLine(0, 0, getWidth(), 0);
+    }
+
+    public LogTabPanel getLogTabPanel() {
+        return logTabPanel;
     }
 }
