@@ -1,11 +1,13 @@
 package jDistsim.core.modules;
 
 
+import jDistsim.core.modules.common.ModuleProperty;
 import jDistsim.ui.module.ModuleView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +27,10 @@ public class ModuleUI extends JComponent {
         initializeUI();
     }
 
+    public boolean isCreateModule() {
+        return module.isCreateModule();
+    }
+
     private void initializeUI() {
         setSize(80, 50);
 
@@ -40,6 +46,15 @@ public class ModuleUI extends JComponent {
             ModuleConnectedPoint connectedPoint = module.getOutputConnectedPoints().get(index);
             connectedPoints.add(new ModuleConnectedPointUI(connectedPoint, ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index), this));
         }
+    }
+
+    public List<ModuleProperty> getProperties() {
+        List<ModuleProperty> properties = new ArrayList<>();
+        properties.add(new ModuleProperty("moduleUI.x", getX(), "location x"));
+        properties.add(new ModuleProperty("moduleUI.y", getY(), "location y"));
+        properties.addAll(getModule().getProperties().getAll());
+        Collections.sort(properties);
+        return properties;
     }
 
     public Module getModule() {
