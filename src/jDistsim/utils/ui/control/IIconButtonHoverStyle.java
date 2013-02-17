@@ -11,4 +11,8 @@ public interface IIconButtonHoverStyle {
 
     public void applyHoverStyle(ImageButton imageButton);
 
+    public void applyPressedStyle(ImageButton imageButton);
+
+    public void applyReleaseStyle(ImageButton imageButton);
+
 }
