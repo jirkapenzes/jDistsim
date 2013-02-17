@@ -25,4 +25,8 @@ public abstract class AbstractView<Component extends JComponent> {
         if (contentPane == null) contentPane = layout();
         return contentPane;
     }
+
+    public void make() {
+        getContentPane();
+    }
 }
