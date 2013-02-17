@@ -168,7 +168,7 @@ public class ModuleConnectorAction extends ModelSpaceListener {
         if (!currentActiveModule.getModule().canOutputConnected())
             return;
 
-        for (ModuleUI moduleUI : modelSpaceController.getModuleList().values()) {
+        for (ModuleUI moduleUI : modelSpaceController.getModel().getModuleList().values()) {
             if (!moduleUI.getModule().canInputConnected())
                 continue;
 
@@ -205,7 +205,7 @@ public class ModuleConnectorAction extends ModelSpaceListener {
                                 connectedPointUI,
                                 ModelSpaceHelper.calculatePointPosition(0, connectedPointUI, moduleUI),
                                 moduleUI,
-                                new ArrayList<>(modelSpaceController.getModuleList().values()),
+                                new ArrayList<>(modelSpaceController.getModel().getModuleList().values()),
                                 modelSpaceController);
                 connectPointHelper.addMouseMotionListener(connectorDrawerAdapterFactory.getMouseMotionAdapter());
                 connectPointHelper.addMouseListener(connectorDrawerAdapterFactory.getMouseAdapter());
@@ -279,7 +279,7 @@ public class ModuleConnectorAction extends ModelSpaceListener {
                 currentSelectedModule = currentSelectedConnectPoint.getOwner();
                 currentSelectedModule.setActiveBackgroundColor();
             } else {
-                ArrayList<ModuleUI> modules = new ArrayList<>(controller.getModuleList().values());
+                ArrayList<ModuleUI> modules = new ArrayList<>(controller.getModel().getModuleList().values());
                 for (ModuleUI moduleUI : modules) {
                     if (moduleUI.getIdentifier().equals(parentModule.getIdentifier()))
                         continue;

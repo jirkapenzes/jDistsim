@@ -1,7 +1,6 @@
 package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.controller.modelSpaceFeature.*;
-import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.modules.IModuleFactory;
@@ -20,7 +19,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,16 +29,11 @@ import java.util.List;
 public class ModelSpaceController extends AbstractController<ModelSpaceModel> implements DropTargetListener, IObserver {
 
     private ModelSpaceView view;
-    private ModuleUI currentDragModule;
-    private ConnectorLine currentSelectedLine;
-
-    private HashMap<String, ModuleUI> moduleList;
     private List<ModelSpaceListener> modelSpaceListeners;
 
     public ModelSpaceController(AbstractFrame mainFrame, ModelSpaceModel model) {
         super(mainFrame, model);
         view = getMainFrame().getView(ModelSpaceView.class);
-        moduleList = new HashMap<>();
         modelSpaceListeners = new ArrayList<>();
         initialize();
     }
@@ -59,8 +52,8 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     }
 
     public void unselectedActiveModule() {
-        if (currentSelectedLine != null) {
-            currentSelectedLine.setActive(false);
+        if (getModel().getCurrentSelectedLine() != null) {
+            getModel().getCurrentSelectedLine().setActive(false);
         }
 
         if (getModel().getCurrentActiveModule() != null) {
@@ -95,10 +88,6 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         return view;
     }
 
-    public HashMap<String, ModuleUI> getModuleList() {
-        return moduleList;
-    }
-
     @Override
     public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
         Transferable transferable = dropTargetDragEvent.getTransferable();
@@ -106,8 +95,10 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
             Module module = moduleFactory.create();
 
-            currentDragModule = new ModuleUI(module);
+            ModuleUI currentDragModule = new ModuleUI(module);
             currentDragModule.setLocation(ModelSpaceHelper.calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize()));
+            getModel().setCurrentDragModule(currentDragModule);
+
             view.getContentPane().add(currentDragModule, 0);
             view.getContentPane().repaint();
         } catch (Exception exception) {
@@ -117,6 +108,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
+        ModuleUI currentDragModule = getModel().getCurrentDragModule();
         Point location = ModelSpaceHelper.calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize());
         currentDragModule.setLocation(location);
     }
@@ -127,7 +119,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
     @Override
     public void dragExit(DropTargetEvent dte) {
-        view.getContentPane().remove(currentDragModule);
+        view.getContentPane().remove(getModel().getCurrentDragModule());
         view.getContentPane().repaint();
     }
 
@@ -138,10 +130,13 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         try {
             Transferable transferable = dropTargetDropEvent.getTransferable();
             IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
+
+            ModuleUI currentDragModule = getModel().getCurrentDragModule();
             currentDragModule.setIdentifier(moduleFactory.createIdentifier());
             currentDragModule.addMouseListener(new ModelSpaceModuleMouseAdapter());
             currentDragModule.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
-            moduleList.put(currentDragModule.getIdentifier(), currentDragModule);
+
+            getModel().getModuleList().put(currentDragModule.getIdentifier(), currentDragModule);
 
             for (ModelSpaceListener listener : modelSpaceListeners)
                 listener.onAddedModule(currentDragModule, this);
@@ -168,20 +163,21 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             return;
         }
 
+        getModel().getModuleList().notifyObservers("connect");
         moduleConnector.getConnectorLine().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 unselectedActiveModule();
 
-                if (currentSelectedLine != null) {
-                    currentSelectedLine.setActive(false);
+                if (getModel().getCurrentSelectedLine() != null) {
+                    getModel().getCurrentSelectedLine().setActive(false);
                 }
-
-                currentSelectedLine = moduleConnector.getConnectorLine();
-                currentSelectedLine.setActive(true);
-                currentSelectedLine.requestFocus();
+                getModel().setCurrentSelectedLine(moduleConnector.getConnectorLine());
+                getModel().getCurrentSelectedLine().setActive(true);
+                getModel().getCurrentSelectedLine().requestFocus();
             }
         });
+
 
         moduleConnector.getConnectorLine().addKeyListener(new KeyAdapter() {
             @Override
@@ -189,9 +185,11 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
                 if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE) {
                     modulePointA.disconnect(modulePointB);
 
-                    view.getContentPane().remove(currentSelectedLine);
+                    view.getContentPane().remove(getModel().getCurrentSelectedLine());
                     view.getContentPane().repaint();
                     view.getContentPane().requestFocus();
+
+                    getModel().getModuleList().notifyObservers("moduleList");
                 }
             }
         });

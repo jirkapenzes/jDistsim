@@ -3,6 +3,7 @@ package jDistsim.application.designer.controller.modelSpaceFeature;
 import jDistsim.application.designer.controller.ModelSpaceController;
 import jDistsim.core.modules.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
+import jDistsim.utils.logging.Logger;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -43,6 +44,7 @@ public class ModuleMovingAction extends ModelSpaceListener {
             ModuleUI moduleUI = getModuleUIFromMouseEvent(mouseEvent);
             modelSpaceController.selectedActiveModule(moduleUI);
             isDragged = false;
+            Logger.log("calculate new position");
         }
     }
 }
