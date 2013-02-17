@@ -32,7 +32,7 @@ public class ToolboxController extends AbstractController<ToolboxModel> implemen
 
     private ToolboxModel buildToolboxModel() {
         IModuleLibrary moduleLibrary = ServiceLocator.getInstance().get(IModuleLibrary.class);
-        ToolboxModel toolboxModel = new ToolboxModel();
+        ToolboxModel toolboxModel = getMainFrame().getModel(ToolboxModel.class);
         for (Map.Entry<String, ModuleContainer> entry : moduleLibrary.entrySet()) {
             ModuleContainer container = entry.getValue();
             toolboxModel.add(entry.getKey(), new ToolboxModelItem(container.getView(), container.getDescription(), container.getFactory(), entry.getKey()));
