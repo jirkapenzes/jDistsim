@@ -1,6 +1,6 @@
 package jDistsim.application.designer.model;
 
-import jDistsim.core.modules.IModuleFactory;
+import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractModel;
 
 import java.util.*;
@@ -14,8 +14,13 @@ public class ToolboxModel extends AbstractModel {
 
     private HashMap<String, ToolboxModelItem> items;
 
-    public ToolboxModel() {
+    public ToolboxModel(AbstractFrame mainFrame) {
+        super(mainFrame);
         this.items = new HashMap<>();
+    }
+
+    @Override
+    public void initialize() {
     }
 
     public ToolboxModel add(String identifier, ToolboxModelItem toolboxModelItem) {

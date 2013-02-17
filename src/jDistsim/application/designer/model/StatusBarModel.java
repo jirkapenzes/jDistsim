@@ -1,5 +1,6 @@
 package jDistsim.application.designer.model;
 
+import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractModel;
 
 /**
@@ -12,11 +13,16 @@ public class StatusBarModel extends AbstractModel {
     private String leftContentText;
     private String rightContentText;
 
-    public StatusBarModel() {
-        this(new String(), new String());
+    public StatusBarModel(AbstractFrame mainFrame) {
+        this(mainFrame, new String(), new String());
     }
 
-    public StatusBarModel(String leftContentText, String rightContentText) {
+    @Override
+    public void initialize() {
+    }
+
+    public StatusBarModel(AbstractFrame mainFrame, String leftContentText, String rightContentText) {
+        super(mainFrame);
         this.leftContentText = leftContentText;
         this.rightContentText = rightContentText;
     }

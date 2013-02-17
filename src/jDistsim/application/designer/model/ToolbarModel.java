@@ -1,5 +1,6 @@
 package jDistsim.application.designer.model;
 
+import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractModel;
 
 /**
@@ -10,6 +11,14 @@ import jDistsim.utils.pattern.mvc.AbstractModel;
 public class ToolbarModel extends AbstractModel {
 
     private boolean relations;
+
+    public ToolbarModel(AbstractFrame mainFrame) {
+        super(mainFrame);
+    }
+
+    @Override
+    public void initialize() {
+    }
 
     public boolean isRelations() {
         return relations;
