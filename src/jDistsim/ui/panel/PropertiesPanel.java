@@ -3,15 +3,19 @@ package jDistsim.ui.panel;
 import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.ui.control.MenuSeparator;
 import jDistsim.ui.control.button.ImageButton;
+import jDistsim.ui.panel.listener.PropertiesViewListener;
 import jDistsim.utils.resource.Resources;
 import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Author: Jirka Pénzeš
@@ -21,39 +25,31 @@ import java.awt.*;
 public class PropertiesPanel extends InternalPanel {
 
     private JTable table;
-    final Object rows[][] = {
-            {"identifier", "delay_1"},
-            {"input max capacity", Integer.MAX_VALUE},
-            {"occupied input", 2},
-            {"input max capacity", Integer.MAX_VALUE},
-            {"output max capacity", 1},
-            {"occupied output", "1"},
-            {"distributed", "false"},
-            {"correct", "true"},
-            {"location x", "54"},
-            {"location y", "357"},
-            {"delay time", "20"}
-    };
-    final Object headers[] = {"Property name", "Value"};
+    private JScrollPane scrollPane;
+    private JPanel contentPane;
+    private PropertiesViewListener viewListener;
 
-    public PropertiesPanel() {
-        super("Properties");
+    private ImageButton pinButton;
 
-        showNothing();
+    public PropertiesPanel(JTable table) {
+        super("Properties", false, false);
+        this.table = table;
+
         setFooterBorderLine(true);
-        setBackground(Color.white);
+        initialize();
+    }
 
-        JPanel contentPane = new JPanel();
+    private void initialize() {
+        contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
         contentPane.setBorder(null);
-        contentPane.setBackground(Color.white);
 
-        initializeControlPanel(contentPane);
-        initializeTable(contentPane);
+        initializeControlPanel();
+        initializeTable();
         add(contentPane, BorderLayout.CENTER);
     }
 
-    private void initializeControlPanel(JPanel contentPane) {
+    private void initializeControlPanel() {
         JPanel controlPanel = new JPanel();
         controlPanel.setBackground(new Color(237, 237, 237));
         controlPanel.setPreferredSize(new Dimension(getWidth(), 26));
@@ -66,17 +62,28 @@ public class PropertiesPanel extends InternalPanel {
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_edit.png"), hoverStyle, new Dimension(16, 16), padding));
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_depen.png"), hoverStyle, new Dimension(16, 16), padding));
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_help.png"), hoverStyle, new Dimension(16, 16), padding));
+
+        pinButton = new ImageButton(Resources.getImage("system/panels/g_pin.png"), hoverStyle, new Dimension(16, 16), padding);
+        pinButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                viewListener.onPinButtonClick(mouseEvent, pinButton);
+            }
+        });
+        controlPanel.add(pinButton);
+
         controlPanel.add(new MenuSeparator(14));
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_sort_az.png"), hoverStyle, new Dimension(16, 16), padding));
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_sort_za.png"), hoverStyle, new Dimension(16, 16), padding));
         controlPanel.add(new MenuSeparator(14));
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_remove.png"), hoverStyle, new Dimension(16, 16), padding));
 
+
         contentPane.add(controlPanel, BorderLayout.NORTH);
     }
 
-    private void initializeTable(JPanel contentPane) {
-        table = new JTable(rows, headers);
+    private void initializeTable() {
+        table.setModel(new DefaultTableModel(0, 2));
         table.setEnabled(false);
         table.setFocusable(false);
         table.setRowSelectionAllowed(false);
@@ -84,6 +91,21 @@ public class PropertiesPanel extends InternalPanel {
         table.setGridColor(new Color(156, 156, 156));
         table.setBorder(null);
 
+        renderTable();
+
+        int verticalScrollbarAsNeeded = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+        int horizontalScrollbarAsNeeded = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
+        scrollPane = new JScrollPane(table, verticalScrollbarAsNeeded, horizontalScrollbarAsNeeded);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getViewport().setBackground(Color.white);
+        contentPane.add(table, BorderLayout.CENTER);
+    }
+
+    public void setViewListener(PropertiesViewListener viewListener) {
+        this.viewListener = viewListener;
+    }
+
+    public void renderTable() {
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setReorderingAllowed(false);
         tableHeader.setResizingAllowed(false);
@@ -94,16 +116,14 @@ public class PropertiesPanel extends InternalPanel {
             tableColumn.setCellRenderer(new TableCellRenderer());
         }
 
-        table.getColumnModel().getColumn(0).setMinWidth(115);
-        table.getColumnModel().getColumn(0).setMaxWidth(115);
-        table.getColumnModel().getColumn(0).setPreferredWidth(115);
+        int width = 125;
+        table.getColumnModel().getColumn(0).setMinWidth(width);
+        table.getColumnModel().getColumn(0).setMaxWidth(width);
+        table.getColumnModel().getColumn(0).setPreferredWidth(width);
+    }
 
-        int verticalScrollbarAsNeeded = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
-        int horizontalScrollbarAsNeeded = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-        JScrollPane scrollPane = new JScrollPane(table, verticalScrollbarAsNeeded, horizontalScrollbarAsNeeded);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getViewport().setBackground(Color.white);
-        contentPane.add(scrollPane, BorderLayout.CENTER);
+    public ImageButton getPinnedButton() {
+        return pinButton;
     }
 
     private class TableCellRenderer extends DefaultTableCellRenderer {
@@ -130,9 +150,23 @@ public class PropertiesPanel extends InternalPanel {
             titleLabel.setBackground(new Color(0, 0, 0));
 
             panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(156, 156, 156)));
-            panel.setBackground(new Color(205,205,205));
+            panel.setBackground(new Color(205, 205, 205));
             panel.add(titleLabel);
             return panel;
         }
+    }
+
+    @Override
+    public void showNothing() {
+        table.setVisible(false);
+        contentPane.setOpaque(false);
+        super.showNothing();
+    }
+
+    @Override
+    public void hideNothing() {
+        table.setVisible(true);
+        contentPane.setOpaque(true);
+        super.hideNothing();
     }
 }
