@@ -1,6 +1,9 @@
 package jDistsim.application.designer.model;
 
+import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.core.modules.ModuleUI;
+import jDistsim.utils.collection.observable.ObservableHashMap;
+import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractModel;
 import jDistsim.utils.pattern.observer.IObserver;
 import jDistsim.utils.pattern.observer.Observable;
@@ -14,9 +17,21 @@ public class ModelSpaceModel extends AbstractModel implements IObserver {
 
     private ModuleUI currentActiveModule;
     private boolean relations;
+    private ModuleUI currentDragModule;
+    private ConnectorLine currentSelectedLine;
+    private ObservableHashMap<String, ModuleUI> moduleList;
 
-    public ModelSpaceModel(ToolbarModel toolbarModel) {
+    public ModelSpaceModel(AbstractFrame mainFrame) {
+        super(mainFrame);
+    }
+
+    @Override
+    public void initialize() {
+        ToolbarModel toolbarModel = getMainFrame().getModel(ToolbarModel.class);
         toolbarModel.addObserver(this);
+
+        moduleList = new ObservableHashMap<>();
+        moduleList.addObserver(this);
     }
 
     public boolean isRelations() {
@@ -32,9 +47,31 @@ public class ModelSpaceModel extends AbstractModel implements IObserver {
         return currentActiveModule;
     }
 
+
     public void setCurrentActiveModule(ModuleUI currentActiveModule) {
         this.currentActiveModule = currentActiveModule;
         notifyObservers("currentActiveModule");
+    }
+
+    public ConnectorLine getCurrentSelectedLine() {
+        return currentSelectedLine;
+    }
+
+    public void setCurrentSelectedLine(ConnectorLine currentSelectedLine) {
+        this.currentSelectedLine = currentSelectedLine;
+        notifyObservers("currentSelectedLine");
+    }
+
+    public ModuleUI getCurrentDragModule() {
+        return currentDragModule;
+    }
+
+    public void setCurrentDragModule(ModuleUI currentDragModule) {
+        this.currentDragModule = currentDragModule;
+    }
+
+    public ObservableHashMap<String, ModuleUI> getModuleList() {
+        return moduleList;
     }
 
     @Override
@@ -42,6 +79,10 @@ public class ModelSpaceModel extends AbstractModel implements IObserver {
         if (observable instanceof ToolbarModel) {
             ToolbarModel toolbarModel = (ToolbarModel) observable;
             setRelations(toolbarModel.isRelations());
+        }
+
+        if (observable instanceof ObservableHashMap) {
+            notifyObservers("moduleList");
         }
     }
 }
