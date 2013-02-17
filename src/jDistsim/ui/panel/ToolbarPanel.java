@@ -37,6 +37,17 @@ public class ToolbarPanel extends JPanel {
         add(new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), hoverStyle, iconDimension, padding));
         add(new MenuSeparator());
         relationsButton = add(new ImageButton(Resources.getImage("system/toolbar-icon-relationship.png"), hoverStyle, iconDimension, padding, true));
+        add(new ImageButton(Resources.getImage("system/zajimave/application-network.png"), hoverStyle, iconDimension, padding, true));
+        add(new ImageButton(Resources.getImage("system/zajimave/sitemap-application-blue.png"), hoverStyle, iconDimension, padding, true));
+        add(new ImageButton(Resources.getImage("system/zajimave/flag-green.png"), hoverStyle, iconDimension, padding, true));
+        add(new MenuSeparator());
+        add(new ImageButton(Resources.getImage("system/zajimave/control.png"), hoverStyle, iconDimension, padding, true));
+        add(new ImageButton(Resources.getImage("system/zajimave/control-pause.png"), hoverStyle, iconDimension, padding, true));
+        add(new ImageButton(Resources.getImage("system/zajimave/control-stop-square.png"), hoverStyle, iconDimension, padding, true));
+        add(new MenuSeparator());
+        add(new ImageButton(Resources.getImage("system/zajimave/screwdriver.png"), hoverStyle, iconDimension, padding, true));
+        add(new ImageButton(Resources.getImage("system/zajimave/pp_controls_help.png"), hoverStyle, iconDimension, padding, true));
+
     }
 
     @Override
