@@ -17,7 +17,6 @@ public class ImageButton extends JComponent {
     private Image image;
     private IIconButtonHoverStyle iconButtonHoverStyle;
     private int paddingSize;
-    private boolean activeButton;
     private boolean active;
 
     public ImageButton(Image image) {
@@ -40,7 +39,6 @@ public class ImageButton extends JComponent {
         this.image = image;
         this.iconButtonHoverStyle = iconButtonHoverStyle;
         this.paddingSize = paddingSize;
-        this.activeButton = activeButton;
         this.active = false;
 
         initialize(dimension, paddingSize);
@@ -53,7 +51,6 @@ public class ImageButton extends JComponent {
         setSize(temporaryDimension);
 
         addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
                 if (active) return;
@@ -66,10 +63,17 @@ public class ImageButton extends JComponent {
             }
 
             @Override
+            public void mousePressed(MouseEvent e) {
+                iconLabelMousePressed();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                iconLabelMouseReleased();
+            }
+
+            @Override
             public void mouseClicked(MouseEvent e) {
-                if (activeButton)
-                    active = !active;
-                repaint();
             }
         });
     }
@@ -91,21 +95,34 @@ public class ImageButton extends JComponent {
             iconButtonHoverStyle.applyHoverStyle(this);
     }
 
+    private void iconLabelMousePressed() {
+        if (iconButtonHoverStyle != null)
+            iconButtonHoverStyle.applyPressedStyle(this);
+    }
+
+    private void iconLabelMouseReleased() {
+        if (iconButtonHoverStyle != null)
+            iconButtonHoverStyle.applyReleaseStyle(this);
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        if (activeButton && active) {
-            graphics.setColor(Color.gray);
+        if (active) {
+            graphics.setColor(new Color(199, 199, 199));
             graphics.fillRect(0, 0, getWidth(), getHeight());
-            graphics.setColor(Color.pink);
+            graphics.setColor(new Color(116, 116, 116));
             graphics.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
-
-        graphics.drawImage(image, paddingSize, paddingSize,
-                getWidth() - 2 * paddingSize, getHeight() - 2 * paddingSize, this);
+        graphics.drawImage(image, paddingSize, paddingSize, getWidth() - 2 * paddingSize, getHeight() - 2 * paddingSize, this);
     }
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        repaint();
     }
 }
