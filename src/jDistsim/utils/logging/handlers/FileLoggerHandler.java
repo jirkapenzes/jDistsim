@@ -51,21 +51,19 @@ public class FileLoggerHandler implements ILoggerHandler {
 
     @Override
     public void publish(LogMessage logMessage) {
-        PrintWriter output = null;
         try {
             File file;
             file = new File(fileName);
             if (!file.exists())
                 file.createNewFile();
 
-            output = new PrintWriter(new FileWriter(file));
+            PrintWriter output = new PrintWriter(new FileWriter(file));
             output.println(loggerFormatter.applyFormat(logMessage));
             output.close();
 
         } catch (IOException exception) {
             Logger.log(exception);
         } finally {
-            output.close();
         }
     }
 
