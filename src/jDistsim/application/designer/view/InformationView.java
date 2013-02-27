@@ -1,6 +1,8 @@
 package jDistsim.application.designer.view;
 
+import jDistsim.application.designer.model.InformationModel;
 import jDistsim.ui.panel.listener.LogTabListener;
+import jDistsim.ui.panel.listener.OutputTabListener;
 import jDistsim.ui.panel.workspace.InformationPanel;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractView;
@@ -22,9 +24,14 @@ public class InformationView extends AbstractView<InformationPanel> {
         informationPanel.getLogTabPanel().setListener(logTabListener);
     }
 
+    public void setOutputListener(OutputTabListener outputListener) {
+        informationPanel.getOutputTabPanel().setListener(outputListener);
+    }
+
     @Override
     protected InformationPanel layout() {
-        informationPanel = new InformationPanel();
+        InformationModel model = getMainFrame().getModel(InformationModel.class);
+        informationPanel = new InformationPanel(model.getOutputPanelTextArea());
         return informationPanel;
     }
 }
