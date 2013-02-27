@@ -1,5 +1,8 @@
 package jDistsim.application.designer;
 
+import jDistsim.ServiceLocator;
+import jDistsim.application.designer.common.DialogBuilder;
+import jDistsim.application.designer.common.IDialogBuilder;
 import jDistsim.application.designer.controller.*;
 import jDistsim.application.designer.model.*;
 import jDistsim.application.designer.view.*;
@@ -63,7 +66,9 @@ public class MainFrame extends AbstractFrame {
 
     @Override
     protected JFrame layout() {
-        Logger.log("Component factory make main frame");
-        return componentFactory.frame(TextResources.APPLICATION_NAME, getView(DesignerView.class).getContentPane(), new MenuBar());
+        Logger.log("Component factory build main frame");
+        JFrame mainFrame = componentFactory.frame(TextResources.APPLICATION_NAME, getView(DesignerView.class).getContentPane(), new MenuBar());
+        ServiceLocator.getInstance().bind(IDialogBuilder.class, new DialogBuilder(mainFrame));
+        return mainFrame;
     }
 }
