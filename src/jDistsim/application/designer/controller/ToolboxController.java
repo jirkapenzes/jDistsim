@@ -12,8 +12,6 @@ import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 
-import java.util.Map;
-
 /**
  * Author: Jirka Pénzeš
  * Date: 9.11.12
@@ -33,9 +31,8 @@ public class ToolboxController extends AbstractController<ToolboxModel> implemen
     private ToolboxModel buildToolboxModel() {
         IModuleLibrary moduleLibrary = ServiceLocator.getInstance().get(IModuleLibrary.class);
         ToolboxModel toolboxModel = getMainFrame().getModel(ToolboxModel.class);
-        for (Map.Entry<String, ModuleContainer> entry : moduleLibrary.entrySet()) {
-            ModuleContainer container = entry.getValue();
-            toolboxModel.add(entry.getKey(), new ToolboxModelItem(container.getView(), container.getDescription(), container.getFactory(), entry.getKey()));
+        for (ModuleContainer container : moduleLibrary.containersList()) {
+            toolboxModel.add(container.getBaseName(), new ToolboxModelItem(container.getView(), container.getDescription(), container.getFactory(), container.getBaseName()));
         }
         return toolboxModel;
     }

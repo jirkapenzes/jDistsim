@@ -60,6 +60,10 @@ public class ConnectorLine extends JComponent {
 
     }
 
+    public List<Point> getPoints() {
+        return points;
+    }
+
     private void recalculatePointsCoordinates() {
         points.clear();
 

@@ -1,16 +1,21 @@
 package jDistsim.application.designer.controller;
 
+import jDistsim.ServiceLocator;
 import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.model.PropertiesModel;
 import jDistsim.application.designer.view.PropertiesView;
+import jDistsim.core.modules.IModuleUIFactory;
 import jDistsim.core.modules.Module;
 import jDistsim.core.modules.ModuleConnectedPointUI;
 import jDistsim.core.modules.ModuleUI;
 import jDistsim.core.modules.common.ModuleProperty;
+import jDistsim.core.simulation.event.library.IModuleLibrary;
 import jDistsim.ui.control.button.ImageButton;
+import jDistsim.ui.dialog.BaseModuleSettingsDialog;
 import jDistsim.ui.panel.listener.ModulesViewListener;
 import jDistsim.ui.panel.listener.PropertiesViewListener;
+import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.observer.IObserver;
@@ -22,7 +27,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Author: Jirka Pénzeš
@@ -105,6 +112,60 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
         pinnedProperties = !imageButton.isActive();
         imageButton.setActive(!imageButton.isActive());
         rebuildProperties();
+    }
+
+    @Override
+    public void onAscendingButtonClick(MouseEvent mouseEvent, Object sender) {
+        sortTableProperties(true);
+    }
+
+    @Override
+    public void onDescendingButtonClick(MouseEvent mouseEvent, Object sender) {
+        sortTableProperties(false);
+    }
+
+    @Override
+    public void onEditButtonClick(MouseEvent mouseEvent, Object sender) {
+
+        if (currentSelectedModule != null) {
+            Module module = currentSelectedModule.getModule();
+            IModuleUIFactory uiFactory = ServiceLocator.getInstance().get(IModuleLibrary.class).get(module.getClass()).getUIFactory();
+            BaseModuleSettingsDialog dialog = uiFactory.makeSettingsDialog(getMainFrame().getFrame(), module);
+            dialog.setVisible(true);
+        }
+    }
+
+    private void sortTableProperties(boolean ascending) {
+        List<ModuleProperty> properties = GetPropertiesFromTable();
+
+        if (ascending) {
+            Collections.sort(properties);
+            Logger.log("Properties are sorted in ascending order");
+        } else {
+            Collections.sort(properties, Collections.reverseOrder());
+            Logger.log("Properties are sorted in descending order");
+        }
+        refreshTable(properties);
+
+        PropertiesView view = getMainFrame().getView(PropertiesView.class);
+        view.renderTable();
+    }
+
+
+    private List<ModuleProperty> GetPropertiesFromTable() {
+        JTable table = getModel().getTable();
+        List<ModuleProperty> tableData = new ArrayList<>(table.getRowCount());
+
+        Vector data = ((DefaultTableModel) table.getModel()).getDataVector();
+        for (int index = 0; index < table.getRowCount(); index++) {
+            Vector row = (Vector) data.elementAt(index);
+            String key = row.elementAt(2).toString();
+            Object value = row.elementAt(1);
+            String text = row.elementAt(0).toString();
+            ModuleProperty property = new ModuleProperty(key, value, text);
+            tableData.add(property);
+        }
+        return tableData;
     }
 
     public void switchModuleView(ImageButton imageButton, ModuleView moduleView) {
@@ -205,15 +266,17 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
     }
 
     private void refreshTable(List<ModuleProperty> properties) {
-        Object[][] data = new Object[properties.size()][2];
+        Object[][] data = new Object[properties.size()][3];
         for (int index = 0; index < properties.size(); index++) {
             ModuleProperty property = properties.get(index);
 
             //defaultTableModel.addRow(new Object[]{property.getText(), property.getValue()});
             data[index][0] = property.getText();
             data[index][1] = property.getValue();
+            data[index][2] = property.getKey();
         }
-        getModel().getTable().setModel(new DefaultTableModel(data, new Object[]{"key", "value"}));
+        getModel().getTable().setModel(new DefaultTableModel(data, new Object[]{"text", "value", "key"}));
+        Logger.log("Set new model for properties table");
     }
 
     private void rebuildModules() {
