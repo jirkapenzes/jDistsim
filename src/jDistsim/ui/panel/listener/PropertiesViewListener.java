@@ -10,4 +10,10 @@ import java.awt.event.MouseEvent;
 public interface PropertiesViewListener {
 
     public void onPinButtonClick(MouseEvent mouseEvent, Object sender);
+
+    public void onAscendingButtonClick(MouseEvent mouseEvent, Object sender);
+
+    public void onDescendingButtonClick(MouseEvent mouseEvent, Object sender);
+
+    void onEditButtonClick(MouseEvent mouseEvent, Object sender);
 }
