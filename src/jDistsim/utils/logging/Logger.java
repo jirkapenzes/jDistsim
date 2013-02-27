@@ -26,7 +26,7 @@ public class Logger {
     private static boolean isTurned = true;
     private static boolean isTurnedDebug = true;
 
-    public enum Level {None, Info, Warning, Error, Severe, Fine, Debug}
+    public enum Level {None, Info, Warning, Error, Severe, Fine, Simulator, Debug}
 
     static {
         synchronized (lock) {
