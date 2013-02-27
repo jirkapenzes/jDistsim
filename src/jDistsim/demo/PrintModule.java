@@ -16,7 +16,7 @@ public class PrintModule extends Module {
     @Override
     public void execute(Simulator simulator, Entity entity) {
         System.out.println("tick on " + getIdentifier() + ": " + simulator.getLocalTime() + " -> " + entity.getIdentifier() + " " + entity.toString());
-        //System.out.println(entity.getAttribute("order"));
+        //System.out.println(entity.get("order"));
 
         double currentTime = simulator.getLocalTime();
         for (Module module : getAllDependencies()) {
