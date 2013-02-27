@@ -2,6 +2,7 @@ package jDistsim.core.modules;
 
 
 import jDistsim.core.modules.common.ModuleProperty;
+import jDistsim.ui.module.ColorScheme;
 import jDistsim.ui.module.ModuleView;
 
 import javax.swing.*;
@@ -136,12 +137,12 @@ public class ModuleUI extends JComponent {
     }
 
     public void setActiveBackgroundColor() {
-        module.getView().setBackgroundColor(new Color(141, 210, 60));
+        module.getView().setColorScheme(new ColorScheme(new Color(141, 210, 60), new Color(70, 127, 137)));
         repaint();
     }
 
     public void setDefaultBackgroundColor() {
-        module.getView().setDefaultBackgroundColor();
+        module.getView().setDefaultColorScheme();
         repaint();
     }
 
@@ -174,5 +175,15 @@ public class ModuleUI extends JComponent {
             possiblePoints.add(connectedPointUI);
         }
         return possiblePoints;
+    }
+
+    public void setColorScheme(ColorScheme colorScheme) {
+        module.getView().setColorScheme(colorScheme);
+        repaint();
+    }
+
+    public void setDefaultColorScheme() {
+        module.getView().setDefaultColorScheme();
+        repaint();
     }
 }

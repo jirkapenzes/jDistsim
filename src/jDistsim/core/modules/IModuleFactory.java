@@ -11,4 +11,5 @@ public interface IModuleFactory {
 
     public String createIdentifier();
 
+    void setModuleConfiguration(ModuleConfiguration moduleConfiguration);
 }

@@ -1,5 +1,7 @@
 package jDistsim.core.modules;
 
+import jDistsim.ui.module.ColorScheme;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -20,4 +22,6 @@ public interface IModuleView {
     List<Point> getInputPoints();
 
     List<Point> getOutputPoints();
+
+    void setDefaultColorScheme(ColorScheme defaultColorScheme);
 }

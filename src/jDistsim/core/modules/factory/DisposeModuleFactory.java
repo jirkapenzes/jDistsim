@@ -4,6 +4,7 @@ import jDistsim.core.modules.IModuleFactory;
 import jDistsim.core.modules.Module;
 import jDistsim.core.modules.ModuleConfiguration;
 import jDistsim.core.modules.ModuleConnectedPoint;
+import jDistsim.core.modules.lib.DisposeModule;
 import jDistsim.ui.module.moduleView.DisposeModuleView;
 
 /**
@@ -16,8 +17,7 @@ public class DisposeModuleFactory implements IModuleFactory {
     private int currentNumber;
     private ModuleConfiguration moduleConfiguration;
 
-    public DisposeModuleFactory(ModuleConfiguration moduleConfiguration) {
-        this.moduleConfiguration = moduleConfiguration;
+    public DisposeModuleFactory() {
     }
 
     public String createIdentifier() {
@@ -25,8 +25,13 @@ public class DisposeModuleFactory implements IModuleFactory {
     }
 
     @Override
+    public void setModuleConfiguration(ModuleConfiguration moduleConfiguration) {
+        this.moduleConfiguration = moduleConfiguration;
+    }
+
+    @Override
     public Module create() {
-        Module module = new Module(new DisposeModuleView(), moduleConfiguration, false);
+        Module module = new DisposeModule(new DisposeModuleView(moduleConfiguration.getColorScheme()), moduleConfiguration);
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }

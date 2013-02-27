@@ -1,7 +1,10 @@
 package jDistsim.core.modules;
 
+import jDistsim.application.designer.common.Application;
 import jDistsim.core.modules.common.ModuleProperties;
 import jDistsim.core.modules.common.ModuleProperty;
+import jDistsim.core.simulation.simulator.ISimulator;
+import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.collection.ReadOnlyList;
 import jDistsim.utils.collection.observable.ObservableList;
@@ -9,32 +12,36 @@ import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.observer.IObserver;
 import jDistsim.utils.pattern.observer.Observable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Author: Jirka Pénzeš
  * Date: 24.11.12
  * Time: 12:16
  */
-public class Module extends Observable implements IObserver {
+public abstract class Module extends Observable implements IObserver, Cloneable {
 
     private String identifier;
     private final ModuleView view;
     private final ObservableList<ModuleConnectedPoint> inputConnectedPoints;
     private final ObservableList<ModuleConnectedPoint> outputConnectedPoints;
     private final ModuleProperties properties;
-    private boolean createModule;
 
-    public Module(ModuleView view, ModuleConfiguration moduleConfiguration, boolean createModule) {
+    public Module(ModuleView view, ModuleConfiguration moduleConfiguration) {
         this.identifier = moduleConfiguration.getBaseIdentifier();
         this.view = view;
-        this.createModule = createModule;
         this.properties = new ModuleProperties(this);
 
         inputConnectedPoints = new ObservableList<>(this);
         outputConnectedPoints = new ObservableList<>(this);
 
         initialize();
+        initializeDefaultValues();
     }
+
+    protected abstract void initializeDefaultValues();
 
     private void initialize() {
         properties.set(new ModuleProperty("identifier", getIdentifier(), "identifier"));
@@ -43,6 +50,30 @@ public class Module extends Observable implements IObserver {
         setInputPointsProperties();
         setOutputPointsProperties();
     }
+
+    public void initializeForSimulation(ISimulator simulator) {
+        resetBaseStates(simulator);
+        resetStates(simulator);
+    }
+
+    protected abstract void resetStates(ISimulator simulator);
+
+    private void resetBaseStates(ISimulator simulator) {
+
+    }
+
+    public void execute(ISimulator simulator, Entity entity) {
+        preExecute(simulator, entity);
+        logic(simulator, entity);
+    }
+
+    protected abstract void logic(ISimulator simulator, Entity entity);
+
+    protected void preExecute(ISimulator simulator, Entity entity) {
+        entity.getAttributes().put("modelLifeCycle", "->" + getIdentifier());
+        entity.getAttributes().put("distributedLifeCycle", "->" + getLongIdentifier());
+    }
+
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
@@ -54,12 +85,26 @@ public class Module extends Observable implements IObserver {
         return identifier;
     }
 
+    public String getLongIdentifier() {
+        return Application.global().getModelName() + "." + getIdentifier();
+    }
+
     public ModuleView getView() {
         return view;
     }
 
     public ModuleProperties getProperties() {
         return properties;
+    }
+
+    public Iterable<Module> getAllOutputDependencies() {
+        List<Module> allDependencies = new ArrayList<>();
+        for (ModuleConnectedPoint connectedPoint : getOutputConnectedPoints()) {
+            for (Module module : connectedPoint.getDependencies()) {
+                allDependencies.add(module);
+            }
+        }
+        return allDependencies;
     }
 
     public void addInputPoint(ModuleConnectedPoint moduleConnectedPoint) {
@@ -95,7 +140,7 @@ public class Module extends Observable implements IObserver {
     }
 
     public boolean isCreateModule() {
-        return createModule;
+        return this instanceof RootModule;
     }
 
     @Override
@@ -144,5 +189,27 @@ public class Module extends Observable implements IObserver {
     public void refreshProperties() {
         setInputPointsProperties();
         setOutputPointsProperties();
+    }
+
+    public boolean isValid() {
+        for (ModuleConnectedPoint connectedPoint : getInputConnectedPoints()) {
+            if (connectedPoint.getDependencies().size() == 0)
+                return false;
+        }
+        for (ModuleConnectedPoint connectedPoint : getOutputConnectedPoints()) {
+            if (connectedPoint.getDependencies().size() == 0)
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        try {
+            final Module result = (Module) super.clone();
+            return result;
+        } catch (final CloneNotSupportedException ex) {
+            throw new AssertionError();
+        }
     }
 }

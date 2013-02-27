@@ -1,5 +1,7 @@
 package jDistsim.core.modules;
 
+import jDistsim.ui.module.ColorScheme;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -12,12 +14,14 @@ public class ModuleConfiguration {
 
     private String baseIdentifier;
     private Dimension moduleSize;
+    private ColorScheme colorScheme;
     private ArrayList<ModulePoint> connectingInputPoints;
     private ArrayList<ModulePoint> connectingOutputPoints;
 
-    public ModuleConfiguration(String baseIdentifier, Dimension moduleSize) {
+    public ModuleConfiguration(String baseIdentifier, Dimension moduleSize, ColorScheme defaultColorScheme) {
         this.baseIdentifier = baseIdentifier;
         this.moduleSize = moduleSize;
+        this.colorScheme = defaultColorScheme;
         connectingInputPoints = new ArrayList<>();
         connectingOutputPoints = new ArrayList<>();
     }
@@ -36,5 +40,9 @@ public class ModuleConfiguration {
 
     public ArrayList<ModulePoint> getConnectingOutputPoints() {
         return connectingOutputPoints;
+    }
+
+    public ColorScheme getColorScheme() {
+        return colorScheme;
     }
 }
