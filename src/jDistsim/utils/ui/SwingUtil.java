@@ -1,5 +1,6 @@
 package jDistsim.utils.ui;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -27,5 +28,16 @@ public final class SwingUtil {
         }
         getComponentTreePosition(component.getParent(), position);
         position.add(new Integer(component.getParent().getComponentCount() - getComponentIndex(component)));
+    }
+
+    public static void setAbsoluteDimension(JComponent component, int width, int height) {
+        setAbsoluteDimension(component, new Dimension(width, height));
+    }
+
+    public static void setAbsoluteDimension(JComponent component, Dimension dimension) {
+        component.setPreferredSize(dimension);
+        component.setMinimumSize(dimension);
+        component.setMaximumSize(dimension);
+        component.setSize(dimension);
     }
 }
