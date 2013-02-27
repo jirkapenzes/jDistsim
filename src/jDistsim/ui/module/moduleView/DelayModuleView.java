@@ -1,5 +1,6 @@
 package jDistsim.ui.module.moduleView;
 
+import jDistsim.ui.module.ColorScheme;
 import jDistsim.ui.module.ModuleView;
 
 import java.awt.*;
@@ -10,6 +11,14 @@ import java.awt.*;
  * Time: 20:58
  */
 public class DelayModuleView extends ModuleView {
+
+    public DelayModuleView() {
+        super();
+    }
+
+    public DelayModuleView(ColorScheme colorScheme) {
+        super(colorScheme);
+    }
 
     @Override
     protected void initializeConnectedPoints(int width, int height) {

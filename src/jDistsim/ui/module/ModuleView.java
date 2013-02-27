@@ -17,15 +17,19 @@ import java.util.List;
 public abstract class ModuleView implements IModuleView {
 
     private JComponent view;
+    private ColorScheme colorScheme;
+    private ColorScheme defaultColorScheme;
+
     protected final List<Point> inputPoints;
     protected final List<Point> outputPoints;
 
-    private Color backgroundColor;
-    private Color borderColor;
-
     public ModuleView() {
-        setDefaultBackgroundColor();
-        setDefaultBorderColor();
+        this(null);
+    }
+
+    public ModuleView(ColorScheme colorScheme) {
+        this.defaultColorScheme = colorScheme;
+        setDefaultColorScheme();
 
         view = new ModuleViewComponent();
         inputPoints = new ArrayList<>();
@@ -37,6 +41,20 @@ public abstract class ModuleView implements IModuleView {
                 invalidateConnectedPoints();
             }
         });
+    }
+
+    @Override
+    public void setDefaultColorScheme(ColorScheme defaultColorScheme) {
+        this.defaultColorScheme = defaultColorScheme;
+        if (colorScheme == null) setDefaultColorScheme();
+    }
+
+    public ColorScheme getColorScheme() {
+        return colorScheme;
+    }
+
+    public void setColorScheme(ColorScheme colorScheme) {
+        this.colorScheme = colorScheme;
     }
 
     public void invalidateConnectedPoints() {
@@ -63,9 +81,9 @@ public abstract class ModuleView implements IModuleView {
         setDefaultBasicStroke(graphics2D);
 
         Polygon polygon = getBounds(width, height);
-        graphics2D.setColor(getBackgroundColor());
+        graphics2D.setColor(colorScheme.getBackgroundColor());
         graphics2D.fillPolygon(polygon);
-        graphics2D.setColor(getBorderColor());
+        graphics2D.setColor(colorScheme.getBorderColor());
         graphics2D.drawPolygon(polygon);
     }
 
@@ -78,28 +96,8 @@ public abstract class ModuleView implements IModuleView {
         graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
     }
 
-    public Color getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public Color getBorderColor() {
-        return borderColor;
-    }
-
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
-    public void setBorderColor(Color borderColor) {
-        this.borderColor = borderColor;
-    }
-
-    public void setDefaultBackgroundColor() {
-        setBackgroundColor(new Color(67, 201, 224));
-    }
-
-    public void setDefaultBorderColor() {
-        setBorderColor(new Color(70, 127, 137));
+    public void setDefaultColorScheme() {
+        colorScheme = defaultColorScheme;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package jDistsim.ui.module.moduleView;
 
+import jDistsim.ui.module.ColorScheme;
 import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.math.PointUtilities;
 
@@ -11,6 +12,14 @@ import java.awt.*;
  * Time: 0:12
  */
 public class DisposeModuleView extends ModuleView {
+
+    public DisposeModuleView() {
+        super();
+    }
+
+    public DisposeModuleView(ColorScheme colorScheme) {
+        super(colorScheme);
+    }
 
     @Override
     protected void initializeConnectedPoints(int width, int height) {
