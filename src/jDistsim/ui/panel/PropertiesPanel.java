@@ -9,10 +9,7 @@ import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -30,6 +27,9 @@ public class PropertiesPanel extends InternalPanel {
     private PropertiesViewListener viewListener;
 
     private ImageButton pinButton;
+    private ImageButton ascendingButton;
+    private ImageButton descendingButton;
+    private ImageButton settingsButton;
 
     public PropertiesPanel(JTable table) {
         super("Properties", false, false);
@@ -59,10 +59,6 @@ public class PropertiesPanel extends InternalPanel {
         IconBackgroundColorHoverStyle hoverStyle = new IconBackgroundColorHoverStyle();
         int padding = 3;
 
-        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_edit.png"), hoverStyle, new Dimension(16, 16), padding));
-        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_depen.png"), hoverStyle, new Dimension(16, 16), padding));
-        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_help.png"), hoverStyle, new Dimension(16, 16), padding));
-
         pinButton = new ImageButton(Resources.getImage("system/panels/g_pin.png"), hoverStyle, new Dimension(16, 16), padding);
         pinButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -70,11 +66,35 @@ public class PropertiesPanel extends InternalPanel {
                 viewListener.onPinButtonClick(mouseEvent, pinButton);
             }
         });
-        controlPanel.add(pinButton);
+        ascendingButton = new ImageButton(Resources.getImage("system/panels/pp_controls_sort_az.png"), hoverStyle, new Dimension(16, 16), padding);
+        ascendingButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                viewListener.onAscendingButtonClick(mouseEvent, ascendingButton);
+            }
+        });
+        descendingButton = new ImageButton(Resources.getImage("system/panels/pp_controls_sort_za.png"), hoverStyle, new Dimension(16, 16), padding);
+        descendingButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                viewListener.onDescendingButtonClick(mouseEvent, descendingButton);
+            }
+        });
+        settingsButton = new ImageButton(Resources.getImage("system/panels/pp_controls_edit.png"), hoverStyle, new Dimension(16, 16), padding);
+        settingsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                viewListener.onEditButtonClick(mouseEvent, settingsButton);
+            }
+        });
 
+        controlPanel.add(settingsButton);
+        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_depen.png"), hoverStyle, new Dimension(16, 16), padding));
+        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_help.png"), hoverStyle, new Dimension(16, 16), padding));
+        controlPanel.add(pinButton);
         controlPanel.add(new MenuSeparator(14));
-        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_sort_az.png"), hoverStyle, new Dimension(16, 16), padding));
-        controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_sort_za.png"), hoverStyle, new Dimension(16, 16), padding));
+        controlPanel.add(ascendingButton);
+        controlPanel.add(descendingButton);
         controlPanel.add(new MenuSeparator(14));
         controlPanel.add(new ImageButton(Resources.getImage("system/panels/pp_controls_remove.png"), hoverStyle, new Dimension(16, 16), padding));
 
@@ -83,7 +103,7 @@ public class PropertiesPanel extends InternalPanel {
     }
 
     private void initializeTable() {
-        table.setModel(new DefaultTableModel(0, 2));
+        table.setModel(new DefaultTableModel(0, 3));
         table.setEnabled(false);
         table.setFocusable(false);
         table.setRowSelectionAllowed(false);
@@ -116,10 +136,14 @@ public class PropertiesPanel extends InternalPanel {
             tableColumn.setCellRenderer(new TableCellRenderer());
         }
 
-        int width = 125;
-        table.getColumnModel().getColumn(0).setMinWidth(width);
-        table.getColumnModel().getColumn(0).setMaxWidth(width);
-        table.getColumnModel().getColumn(0).setPreferredWidth(width);
+        setColumnWidth(0, 125);
+        setColumnWidth(2, 0);
+    }
+
+    private void setColumnWidth(int index, int width) {
+        table.getColumnModel().getColumn(index).setMinWidth(width);
+        table.getColumnModel().getColumn(index).setMaxWidth(width);
+        table.getColumnModel().getColumn(index).setPreferredWidth(width);
     }
 
     public ImageButton getPinnedButton() {

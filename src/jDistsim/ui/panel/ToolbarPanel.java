@@ -2,22 +2,28 @@ package jDistsim.ui.panel;
 
 import jDistsim.ui.control.MenuSeparator;
 import jDistsim.ui.control.button.ImageButton;
+import jDistsim.ui.panel.listener.ToolbarListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.Resources;
+import jDistsim.utils.ui.ListenerablePanel;
 import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
 
-import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 3.10.12
  * Time: 0:24
  */
-public class ToolbarPanel extends JPanel {
+public class ToolbarPanel extends ListenerablePanel<ToolbarListener> {
 
     private Component relationsButton;
+
+    private ImageButton simulationStartButton;
+    private ImageButton simulationStopButton;
 
     public ToolbarPanel() {
         Logger.log("Initialize toolbox panel");
@@ -32,6 +38,24 @@ public class ToolbarPanel extends JPanel {
         Dimension iconDimension = new Dimension(16, 16);
         int padding = 5;
 
+        simulationStartButton = new ImageButton(Resources.getImage("system/toolbar/simulation_start.png"), hoverStyle, iconDimension, padding, true);
+        simulationStartButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                Logger.log("Pressed the simulation start button on toolbar");
+                getListener().onSimulationStartButtonClick(mouseEvent, simulationStartButton);
+            }
+        });
+
+        simulationStopButton = new ImageButton(Resources.getImage("system/toolbar/simulation_stop.png"), hoverStyle, iconDimension, padding, true);
+        simulationStopButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                Logger.log("Pressed the simulation stop button on toolbar");
+                getListener().onSimulationStopButtonClick(mouseEvent, simulationStopButton);
+            }
+        });
+
         add(new ImageButton(Resources.getImage("system/toolbar-icon-new.png"), hoverStyle, new Dimension(16, 16), padding));
         add(new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), hoverStyle, iconDimension, padding));
         add(new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), hoverStyle, iconDimension, padding));
@@ -41,9 +65,10 @@ public class ToolbarPanel extends JPanel {
         add(new ImageButton(Resources.getImage("system/zajimave/sitemap-application-blue.png"), hoverStyle, iconDimension, padding, true));
         add(new ImageButton(Resources.getImage("system/zajimave/flag-green.png"), hoverStyle, iconDimension, padding, true));
         add(new MenuSeparator());
-        add(new ImageButton(Resources.getImage("system/zajimave/control.png"), hoverStyle, iconDimension, padding, true));
+
+        add(simulationStartButton);
         add(new ImageButton(Resources.getImage("system/zajimave/control-pause.png"), hoverStyle, iconDimension, padding, true));
-        add(new ImageButton(Resources.getImage("system/zajimave/control-stop-square.png"), hoverStyle, iconDimension, padding, true));
+        add(simulationStopButton);
         add(new MenuSeparator());
         add(new ImageButton(Resources.getImage("system/zajimave/screwdriver.png"), hoverStyle, iconDimension, padding, true));
         add(new ImageButton(Resources.getImage("system/zajimave/pp_controls_help.png"), hoverStyle, iconDimension, padding, true));
