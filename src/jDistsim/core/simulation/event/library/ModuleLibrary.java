@@ -4,19 +4,23 @@ import jDistsim.core.modules.ModuleConfiguration;
 import jDistsim.core.modules.factory.CreateModuleFactory;
 import jDistsim.core.modules.factory.DelayModuleFactory;
 import jDistsim.core.modules.factory.DisposeModuleFactory;
+import jDistsim.core.modules.factory.ui.CreateModuleUIFactory;
+import jDistsim.core.modules.lib.CreateModule;
+import jDistsim.core.modules.lib.DelayModule;
+import jDistsim.core.modules.lib.DisposeModule;
 import jDistsim.core.simulation.event.description.CreateDescription;
 import jDistsim.core.simulation.event.description.DelayDescription;
 import jDistsim.core.simulation.event.description.DisposeDescription;
+import jDistsim.ui.module.ColorScheme;
 import jDistsim.ui.module.moduleView.CreateModuleView;
 import jDistsim.ui.module.moduleView.DelayModuleView;
 import jDistsim.ui.module.moduleView.DisposeModuleView;
 import jDistsim.utils.ioc.ObjectContainer;
 
 import java.awt.*;
-import java.util.AbstractMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
+
 
 /**
  * Author: Jirka Pénzeš
@@ -25,7 +29,8 @@ import java.util.Set;
  */
 public class ModuleLibrary implements IModuleLibrary {
 
-    private ObjectContainer<String> container;
+    private ObjectContainer<Class> container;
+    private ColorScheme defaultColorScheme = new ColorScheme(new Color(67, 201, 224), new Color(70, 127, 137));
 
     public ModuleLibrary() {
         container = new ObjectContainer<>();
@@ -33,27 +38,42 @@ public class ModuleLibrary implements IModuleLibrary {
     }
 
     private void configure() {
-        container.bind("create", new ModuleContainer())
+        container.bind(CreateModule.class, new ModuleContainer())
                 .toView(new CreateModuleView())
                 .toDescription(new CreateDescription())
-                .toFactory(new CreateModuleFactory(new ModuleConfiguration("create", new Dimension(80, 50))));
+                .toFactory(new CreateModuleFactory())
+                .toUIFactory(new CreateModuleUIFactory())
+                .withConfiguration(new ModuleConfiguration("create", new Dimension(80, 50), defaultColorScheme))
+                .build();
 
-        container.bind("dispose", new ModuleContainer())
+        container.bind(DisposeModule.class, new ModuleContainer())
                 .toView(new DisposeModuleView())
                 .toDescription(new DisposeDescription())
-                .toFactory(new DisposeModuleFactory(new ModuleConfiguration("dispose", new Dimension(80, 50))));
+                .toFactory(new DisposeModuleFactory())
+                .toUIFactory(new CreateModuleUIFactory())
+                .withConfiguration(new ModuleConfiguration("dispose", new Dimension(80, 50), defaultColorScheme))
+                .build();
 
-        container.bind("delay", new ModuleContainer())
+        container.bind(DelayModule.class, new ModuleContainer())
                 .toView(new DelayModuleView())
                 .toDescription(new DelayDescription())
-                .toFactory(new DelayModuleFactory(new ModuleConfiguration("delay", new Dimension(80, 50))));
+                .toFactory(new DelayModuleFactory())
+                .toUIFactory(new CreateModuleUIFactory())
+                .withConfiguration(new ModuleConfiguration("delay", new Dimension(80, 50), defaultColorScheme))
+                .build();
     }
 
-    public Set<Map.Entry<String, ModuleContainer>> entrySet() {
-        Set<Map.Entry<String, ModuleContainer>> entries = new HashSet<>();
-        for (Map.Entry<String, Object> entry : container.entrySet()) {
-            entries.add(new AbstractMap.SimpleEntry<>(entry.getKey(), (ModuleContainer) entry.getValue()));
+    @Override
+    public ModuleContainer get(Class moduleClass) {
+        return container.get(moduleClass);
+    }
+
+    @Override
+    public List<ModuleContainer> containersList() {
+        List<ModuleContainer> containers = new ArrayList<>();
+        for (Map.Entry<Class, Object> entry : container.entrySet()) {
+            containers.add((ModuleContainer) entry.getValue());
         }
-        return entries;
+        return containers;
     }
 }

@@ -1,7 +1,6 @@
 package jDistsim.core.simulation.event.library;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -10,5 +9,7 @@ import java.util.Set;
  */
 public interface IModuleLibrary {
 
-    public Set<Map.Entry<String, ModuleContainer>> entrySet();
+    ModuleContainer get(Class moduleClass);
+
+    List<ModuleContainer> containersList();
 }
