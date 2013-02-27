@@ -52,6 +52,10 @@ public abstract class AbstractFrame {
         componentFactory.showFrame(frame);
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
+
     public <View extends AbstractView<? extends JComponent>> View getView(Class<View> viewClass) {
         return views.get(viewClass);
     }
