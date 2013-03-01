@@ -9,19 +9,32 @@ import java.awt.*;
  */
 public class ColorScheme {
 
-    private Color backgroundColor;
+    private Color backgroundColorA;
+    private Color backgroundColorB;
     private Color borderColor;
 
+    /*
     public ColorScheme(Color backgroundColor, Color borderColor) {
-        this.backgroundColor = backgroundColor;
+        this.backgroundColorA = backgroundColor;
+        this.backgroundColorB = backgroundColor;
         this.borderColor = borderColor;
     }
-
-    public Color getBackgroundColor() {
-        return backgroundColor;
+    */
+    public ColorScheme(Color backgroundColorA, Color backgroundColorB, Color borderColor) {
+        this.backgroundColorA = backgroundColorA;
+        this.backgroundColorB = backgroundColorB;
+        this.borderColor = borderColor;
     }
 
     public Color getBorderColor() {
         return borderColor;
+    }
+
+    public Color getBackgroundColorA() {
+        return backgroundColorA;
+    }
+
+    public Color getBackgroundColorB() {
+        return backgroundColorB;
     }
 }

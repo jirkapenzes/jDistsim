@@ -46,11 +46,11 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<CreateM
 
     @Override
     protected void buildWindowBody() {
-        entityNameTextField = new JTextField();
-        valueTextField = new JTextField();
-        entitiesPerIntervalTextField = new JTextField();
-        maxArrivalsTextField = new JTextField();
-        firstCreationTextField = new JTextField();
+        entityNameTextField = getComponentFactory().makeTextField();
+        valueTextField = getComponentFactory().makeTextField();
+        entitiesPerIntervalTextField = getComponentFactory().makeTextField();
+        maxArrivalsTextField = getComponentFactory().makeTextField();
+        firstCreationTextField = getComponentFactory().makeTextField();
 
         build(getComponentFactory().makeLabel("Entity name"));
         constraints.gridwidth = GridBagConstraints.REMAINDER;

@@ -3,6 +3,7 @@ package jDistsim.ui.panel.workspace;
 import jDistsim.ui.control.GradientTitle;
 import jDistsim.ui.control.tabControl.TabControl;
 import jDistsim.ui.control.tabControl.TabItem;
+import jDistsim.ui.panel.tab.EntitiesTabPanel;
 import jDistsim.ui.panel.tab.LogTabPanel;
 import jDistsim.ui.panel.tab.NotesTabPanel;
 import jDistsim.ui.panel.tab.OutputTabPanel;
@@ -23,13 +24,14 @@ public class InformationPanel extends JPanel {
     private LogTabPanel logTabPanel;
     private NotesTabPanel notesTabPanel;
     private OutputTabPanel outputTabPanel;
+    private EntitiesTabPanel entitiesTabPanel;
 
-    public InformationPanel(JTextArea outputTextArea) {
+    public InformationPanel(JTextArea outputTextArea, JTable entitiesInfoTable) {
         Logger.log("Initialize information panel");
-        initializeComponents(outputTextArea);
+        initializeComponents(outputTextArea, entitiesInfoTable);
     }
 
-    private void initializeComponents(JTextArea outputTextArea) {
+    private void initializeComponents(JTextArea outputTextArea, JTable entitiesInfoTable) {
         setBackground(new Color(240, 240, 240));
         setBorder(new EmptyBorder(1, 0, 1, 0));
         setLayout(new BorderLayout());
@@ -44,13 +46,14 @@ public class InformationPanel extends JPanel {
         logTabPanel = new LogTabPanel();
         notesTabPanel = new NotesTabPanel();
         outputTabPanel = new OutputTabPanel(outputTextArea);
+        entitiesTabPanel = new EntitiesTabPanel(entitiesInfoTable);
 
         //panel4.setBackground(Color.yellow);
 
         panel1.setBackground(new Color(231, 231, 231));
         TabControl tabControl = new TabControl();
         tabControl.addTabItem(new TabItem("Simulator output", outputTabPanel));
-        tabControl.addTabItem(new TabItem("Entities", panel1));
+        tabControl.addTabItem(new TabItem("Entities", entitiesTabPanel));
         tabControl.addTabItem(new TabItem("Application logs", logTabPanel));
         tabControl.addTabItem(new TabItem("Network", panel1));
         tabControl.addTabItem(new TabItem("Remote models", panel1));
@@ -79,5 +82,13 @@ public class InformationPanel extends JPanel {
 
     public OutputTabPanel getOutputTabPanel() {
         return outputTabPanel;
+    }
+
+    public NotesTabPanel getNotesTabPanel() {
+        return notesTabPanel;
+    }
+
+    public EntitiesTabPanel getEntitiesTabPanel() {
+        return entitiesTabPanel;
     }
 }

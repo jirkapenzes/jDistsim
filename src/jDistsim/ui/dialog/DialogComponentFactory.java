@@ -22,4 +22,9 @@ public class DialogComponentFactory implements IDialogComponentFactory {
     public JButton makeButton(String text) {
         return new JButton(text);
     }
+
+    @Override
+    public JTextField makeTextField() {
+        return new JTextField(10);
+    }
 }

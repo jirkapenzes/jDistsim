@@ -81,8 +81,12 @@ public abstract class ModuleView implements IModuleView {
         setDefaultBasicStroke(graphics2D);
 
         Polygon polygon = getBounds(width, height);
-        graphics2D.setColor(colorScheme.getBackgroundColor());
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        GradientPaint gradientPaint = new GradientPaint(0, 0, colorScheme.getBackgroundColorA(), 0, height, colorScheme.getBackgroundColorB());
+        Paint currentPaint = graphics2D.getPaint();
+        graphics2D.setPaint(gradientPaint);
         graphics2D.fillPolygon(polygon);
+        graphics2D.setPaint(currentPaint);
         graphics2D.setColor(colorScheme.getBorderColor());
         graphics2D.drawPolygon(polygon);
     }
@@ -93,7 +97,7 @@ public abstract class ModuleView implements IModuleView {
     }
 
     protected void setDefaultBasicStroke(Graphics2D graphics2D) {
-        graphics2D.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics2D.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
     }
 
     public void setDefaultColorScheme() {

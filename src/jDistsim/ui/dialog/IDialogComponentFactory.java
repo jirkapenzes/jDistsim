@@ -11,4 +11,6 @@ public interface IDialogComponentFactory {
     JComponent makeLabel(String text);
 
     JButton makeButton(String text);
+
+    JTextField makeTextField();
 }

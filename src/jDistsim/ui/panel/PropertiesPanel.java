@@ -1,15 +1,18 @@
 package jDistsim.ui.panel;
 
-import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.ui.control.MenuSeparator;
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.ui.panel.listener.PropertiesViewListener;
+import jDistsim.ui.renderer.ValueTableCellHeaderRenderer;
+import jDistsim.ui.renderer.ValueTableCellRenderer;
 import jDistsim.utils.resource.Resources;
+import jDistsim.utils.ui.SwingUtil;
 import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -129,55 +132,19 @@ public class PropertiesPanel extends InternalPanel {
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setReorderingAllowed(false);
         tableHeader.setResizingAllowed(false);
-        tableHeader.setDefaultRenderer(new TableCellHeaderRenderer());
+        tableHeader.setDefaultRenderer(new ValueTableCellHeaderRenderer());
 
         for (int index = 0; index < table.getColumnCount(); index++) {
             TableColumn tableColumn = table.getColumnModel().getColumn(index);
-            tableColumn.setCellRenderer(new TableCellRenderer());
+            tableColumn.setCellRenderer(new ValueTableCellRenderer());
         }
 
-        setColumnWidth(0, 125);
-        setColumnWidth(2, 0);
-    }
-
-    private void setColumnWidth(int index, int width) {
-        table.getColumnModel().getColumn(index).setMinWidth(width);
-        table.getColumnModel().getColumn(index).setMaxWidth(width);
-        table.getColumnModel().getColumn(index).setPreferredWidth(width);
+        SwingUtil.setColumnWidth(table, 0, 125);
+        SwingUtil.setColumnWidth(table, 2, 0);
     }
 
     public ImageButton getPinnedButton() {
         return pinButton;
-    }
-
-    private class TableCellRenderer extends DefaultTableCellRenderer {
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel cellLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            cellLabel.setBorder(new EmptyBorder(3, 5, 3, 0));
-            cellLabel.setFont(UIConfiguration.getInstance().getDefaultFont(false));
-            cellLabel.setForeground(new Color(30, 30, 30));
-
-            Color backgroundColor = row % 2 == 0 ? new Color(255, 255, 255) : new Color(245, 245, 245);
-            cellLabel.setBackground(backgroundColor);
-            return cellLabel;
-        }
-    }
-
-    private class TableCellHeaderRenderer extends TableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-            JLabel titleLabel = new JLabel(value.toString());
-            titleLabel.setBorder(new EmptyBorder(5, 5, 5, 0));
-            titleLabel.setFont(UIConfiguration.getInstance().getDefaultFont(true));
-            titleLabel.setForeground(new Color(30, 30, 30));
-            titleLabel.setBackground(new Color(0, 0, 0));
-
-            panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(156, 156, 156)));
-            panel.setBackground(new Color(205, 205, 205));
-            panel.add(titleLabel);
-            return panel;
-        }
     }
 
     @Override
