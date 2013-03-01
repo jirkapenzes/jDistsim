@@ -14,6 +14,7 @@ public class ModuleContainer {
 
     private IObjectContainer objectContainer;
     private ModuleConfiguration configuration;
+    private int index;
 
     public ModuleContainer() {
         objectContainer = new ObjectContainer();
@@ -64,10 +65,20 @@ public class ModuleContainer {
         return this;
     }
 
-    public void build() {
-        if (getDescription() == null)
-            Logger.log("Module description not loaded");
+    public ModuleContainer toIndex(int index) {
+        this.index = index;
+        return this;
+    }
 
+    public int getIndex() {
+        return index;
+    }
+
+    public void build() {
+        if (getDescription() == null) {
+            Logger.log("Module description not loaded -> load dispatcher");
+            toDescription(new DescriptionDispatcher());
+        }
         if (getView() == null)
             Logger.log("Module view not loaded");
 
@@ -85,5 +96,8 @@ public class ModuleContainer {
     private void configure() {
         getFactory().setModuleConfiguration(configuration);
         getView().setDefaultColorScheme(configuration.getColorScheme());
+
+        if (getDescription() instanceof DescriptionDispatcher)
+            ((DescriptionDispatcher) getDescription()).setConfiguration(configuration);
     }
 }

@@ -4,16 +4,26 @@ import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.core.simulation.modules.IModuleLibrary;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.ModuleContainer;
-import jDistsim.core.simulation.modules.lib.create.*;
-import jDistsim.core.simulation.modules.lib.delay.*;
+import jDistsim.core.simulation.modules.lib.create.Create;
+import jDistsim.core.simulation.modules.lib.create.CreateFactory;
+import jDistsim.core.simulation.modules.lib.create.CreateUIFactory;
+import jDistsim.core.simulation.modules.lib.create.CreateView;
+import jDistsim.core.simulation.modules.lib.delay.Delay;
+import jDistsim.core.simulation.modules.lib.delay.DelayFactory;
+import jDistsim.core.simulation.modules.lib.delay.DelayUIFactory;
+import jDistsim.core.simulation.modules.lib.delay.DelayView;
 import jDistsim.core.simulation.modules.lib.dispose.Dispose;
-import jDistsim.core.simulation.modules.lib.dispose.DisposeDescription;
 import jDistsim.core.simulation.modules.lib.dispose.DisposeFactory;
 import jDistsim.core.simulation.modules.lib.dispose.DisposeView;
-import jDistsim.core.simulation.modules.lib.sender.*;
+import jDistsim.core.simulation.modules.lib.sender.Sender;
+import jDistsim.core.simulation.modules.lib.sender.SenderFactory;
+import jDistsim.core.simulation.modules.lib.sender.SenderUIFactory;
+import jDistsim.core.simulation.modules.lib.sender.SenderView;
 import jDistsim.utils.ioc.ObjectContainer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,34 +44,27 @@ public class ModuleLibrary implements IModuleLibrary {
         container.bind(Create.class, new ModuleContainer())
                 .toIndex(1)
                 .toView(new CreateView())
-                .toDescription(new CreateDescription())
                 .toFactory(new CreateFactory())
                 .toUIFactory(new CreateUIFactory())
                 .withConfiguration(new ModuleConfiguration("create", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
-
         container.bind(Dispose.class, new ModuleContainer())
                 .toIndex(2)
                 .toView(new DisposeView())
-                .toDescription(new DisposeDescription())
                 .toFactory(new DisposeFactory())
                 .toUIFactory(new CreateUIFactory())
                 .withConfiguration(new ModuleConfiguration("dispose", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
-
         container.bind(Delay.class, new ModuleContainer())
                 .toIndex(3)
                 .toView(new DelayView())
-                .toDescription(new DelayDescription())
                 .toFactory(new DelayFactory())
                 .toUIFactory(new DelayUIFactory())
                 .withConfiguration(new ModuleConfiguration("delay", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
-
         container.bind(Sender.class, new ModuleContainer())
                 .toIndex(4)
                 .toView(new SenderView())
-                .toDescription(new SenderDescription())
                 .toFactory(new SenderFactory())
                 .toUIFactory(new SenderUIFactory())
                 .withConfiguration(new ModuleConfiguration("sender", UIConfiguration.getInstance().getColorSchemeForDistributedModule()))
