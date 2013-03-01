@@ -12,11 +12,11 @@ import jDistsim.ui.module.ModuleView;
  * Date: 21.2.13
  * Time: 22:37
  */
-public class DelayModule extends Module {
+public class Delay extends Module {
 
     private int delayTime = 1;
 
-    public DelayModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
+    public Delay(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
     }
 

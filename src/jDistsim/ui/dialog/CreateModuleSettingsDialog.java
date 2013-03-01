@@ -1,6 +1,6 @@
 package jDistsim.ui.dialog;
 
-import jDistsim.core.simulation.modules.lib.create.CreateModule;
+import jDistsim.core.simulation.modules.lib.create.Create;
 import jDistsim.ui.TypeInputValidator;
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.utils.resource.Resources;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Date: 24.2.13
  * Time: 17:03
  */
-public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<CreateModule> {
+public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create> {
 
     private JTextField entityNameTextField;
     private JTextField valueTextField;
@@ -29,7 +29,7 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<CreateM
     private String currentIcon;
     private ArrayList<ImageButton> buttons;
 
-    public CreateModuleSettingsDialog(JFrame parent, CreateModule module) {
+    public CreateModuleSettingsDialog(JFrame parent, Create module) {
         super(parent, module);
         initializeUI();
     }
@@ -70,7 +70,7 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<CreateM
         constraints.insets = new Insets(0, 0, 8, 5);
         constraints.gridwidth = 1;
         timeBetweenArrivalsTypeComboBox = new JComboBox(new Object[]{"Constant", "Random (expo)"});
-        if (module.getArrivalsType() == CreateModule.TimeBetweenArrivalsType.Constant)
+        if (module.getArrivalsType() == Create.TimeBetweenArrivalsType.Constant)
             timeBetweenArrivalsTypeComboBox.setSelectedIndex(0);
         else
             timeBetweenArrivalsTypeComboBox.setSelectedIndex(1);
@@ -113,10 +113,10 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<CreateM
             module.setIconName(iconName);
 
             if (timeBetweenArrivalsTypeComboBox.getSelectedIndex() == 0) {
-                module.setArrivalsType(CreateModule.TimeBetweenArrivalsType.Constant);
+                module.setArrivalsType(Create.TimeBetweenArrivalsType.Constant);
                 module.setArrivalsTypeValue((int) value);
             } else {
-                module.setArrivalsType(CreateModule.TimeBetweenArrivalsType.Random_Expo);
+                module.setArrivalsType(Create.TimeBetweenArrivalsType.Random_Expo);
             }
         } catch (Exception exception) {
         }

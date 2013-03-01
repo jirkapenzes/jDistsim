@@ -6,10 +6,10 @@ import jDistsim.core.simulation.modules.ModuleContainer;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.lib.create.*;
 import jDistsim.core.simulation.modules.lib.delay.*;
+import jDistsim.core.simulation.modules.lib.dispose.Dispose;
 import jDistsim.core.simulation.modules.lib.dispose.DisposeDescription;
-import jDistsim.core.simulation.modules.lib.dispose.DisposeModule;
-import jDistsim.core.simulation.modules.lib.dispose.DisposeModuleFactory;
-import jDistsim.core.simulation.modules.lib.dispose.DisposeModuleView;
+import jDistsim.core.simulation.modules.lib.dispose.DisposeFactory;
+import jDistsim.core.simulation.modules.lib.dispose.DisposeView;
 import jDistsim.utils.ioc.ObjectContainer;
 
 import java.util.ArrayList;
@@ -32,26 +32,26 @@ public class ModuleLibrary implements IModuleLibrary {
     }
 
     private void configure() {
-        container.bind(CreateModule.class, new ModuleContainer())
-                .toView(new CreateModuleView())
+        container.bind(Create.class, new ModuleContainer())
+                .toView(new CreateView())
                 .toDescription(new CreateDescription())
-                .toFactory(new CreateModuleFactory())
-                .toUIFactory(new CreateModuleUIFactory())
+                .toFactory(new CreateFactory())
+                .toUIFactory(new CreateUIFactory())
                 .withConfiguration(new ModuleConfiguration("create", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
 
-        container.bind(DisposeModule.class, new ModuleContainer())
-                .toView(new DisposeModuleView())
+        container.bind(Dispose.class, new ModuleContainer())
+                .toView(new DisposeView())
                 .toDescription(new DisposeDescription())
-                .toFactory(new DisposeModuleFactory())
-                .toUIFactory(new CreateModuleUIFactory())
+                .toFactory(new DisposeFactory())
+                .toUIFactory(new CreateUIFactory())
                 .withConfiguration(new ModuleConfiguration("dispose", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
 
-        container.bind(DelayModule.class, new ModuleContainer())
-                .toView(new DelayModuleView())
+        container.bind(Delay.class, new ModuleContainer())
+                .toView(new DelayView())
                 .toDescription(new DelayDescription())
-                .toFactory(new DelayModuleFactory())
+                .toFactory(new DelayFactory())
                 .toUIFactory(new DelayModuleUIFactory())
                 .withConfiguration(new ModuleConfiguration("delay", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();

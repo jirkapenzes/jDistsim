@@ -11,13 +11,13 @@ import java.awt.*;
  * Date: 2.11.12
  * Time: 12:52
  */
-public class CreateModuleView extends ModuleView {
+public class CreateView extends ModuleView {
 
-    public CreateModuleView() {
+    public CreateView() {
         super();
     }
 
-    public CreateModuleView(ColorScheme colorScheme) {
+    public CreateView(ColorScheme colorScheme) {
         super(colorScheme);
     }
 

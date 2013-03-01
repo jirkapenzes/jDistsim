@@ -11,10 +11,10 @@ import javax.swing.*;
  * Date: 25.2.13
  * Time: 10:29
  */
-public class CreateModuleUIFactory implements IModuleUIFactory<CreateModule> {
+public class CreateUIFactory implements IModuleUIFactory<Create> {
 
     @Override
-    public BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, CreateModule module) {
+    public BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, Create module) {
         return new CreateModuleSettingsDialog(parent, module);
     }
 }

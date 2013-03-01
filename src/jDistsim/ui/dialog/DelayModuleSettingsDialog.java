@@ -1,6 +1,6 @@
 package jDistsim.ui.dialog;
 
-import jDistsim.core.simulation.modules.lib.delay.DelayModule;
+import jDistsim.core.simulation.modules.lib.delay.Delay;
 import jDistsim.ui.TypeInputValidator;
 
 import javax.swing.*;
@@ -11,11 +11,11 @@ import java.awt.*;
  * Date: 27.2.13
  * Time: 1:48
  */
-public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<DelayModule> {
+public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
 
     private JTextField delayTimeTextField;
 
-    public DelayModuleSettingsDialog(JFrame parent, DelayModule module) {
+    public DelayModuleSettingsDialog(JFrame parent, Delay module) {
         super(parent, module);
         initializeUI();
     }

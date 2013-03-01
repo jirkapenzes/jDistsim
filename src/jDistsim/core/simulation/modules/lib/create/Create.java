@@ -20,13 +20,13 @@ import java.util.Random;
  * Date: 21.2.13
  * Time: 22:36
  */
-public class CreateModule extends RootModule {
+public class Create extends RootModule {
 
     private AttributeCollection initialEntityAttributes;
     private Counter entityCounter;
     private Random random;
 
-    public CreateModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
+    public Create(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
     }
 

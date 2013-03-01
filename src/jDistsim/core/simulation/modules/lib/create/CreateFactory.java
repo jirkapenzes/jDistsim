@@ -1,4 +1,4 @@
-package jDistsim.core.simulation.modules.lib.delay;
+package jDistsim.core.simulation.modules.lib.create;
 
 import jDistsim.core.simulation.modules.IModuleFactory;
 import jDistsim.core.simulation.modules.Module;
@@ -7,31 +7,29 @@ import jDistsim.core.simulation.modules.ModuleConnectedPoint;
 
 /**
  * Author: Jirka Pénzeš
- * Date: 1.2.13
- * Time: 21:42
+ * Date: 24.11.12
+ * Time: 13:00
  */
-public class DelayModuleFactory implements IModuleFactory {
+public class CreateFactory implements IModuleFactory {
 
     private int currentNumber;
     private ModuleConfiguration moduleConfiguration;
 
-    public DelayModuleFactory() {
+    public CreateFactory() {
     }
 
     public String createIdentifier() {
-        return "delay" + ++currentNumber;
+        return "create_" + ++currentNumber;
     }
 
-    @Override
     public void setModuleConfiguration(ModuleConfiguration moduleConfiguration) {
         this.moduleConfiguration = moduleConfiguration;
     }
 
     @Override
     public Module create() {
-        Module module = new DelayModule(new DelayModuleView(moduleConfiguration.getColorScheme()), moduleConfiguration);
+        Module module = new Create(new CreateView(moduleConfiguration.getColorScheme()), moduleConfiguration);
         module.addOutputPoint(new ModuleConnectedPoint(1));
-        module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }
 }

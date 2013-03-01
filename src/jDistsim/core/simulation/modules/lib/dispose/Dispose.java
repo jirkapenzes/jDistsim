@@ -11,9 +11,9 @@ import jDistsim.ui.module.ModuleView;
  * Date: 21.2.13
  * Time: 22:37
  */
-public class DisposeModule extends Module {
+public class Dispose extends Module {
 
-    public DisposeModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
+    public Dispose(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
     }
 
