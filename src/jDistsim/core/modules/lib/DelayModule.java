@@ -2,6 +2,7 @@ package jDistsim.core.modules.lib;
 
 import jDistsim.core.modules.Module;
 import jDistsim.core.modules.ModuleConfiguration;
+import jDistsim.core.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.ui.module.ModuleView;
@@ -36,5 +37,16 @@ public class DelayModule extends Module {
             simulator.plan(localTime + delayTime, module, entity);
     }
 
+    @Override
+    protected void setChildProperty() {
+        getProperties().set(new ModuleProperty("delayTime", getDelayTime(), "delay time"));
+    }
 
+    public int getDelayTime() {
+        return delayTime;
+    }
+
+    public void setDelayTime(int delayTime) {
+        this.delayTime = delayTime;
+    }
 }

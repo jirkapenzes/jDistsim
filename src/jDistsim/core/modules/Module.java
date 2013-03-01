@@ -49,6 +49,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
 
         setInputPointsProperties();
         setOutputPointsProperties();
+        setChildProperty();
     }
 
     public void initializeForSimulation(ISimulator simulator) {
@@ -187,9 +188,13 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     }
 
     public void refreshProperties() {
+        properties.set(new ModuleProperty("correct", isValid(), "correct"));
         setInputPointsProperties();
         setOutputPointsProperties();
+        setChildProperty();
     }
+
+    protected abstract void setChildProperty();
 
     public boolean isValid() {
         for (ModuleConnectedPoint connectedPoint : getInputConnectedPoints()) {

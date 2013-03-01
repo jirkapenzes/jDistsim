@@ -3,6 +3,7 @@ package jDistsim.core.modules.lib;
 import jDistsim.core.modules.Module;
 import jDistsim.core.modules.ModuleConfiguration;
 import jDistsim.core.modules.RootModule;
+import jDistsim.core.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.SimulatorOutput;
 import jDistsim.core.simulation.simulator.entity.Attribute;
@@ -12,6 +13,8 @@ import jDistsim.core.simulation.simulator.exception.EntityNotCreatedException;
 import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.common.Counter;
 
+import java.util.Random;
+
 /**
  * Author: Jirka Pénzeš
  * Date: 21.2.13
@@ -19,19 +22,9 @@ import jDistsim.utils.common.Counter;
  */
 public class CreateModule extends RootModule {
 
-    public enum TimeBetweenArrivalsType {
-        Constant, Random_Expo
-    }
-
     private AttributeCollection initialEntityAttributes;
     private Counter entityCounter;
-
-    private String baseEntityName;
-    private TimeBetweenArrivalsType arrivalsType;
-    private double arrivalsTypeValue;
-    private int entityPerInterval;
-    private double maxArrivals;
-    private String iconName;
+    private Random random;
 
     public CreateModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
@@ -40,6 +33,7 @@ public class CreateModule extends RootModule {
     @Override
     protected void initializeDefaultValues() {
         entityCounter = new Counter();
+        random = new Random(0);
         baseEntityName = "entity_" + entityCounter.nextValue();
         arrivalsType = TimeBetweenArrivalsType.Constant;
         arrivalsTypeValue = 1;
@@ -58,6 +52,16 @@ public class CreateModule extends RootModule {
         entityCounter = new Counter();
     }
 
+    @Override
+    protected void setChildProperty() {
+        getProperties().set(new ModuleProperty("baseEntityName", getBaseEntityName(), "entity name"));
+        getProperties().set(new ModuleProperty("arrivalsType", getArrivalsType() + "(" + getArrivalsTypeValue() + ")", "arrivals type"));
+        getProperties().set(new ModuleProperty("maxArrivals", getMaxArrivals(), "max arrivals"));
+        getProperties().set(new ModuleProperty("entityPerInterval", getEntityPerInterval(), "per interval"));
+        getProperties().set(new ModuleProperty("iconName", getIconName(), "entity icon"));
+        getProperties().set(new ModuleProperty("firstCreation", getFirsCreation(), "first creation"));
+    }
+
     private Entity makeEntity(ISimulator simulator) {
         String entityName = baseEntityName + entityCounter.nextValue();
         Entity entity = new Entity(entityName, getIdentifier(), simulator.getEnvironment().getModelName());
@@ -66,7 +70,7 @@ public class CreateModule extends RootModule {
         }
         entity.getAttributes().put("iconName", getIconName());
         entity.getAttributes().put("creationTime", String.valueOf(simulator.getLocalTime()));
-
+        entity.getAttributes().put("currentModule", getIdentifier());
         return entity;
     }
 
@@ -82,63 +86,18 @@ public class CreateModule extends RootModule {
         for (Module module : getAllOutputDependencies()) {
             for (int index = 0; index < entityPerInterval; index++) {
                 Entity entity = makeEntity(simulator);
-                entity.getAttributes().put("currentModule", getIdentifier());
                 simulator.plan(currentTime, module, entity);
             }
         }
 
         try {
-            simulator.plan(currentTime + arrivalsTypeValue, (Module) clone(), null);
+            double timeInterval = arrivalsTypeValue;
+            if (arrivalsType == TimeBetweenArrivalsType.Random_Expo)
+                timeInterval = Math.round((random.nextDouble() * arrivalsTypeValue + 1) * 100) / 100;
+
+            simulator.plan(currentTime + timeInterval, (Module) clone(), null);
         } catch (CloneNotSupportedException exception) {
             throw new EntityNotCreatedException(getIdentifier());
         }
-    }
-
-    public String getBaseEntityName() {
-        return baseEntityName;
-    }
-
-    public void setBaseEntityName(String baseEntityName) {
-        this.baseEntityName = baseEntityName;
-    }
-
-    public TimeBetweenArrivalsType getArrivalsType() {
-        return arrivalsType;
-    }
-
-    public void setArrivalsType(TimeBetweenArrivalsType arrivalsType) {
-        this.arrivalsType = arrivalsType;
-    }
-
-    public double getArrivalsTypeValue() {
-        return arrivalsTypeValue;
-    }
-
-    public void setArrivalsTypeValue(double arrivalsTypeValue) {
-        this.arrivalsTypeValue = arrivalsTypeValue;
-    }
-
-    public int getEntityPerInterval() {
-        return entityPerInterval;
-    }
-
-    public void setEntityPerInterval(int entityPerInterval) {
-        this.entityPerInterval = entityPerInterval;
-    }
-
-    public double getMaxArrivals() {
-        return maxArrivals;
-    }
-
-    public void setMaxArrivals(double maxArrivals) {
-        this.maxArrivals = maxArrivals;
-    }
-
-    public String getIconName() {
-        return iconName;
-    }
-
-    public void setIconName(String iconName) {
-        this.iconName = iconName;
     }
 }

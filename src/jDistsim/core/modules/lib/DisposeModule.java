@@ -30,4 +30,9 @@ public class DisposeModule extends Module {
     public void logic(ISimulator simulator, Entity entity) {
 
     }
+
+    @Override
+    protected void setChildProperty() {
+
+    }
 }

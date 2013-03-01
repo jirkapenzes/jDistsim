@@ -9,7 +9,7 @@ import javax.swing.*;
  * Date: 25.2.13
  * Time: 9:45
  */
-public interface IModuleUIFactory {
+public interface IModuleUIFactory<TModule extends  Module> {
 
-    BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, Module module);
+    BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, TModule module);
 }

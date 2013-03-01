@@ -1,9 +1,13 @@
 package jDistsim.core.modules;
 
 
+import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.core.modules.common.ModuleProperty;
 import jDistsim.ui.module.ColorScheme;
 import jDistsim.ui.module.ModuleView;
+import jDistsim.utils.pattern.observer.IObservable;
+import jDistsim.utils.pattern.observer.IObserver;
+import jDistsim.utils.pattern.observer.Observable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +20,9 @@ import java.util.List;
  * Date: 24.11.12
  * Time: 17:14
  */
-public class ModuleUI extends JComponent {
+public class ModuleUI extends JComponent implements IObservable, IObserver {
 
+    private Observable observable;
     private boolean active;
     private Module module;
     private final List<ModuleConnectedPointUI> connectedPoints;
@@ -25,6 +30,8 @@ public class ModuleUI extends JComponent {
     public ModuleUI(Module module) {
         this.module = module;
         this.connectedPoints = new ArrayList<>();
+        this.observable = new Observable();
+        module.addObserver(this);
         initializeUI();
     }
 
@@ -137,7 +144,7 @@ public class ModuleUI extends JComponent {
     }
 
     public void setActiveBackgroundColor() {
-        module.getView().setColorScheme(new ColorScheme(new Color(141, 210, 60), new Color(70, 127, 137)));
+        module.getView().setColorScheme(UIConfiguration.getInstance().getColorSchemeForActiveModule());
         repaint();
     }
 
@@ -185,5 +192,35 @@ public class ModuleUI extends JComponent {
     public void setDefaultColorScheme() {
         module.getView().setDefaultColorScheme();
         repaint();
+    }
+
+    @Override
+    public void addObserver(IObserver observer) {
+        observable.addObserver(observer);
+    }
+
+    @Override
+    public void removeObserver(IObserver observer) {
+        observable.removeObserver(observer);
+    }
+
+    @Override
+    public int countObservers() {
+        return observable.countObservers();
+    }
+
+    @Override
+    public void notifyObservers() {
+        observable.notifyObservers();
+    }
+
+    @Override
+    public void notifyObservers(Object argument) {
+        observable.notifyObservers(argument);
+    }
+
+    @Override
+    public void update(Observable observable, Object arguments) {
+        notifyObservers(arguments);
     }
 }
