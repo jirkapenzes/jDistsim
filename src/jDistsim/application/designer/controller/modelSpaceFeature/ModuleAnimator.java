@@ -1,5 +1,6 @@
 package jDistsim.application.designer.controller.modelSpaceFeature;
 
+import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.application.designer.controller.ModuleConnector;
 import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.core.modules.ModuleConnectedPointUI;
@@ -22,7 +23,7 @@ public class ModuleAnimator implements ISimulationAnimator {
 
     private ObservableHashMap<String, ModuleUI> modules;
     private JComponent contentPane;
-    private ColorScheme colorScheme = new ColorScheme(new Color(250, 250, 55), new Color(70, 127, 137));
+    private ColorScheme colorScheme = UIConfiguration.getInstance().getColorSchemeForAnimateActionModule();
 
     public ModuleAnimator(ObservableHashMap<String, ModuleUI> modules, JComponent contentPane) {
         this.modules = modules;

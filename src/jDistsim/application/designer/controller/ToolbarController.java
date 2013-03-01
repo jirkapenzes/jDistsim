@@ -41,17 +41,11 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
         ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
 
         Collection<ModuleUI> modules = modelSpaceController.getModel().getModuleList().values();
-        ISimulatorEndCondition endCondition = new ISimulatorEndCondition() {
-            @Override
-            public boolean occurred(SimulatorEnvironment environment) {
-                return environment.getLocalTime() > 20;
-            }
-        };
 
         ISimulationModel simulationModel = SimulationModelBuilder.buildSimulationModelFromUI(modules);
         ISimulationModelValidator modelValidator = new SimulationModelValidator();
 
-        simulator = new DistributedSimulator(modelValidator, endCondition);
+        simulator = new DistributedSimulator(modelValidator);
         simulator.setAnimator(new ModuleAnimator(modelSpaceController.getModel().getModuleList(), modelSpaceController.getView().getContentPane()));
         simulator.getOutput().getWriters().add(informationController.makeSimulatorWriter());
         simulator.getOutput().getWriters().add(new SimulatorLoggerHandler());

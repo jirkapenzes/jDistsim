@@ -1,5 +1,6 @@
 package jDistsim.application.designer.common;
 
+import jDistsim.ui.module.ColorScheme;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.singleton.SingletonFactory;
 
@@ -36,17 +37,15 @@ public final class UIConfiguration {
         return new Font("Calibri", bold ? Font.BOLD : Font.PLAIN, size);
     }
 
-    // Event controls
-    public Stroke getEventControlBorderStroke() {
-        return new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public ColorScheme getColorSchemeForBasicModule() {
+        return new ColorScheme(new Color(194, 214, 232), new Color(174, 202, 225), new Color(64, 64, 64));
     }
 
-    public Color getEventControlBorderColor() {
-        return new Color(79, 79, 79);
+    public ColorScheme getColorSchemeForActiveModule() {
+        return new ColorScheme(new Color(209, 218, 180), new Color(198, 208, 159), new Color(64, 64, 64));
     }
 
-    public Color getEventControlFillColor() {
-        return new Color(158, 180, 228);
-        //return new Color(255, 255, 164);
+    public ColorScheme getColorSchemeForAnimateActionModule() {
+        return new ColorScheme(new Color(242, 191, 149), new Color(239, 175, 123), new Color(64, 64, 64));
     }
 }
