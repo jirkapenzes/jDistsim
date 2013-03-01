@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -70,7 +71,9 @@ public class ToolboxPanel extends InternalPanel {
 
     public void buildToolbox() {
         toolboxPanel.removeAll();
-        for (ToolboxModelItem item : toolboxModel.getItems()) {
+        List<ToolboxModelItem> toolboxModelItems = new ArrayList<>(toolboxModel.getItems());
+        Collections.sort(toolboxModelItems);
+        for (ToolboxModelItem item : toolboxModelItems) {
             ToolboxButton toolboxButton = new ToolboxButton(item.getComponentView(), item.getModuleFactory(), item.getModuleDescription().getTitle(), item.getIdentifier());
             toolboxButton.setMouseEnteredMode(true);
             toolboxButton.addMouseListener(new MouseAdapter() {
