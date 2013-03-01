@@ -23,11 +23,11 @@ public abstract class ModuleView implements IModuleView {
     protected final List<Point> inputPoints;
     protected final List<Point> outputPoints;
 
-    public ModuleView() {
+    protected ModuleView() {
         this(null);
     }
 
-    public ModuleView(ColorScheme colorScheme) {
+    protected ModuleView(ColorScheme colorScheme) {
         this.defaultColorScheme = colorScheme;
         setDefaultColorScheme();
 
