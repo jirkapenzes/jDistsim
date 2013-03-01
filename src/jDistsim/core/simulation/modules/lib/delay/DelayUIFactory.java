@@ -11,7 +11,7 @@ import javax.swing.*;
  * Date: 27.2.13
  * Time: 1:49
  */
-public class DelayModuleUIFactory implements IModuleUIFactory<Delay> {
+public class DelayUIFactory implements IModuleUIFactory<Delay> {
 
     @Override
     public BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, Delay module) {

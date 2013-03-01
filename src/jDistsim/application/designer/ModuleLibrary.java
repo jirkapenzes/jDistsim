@@ -52,7 +52,7 @@ public class ModuleLibrary implements IModuleLibrary {
                 .toView(new DelayView())
                 .toDescription(new DelayDescription())
                 .toFactory(new DelayFactory())
-                .toUIFactory(new DelayModuleUIFactory())
+                .toUIFactory(new DelayUIFactory())
                 .withConfiguration(new ModuleConfiguration("delay", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
     }
