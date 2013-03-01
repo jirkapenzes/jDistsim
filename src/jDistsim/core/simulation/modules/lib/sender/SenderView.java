@@ -35,4 +35,19 @@ public class SenderView extends ModuleView {
         polygon.addPoint(1, height - 1);
         return polygon;
     }
+
+    @Override
+    protected void postDraw(Graphics2D graphics, int width, int height) {
+        super.postDraw(graphics, width, height);
+        /*
+        Color color = getColorScheme().getBorderColor();
+        int msgWidth = PointUtilities.byPercentageOnLine(60, width);
+
+        graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 50));
+        graphics.drawLine(1, 1, msgWidth / 2, PointUtilities.byPercentageOnLine(65, height));
+        graphics.drawLine(msgWidth, 1, msgWidth / 2, PointUtilities.byPercentageOnLine(65, height));
+        graphics.drawLine(1, height - 1, PointUtilities.byPercentageOnLine(30, msgWidth), PointUtilities.byPercentageOnLine(50, height));
+        graphics.drawLine(msgWidth - 1, height - 1, PointUtilities.byPercentageOnLine(70, msgWidth), PointUtilities.byPercentageOnLine(50, height));
+        */
+    }
 }

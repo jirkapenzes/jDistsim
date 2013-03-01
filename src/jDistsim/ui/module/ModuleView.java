@@ -87,7 +87,7 @@ public abstract class ModuleView implements IModuleView {
         graphics2D.setPaint(gradientPaint);
         graphics2D.fillPolygon(polygon);
         graphics2D.setPaint(currentPaint);
-        postDraw(graphics, width, height);
+        postDraw(graphics2D, width, height);
         graphics2D.setColor(colorScheme.getBorderColor());
         graphics2D.drawPolygon(polygon);
     }
