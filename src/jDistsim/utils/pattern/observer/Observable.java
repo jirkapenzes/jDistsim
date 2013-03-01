@@ -8,7 +8,7 @@ import java.util.List;
  * Date: 28.9.12
  * Time: 15:14
  */
-public class Observable {
+public class Observable implements IObservable {
 
     private List<IObserver> observers;
 
