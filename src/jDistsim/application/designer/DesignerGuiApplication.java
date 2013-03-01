@@ -2,8 +2,7 @@ package jDistsim.application.designer;
 
 import jDistsim.ServiceLocator;
 import jDistsim.application.designer.common.ComponentFactory;
-import jDistsim.core.simulation.event.library.IModuleLibrary;
-import jDistsim.core.simulation.event.library.ModuleLibrary;
+import jDistsim.core.simulation.modules.IModuleLibrary;
 import jDistsim.main.IGuiApplication;
 import jDistsim.utils.logging.Logger;
 

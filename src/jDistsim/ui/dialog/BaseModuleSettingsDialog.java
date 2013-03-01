@@ -1,7 +1,7 @@
 package jDistsim.ui.dialog;
 
 import jDistsim.application.designer.common.UIConfiguration;
-import jDistsim.core.modules.Module;
+import jDistsim.core.simulation.modules.Module;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;

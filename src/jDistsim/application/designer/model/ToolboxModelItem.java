@@ -1,8 +1,8 @@
 package jDistsim.application.designer.model;
 
-import jDistsim.core.modules.IModuleFactory;
-import jDistsim.core.simulation.event.description.IModuleDescription;
-import jDistsim.core.modules.IModuleView;
+import jDistsim.core.simulation.modules.IModuleFactory;
+import jDistsim.core.simulation.modules.IModuleDescription;
+import jDistsim.core.simulation.modules.IModuleView;
 
 /**
  * Author: Jirka Pénzeš

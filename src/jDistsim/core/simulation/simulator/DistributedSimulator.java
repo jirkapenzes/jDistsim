@@ -1,6 +1,6 @@
 package jDistsim.core.simulation.simulator;
 
-import jDistsim.core.modules.Module;
+import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.model.ISimulationModelValidator;
 
 /**

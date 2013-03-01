@@ -1,6 +1,6 @@
 package jDistsim.core.simulation.simulator.event;
 
-import jDistsim.core.modules.Module;
+import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.simulator.entity.Entity;
 
 /**

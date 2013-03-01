@@ -1,7 +1,7 @@
 package jDistsim.core.simulation.model;
 
-import jDistsim.core.modules.Module;
-import jDistsim.core.modules.RootModule;
+import jDistsim.core.simulation.modules.Module;
+import jDistsim.core.simulation.modules.RootModule;
 import jDistsim.core.simulation.simulator.ISimulationModel;
 
 import java.util.ArrayList;

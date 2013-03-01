@@ -2,7 +2,7 @@ package jDistsim.ui.panel.toolbox;
 
 import jDistsim.application.designer.model.ToolboxModel;
 import jDistsim.application.designer.model.ToolboxModelItem;
-import jDistsim.core.simulation.event.description.IModuleDescription;
+import jDistsim.core.simulation.modules.IModuleDescription;
 import jDistsim.ui.panel.InternalPanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;

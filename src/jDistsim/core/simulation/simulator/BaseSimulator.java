@@ -1,17 +1,17 @@
 package jDistsim.core.simulation.simulator;
 
-import jDistsim.core.modules.Module;
-import jDistsim.core.modules.RootModule;
+import jDistsim.core.simulation.modules.Module;
+import jDistsim.core.simulation.modules.RootModule;
 import jDistsim.core.simulation.animation.ISimulationAnimator;
 import jDistsim.core.simulation.model.ISimulationModelValidator;
 import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.core.simulation.simulator.event.Calendar;
 import jDistsim.core.simulation.simulator.event.EventContainer;
 import jDistsim.core.simulation.simulator.event.ScheduleEvent;
-import jDistsim.core.simulation.simulator.exception.EventNotFoundException;
-import jDistsim.core.simulation.simulator.exception.ModelNotValidException;
-import jDistsim.core.simulation.simulator.exception.SimulatorCoreException;
-import jDistsim.core.simulation.simulator.exception.TimeNotSynchronizedException;
+import jDistsim.core.simulation.exception.EventNotFoundException;
+import jDistsim.core.simulation.exception.ModelNotValidException;
+import jDistsim.core.simulation.exception.SimulatorCoreException;
+import jDistsim.core.simulation.exception.TimeNotSynchronizedException;
 import jDistsim.core.simulation.validator.ValidatorException;
 import jDistsim.core.simulation.validator.ValidatorResult;
 

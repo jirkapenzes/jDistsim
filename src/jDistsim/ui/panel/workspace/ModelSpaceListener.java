@@ -1,6 +1,6 @@
 package jDistsim.ui.panel.workspace;
 
-import jDistsim.core.modules.Module;
+import jDistsim.core.simulation.modules.Module;
 
 /**
  * Author: Jirka Pénzeš

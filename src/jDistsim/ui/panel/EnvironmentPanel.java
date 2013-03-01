@@ -1,7 +1,7 @@
 package jDistsim.ui.panel;
 
 import jDistsim.application.designer.common.UIConfiguration;
-import jDistsim.core.modules.common.ModuleProperty;
+import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.ui.skins.ScrollBarUI;
 
 import javax.swing.*;

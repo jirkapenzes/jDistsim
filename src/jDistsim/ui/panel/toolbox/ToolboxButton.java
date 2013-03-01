@@ -1,7 +1,7 @@
 package jDistsim.ui.panel.toolbox;
 
-import jDistsim.core.modules.IModuleFactory;
-import jDistsim.core.modules.IModuleView;
+import jDistsim.core.simulation.modules.IModuleFactory;
+import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.utils.common.TransferableObject;
 import jDistsim.utils.logging.Logger;
 

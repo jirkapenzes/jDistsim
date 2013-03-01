@@ -1,10 +1,10 @@
 package jDistsim.core.simulation.simulator;
 
 
-import jDistsim.core.modules.Module;
+import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.animation.ISimulationAnimator;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.core.simulation.simulator.exception.SimulatorCoreException;
+import jDistsim.core.simulation.exception.SimulatorCoreException;
 
 /**
  * Author: Jirka Pénzeš

@@ -2,7 +2,7 @@ package jDistsim.core.simulation.simulator;
 
 import jDistsim.ServiceLocator;
 import jDistsim.application.designer.common.IDialogBuilder;
-import jDistsim.core.simulation.simulator.exception.SimulatorCoreException;
+import jDistsim.core.simulation.exception.SimulatorCoreException;
 import jDistsim.utils.logging.Logger;
 
 /**

@@ -1,8 +1,8 @@
 package jDistsim.core.simulation.validator;
 
-import jDistsim.core.modules.Module;
-import jDistsim.core.modules.ModuleConnectedPoint;
-import jDistsim.core.modules.RootModule;
+import jDistsim.core.simulation.modules.Module;
+import jDistsim.core.simulation.modules.ModuleConnectedPoint;
+import jDistsim.core.simulation.modules.RootModule;
 import jDistsim.core.simulation.model.ISimulationModelValidator;
 import jDistsim.core.simulation.simulator.ISimulationModel;
 

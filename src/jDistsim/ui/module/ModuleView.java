@@ -1,6 +1,6 @@
 package jDistsim.ui.module;
 
-import jDistsim.core.modules.IModuleView;
+import jDistsim.core.simulation.modules.IModuleView;
 
 import javax.swing.*;
 import java.awt.*;

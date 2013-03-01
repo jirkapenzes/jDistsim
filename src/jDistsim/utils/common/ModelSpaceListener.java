@@ -1,7 +1,7 @@
 package jDistsim.utils.common;
 
 import jDistsim.application.designer.controller.ModelSpaceController;
-import jDistsim.core.modules.ModuleUI;
+import jDistsim.core.simulation.modules.ui.ModuleUI;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;

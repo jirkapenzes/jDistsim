@@ -1,6 +1,6 @@
 package jDistsim.ui.dialog;
 
-import jDistsim.core.modules.lib.CreateModule;
+import jDistsim.core.simulation.modules.lib.create.CreateModule;
 import jDistsim.ui.TypeInputValidator;
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.utils.resource.Resources;

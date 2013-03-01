@@ -1,8 +1,8 @@
 package jDistsim.ui.panel.toolbox;
 
 import jDistsim.application.designer.common.UIConfiguration;
-import jDistsim.core.simulation.event.description.EmptyDescription;
-import jDistsim.core.simulation.event.description.IModuleDescription;
+import jDistsim.core.simulation.modules.EmptyDescription;
+import jDistsim.core.simulation.modules.IModuleDescription;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

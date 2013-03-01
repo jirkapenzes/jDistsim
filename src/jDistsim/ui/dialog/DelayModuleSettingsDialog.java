@@ -1,6 +1,6 @@
 package jDistsim.ui.dialog;
 
-import jDistsim.core.modules.lib.DelayModule;
+import jDistsim.core.simulation.modules.lib.delay.DelayModule;
 import jDistsim.ui.TypeInputValidator;
 
 import javax.swing.*;

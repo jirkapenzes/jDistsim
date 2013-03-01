@@ -1,6 +1,6 @@
 package jDistsim.core.simulation.simulator.entity;
 
-import jDistsim.core.simulation.simulator.exception.ReservedAttributeNameException;
+import jDistsim.core.simulation.exception.ReservedAttributeNameException;
 
 import java.util.HashMap;
 import java.util.Iterator;

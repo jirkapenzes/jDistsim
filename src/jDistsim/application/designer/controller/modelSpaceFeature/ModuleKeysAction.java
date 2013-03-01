@@ -2,8 +2,8 @@ package jDistsim.application.designer.controller.modelSpaceFeature;
 
 import jDistsim.application.designer.controller.ModelSpaceController;
 import jDistsim.application.designer.controller.ModuleConnector;
-import jDistsim.core.modules.ModuleConnectedPointUI;
-import jDistsim.core.modules.ModuleUI;
+import jDistsim.core.simulation.modules.ui.ModuleConnectedPointUI;
+import jDistsim.core.simulation.modules.ui.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
 
 import java.awt.event.KeyAdapter;
