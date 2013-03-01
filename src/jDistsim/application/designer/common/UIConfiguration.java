@@ -41,6 +41,10 @@ public final class UIConfiguration {
         return new ColorScheme(new Color(194, 214, 232), new Color(174, 202, 225), new Color(64, 64, 64));
     }
 
+    public ColorScheme getColorSchemeForDistributedModule() {
+        return new ColorScheme(new Color(184, 172, 205), new Color(168, 153, 193), new Color(64, 64, 64));
+    }
+
     public ColorScheme getColorSchemeForActiveModule() {
         return new ColorScheme(new Color(209, 218, 180), new Color(198, 208, 159), new Color(64, 64, 64));
     }
