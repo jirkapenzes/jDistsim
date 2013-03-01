@@ -40,4 +40,15 @@ public final class SwingUtil {
         component.setMaximumSize(dimension);
         component.setSize(dimension);
     }
+
+    public static void setColumnWidth(JTable table, int index, int width) {
+        table.getColumnModel().getColumn(index).setMinWidth(width);
+        table.getColumnModel().getColumn(index).setMaxWidth(width);
+        table.getColumnModel().getColumn(index).setPreferredWidth(width);
+    }
+
+    public static void setPrefColumnWidth(JTable table, int index, int width) {
+        table.getColumnModel().getColumn(index).setMinWidth(width);
+        table.getColumnModel().getColumn(index).setPreferredWidth(width);
+    }
 }
