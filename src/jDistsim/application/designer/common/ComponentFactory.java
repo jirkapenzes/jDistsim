@@ -22,7 +22,7 @@ public class ComponentFactory implements IComponentFactory {
         if (title != null) frame.setTitle(title);
         if (menuBar != null) frame.setJMenuBar(menuBar);
         if (contentPane != null) frame.getContentPane().add(contentPane, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension(1000, 600));
+        frame.setPreferredSize(new Dimension(1050, 600));
         return frame;
     }
 
