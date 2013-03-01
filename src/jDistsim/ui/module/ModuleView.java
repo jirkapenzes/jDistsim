@@ -87,10 +87,13 @@ public abstract class ModuleView implements IModuleView {
         graphics2D.setPaint(gradientPaint);
         graphics2D.fillPolygon(polygon);
         graphics2D.setPaint(currentPaint);
+        postDraw(graphics, width, height);
         graphics2D.setColor(colorScheme.getBorderColor());
         graphics2D.drawPolygon(polygon);
     }
 
+    protected void postDraw(Graphics2D graphics, int width, int height) {
+    }
 
     protected void setDefaultRenderingMode(Graphics2D graphics2D) {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
