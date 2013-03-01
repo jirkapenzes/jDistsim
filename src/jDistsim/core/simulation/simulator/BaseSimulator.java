@@ -133,7 +133,8 @@ public abstract class BaseSimulator implements ISimulator {
             output.sendToOutput(SimulatorOutput.MessageType.Error, "Unexpected end of simulation");
             throw new SimulatorCoreException(exception);
         }
-
+        output.drawSeparateLine();
+        output.sendToOutput(SimulatorOutput.MessageType.Standard, "End of simulation");
     }
 
     private void animate(Entity entity) {

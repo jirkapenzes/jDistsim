@@ -28,6 +28,7 @@ public class SimulationModelValidator implements ISimulationModelValidator {
         validateNumberOfRootModules(simulationModel, exceptions);
         validateUndefinedModules(simulationModel, exceptions);
         validateModules(simulationModel, exceptions);
+        validateEntitiesName(simulationModel, exceptions);
 
         return new ValidatorResult(exceptions);
     }
@@ -68,6 +69,18 @@ public class SimulationModelValidator implements ISimulationModelValidator {
         for (ModuleConnectedPoint connectedPoint : parentModule.getOutputConnectedPoints()) {
             for (Module module : connectedPoint.getDependencies())
                 continueSearch(module, simulationModel, exceptions);
+        }
+    }
+
+    private void validateEntitiesName(ISimulationModel simulationModel, List<ValidatorException> exceptions) {
+        for (RootModule rootModuleA : simulationModel.getRootModules()) {
+            for (RootModule rootModuleB : simulationModel.getRootModules()) {
+                if (rootModuleA.getIdentifier().equals(rootModuleB.getIdentifier()))
+                    continue;
+
+                if (rootModuleA.getBaseEntityName().equals(rootModuleB.getBaseEntityName()))
+                    exceptions.add(new ValidatorException(rootModuleA.getIdentifier(), "duplicity entity name with " + rootModuleB.getIdentifier()));
+            }
         }
     }
 }

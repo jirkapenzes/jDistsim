@@ -10,6 +10,10 @@ import jDistsim.core.simulation.model.ISimulationModelValidator;
  */
 public class DistributedSimulator extends BaseSimulator {
 
+    public DistributedSimulator(ISimulationModelValidator modelValidator) {
+        super(modelValidator);
+    }
+
     public DistributedSimulator(ISimulationModelValidator modelValidator, ISimulatorEndCondition endCondition) {
         super(modelValidator, endCondition);
     }
