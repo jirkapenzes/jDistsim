@@ -1,8 +1,13 @@
 package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.MainFrame;
+import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.model.InformationModel;
+import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.InformationView;
+import jDistsim.core.modules.Module;
+import jDistsim.core.modules.ModuleUI;
+import jDistsim.core.modules.RootModule;
 import jDistsim.core.simulation.simulator.Writer;
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.ui.panel.listener.LogTabListener;
@@ -10,12 +15,17 @@ import jDistsim.ui.panel.listener.OutputTabListener;
 import jDistsim.ui.panel.tab.LogTabPanel;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
+import jDistsim.utils.pattern.observer.IObserver;
+import jDistsim.utils.pattern.observer.Observable;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
+import java.util.Vector;
 
 /**
  * Author: Jirka Pénzeš
@@ -27,6 +37,7 @@ public class InformationController extends AbstractController<InformationModel> 
     private InformationView view;
     private LogTabListener logTabLogic;
     private OutputTabLogic outputTabLogic;
+    private EntitiesInfoTabLogic entitiesInfoTabLogic;
 
     public InformationController(MainFrame mainFrame, InformationModel model) {
         super(mainFrame, model);
@@ -38,6 +49,7 @@ public class InformationController extends AbstractController<InformationModel> 
     private void initialize() {
         logTabLogic = new LogTabLogic();
         outputTabLogic = new OutputTabLogic();
+        entitiesInfoTabLogic = new EntitiesInfoTabLogic();
 
         view.setLogTabListener(logTabLogic);
         view.setOutputListener(outputTabLogic);
@@ -98,10 +110,6 @@ public class InformationController extends AbstractController<InformationModel> 
 
     private class OutputTabLogic implements OutputTabListener, Writer {
 
-        public OutputTabLogic() {
-
-        }
-
         @Override
         public void write(String text) {
             JTextArea textArea = getModel().getOutputPanelTextArea();
@@ -115,6 +123,65 @@ public class InformationController extends AbstractController<InformationModel> 
         @Override
         public void clear() {
             getModel().getOutputPanelTextArea().setText("");
+        }
+    }
+
+    private class EntitiesInfoTabLogic implements IObserver {
+
+        public EntitiesInfoTabLogic() {
+            getMainFrame().getModel(ModelSpaceModel.class).getModuleList().addObserver(this);
+            rebuildTableModel();
+        }
+
+        private void rebuildTableModel() {
+            Collection<ModuleUI> modules = getMainFrame().getModel(ModelSpaceModel.class).getModuleList().values();
+            Vector<String> columns = makeColumns();
+            Vector<Vector<String>> rows = new Vector<>();
+
+            for (ModuleUI moduleUI : modules) {
+                Module module = moduleUI.getModule();
+                if (module instanceof RootModule) {
+                    RootModule rootModule = (RootModule) module;
+                    rows.addElement(makeEntityRow(rootModule));
+                }
+            }
+
+            getModel().getEntitiesInfoTable().setModel(new DefaultTableModel(rows, columns));
+            view.renderEntitiesTable();
+            Logger.log("Rebuild entities info table");
+        }
+
+        private Vector<String> makeColumns() {
+            Vector<String> columnNames = new Vector<>();
+            columnNames.addElement("Name");
+            columnNames.addElement("Originator");
+            columnNames.addElement("Owner");
+            columnNames.addElement("Distributed");
+            columnNames.addElement("Per interval");
+            columnNames.addElement("First creation");
+            columnNames.addElement("Max arrivals");
+            columnNames.addElement("Between arrivals");
+            columnNames.addElement("Icon");
+            return columnNames;
+        }
+
+        private Vector<String> makeEntityRow(RootModule rootModule) {
+            Vector<String> row = new Vector<>();
+            row.addElement(rootModule.getBaseEntityName());
+            row.addElement(rootModule.getIdentifier());
+            row.addElement(Application.global().getModelName());
+            row.addElement("false");
+            row.addElement(String.valueOf(rootModule.getEntityPerInterval()));
+            row.addElement(String.valueOf(rootModule.getFirsCreation()));
+            row.addElement(String.valueOf(rootModule.getMaxArrivals()));
+            row.addElement(rootModule.getArrivalsType() + "(" + rootModule.getArrivalsTypeValue() + ")");
+            row.addElement(rootModule.getIconName());
+            return row;
+        }
+
+        @Override
+        public void update(Observable observable, Object arguments) {
+            rebuildTableModel();
         }
     }
 }
