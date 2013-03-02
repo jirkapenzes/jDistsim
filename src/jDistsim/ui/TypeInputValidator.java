@@ -44,6 +44,13 @@ public class TypeInputValidator {
         return input;
     }
 
+    public String validateSpecialCharacters(String input, String inputName) throws TypeInputException {
+        if (input.contains(" ")) {
+            return (String) buildError(inputName);
+        }
+        return input;
+    }
+
     private Object buildError(String inputName) throws TypeInputException {
         String message = "Invalid " + inputName + " value ";
         showErrorDialog(message);

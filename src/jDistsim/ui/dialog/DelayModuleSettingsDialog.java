@@ -44,7 +44,7 @@ public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
             int delayTime = validator.validateInteger(delayTimeTextField.getText(), "Delay time");
             module.setDelayTime(delayTime);
         } catch (Exception exception) {
-
+            return;
         }
     }
 }

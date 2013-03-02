@@ -119,6 +119,7 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
                 module.setArrivalsType(Create.TimeBetweenArrivalsType.Random_Expo);
             }
         } catch (Exception exception) {
+            return;
         }
     }
 

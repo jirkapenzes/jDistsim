@@ -19,6 +19,10 @@ public class DistributedModule extends Module {
         super(view, moduleConfiguration);
     }
 
+    public DistributedModelDefinition getDistributedModelDefinition() {
+        return distributedModelDefinition;
+    }
+
     @Override
     protected void initializeDefaultValues() {
     }
