@@ -47,7 +47,6 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
 
     public PropertiesController(AbstractFrame mainFrame, PropertiesModel model) {
         super(mainFrame, model);
-
         initializeView();
     }
 
@@ -131,7 +130,7 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
             Module module = currentSelectedModule.getModule();
             IModuleUIFactory uiFactory = ServiceLocator.getInstance().get(IModuleLibrary.class).get(module.getClass()).getUIFactory();
             BaseModuleSettingsDialog dialog = uiFactory.makeSettingsDialog(getMainFrame().getFrame(), module);
-            dialog.setVisible(true);
+            dialog.showDialog();
         }
     }
 
