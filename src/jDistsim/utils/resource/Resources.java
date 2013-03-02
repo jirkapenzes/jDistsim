@@ -1,6 +1,10 @@
 package jDistsim.utils.resource;
 
+import jDistsim.utils.logging.Logger;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -15,6 +19,11 @@ public class Resources {
 
     public static Image getImage(String resourceName) {
         URL url = resource.getClass().getResource(resourceRootDirectory + resourceName);
-        return Toolkit.getDefaultToolkit().getImage(url);
+        try {
+            return ImageIO.read(url);
+        } catch (IOException exception) {
+            Logger.log(exception);
+            return null;
+        }
     }
 }
