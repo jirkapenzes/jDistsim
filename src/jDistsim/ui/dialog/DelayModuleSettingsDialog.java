@@ -17,9 +17,9 @@ public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
 
     public DelayModuleSettingsDialog(JFrame parent, Delay module) {
         super(parent, module);
-        initializeUI();
     }
 
+    @Override
     protected void initializeUI() {
         delayTimeTextField.setText(String.valueOf(module.getDelayTime()));
     }

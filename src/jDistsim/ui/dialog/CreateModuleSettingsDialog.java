@@ -31,9 +31,9 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
 
     public CreateModuleSettingsDialog(JFrame parent, Create module) {
         super(parent, module);
-        initializeUI();
     }
 
+    @Override
     protected void initializeUI() {
         entityNameTextField.setText(module.getBaseEntityName());
         valueTextField.setText(String.valueOf(module.getArrivalsTypeValue()));
