@@ -1,6 +1,6 @@
 package jDistsim.core.simulation.modules.lib.sender;
 
-import jDistsim.core.simulation.modules.Module;
+import jDistsim.core.simulation.distributed.DistributedModule;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
@@ -11,7 +11,7 @@ import jDistsim.ui.module.ModuleView;
  * Date: 1.3.13
  * Time: 20:27
  */
-public class Sender extends Module {
+public class Sender extends DistributedModule {
 
     public Sender(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
