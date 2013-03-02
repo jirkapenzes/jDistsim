@@ -1,5 +1,8 @@
 package jDistsim.application.designer.common;
 
+import jDistsim.core.simulation.distributed.DistributedModule;
+import jDistsim.utils.collection.observable.ObservableHashMap;
+
 /**
  * Author: Jirka Pénzeš
  * Date: 10.2.13
@@ -11,8 +14,10 @@ public class Application {
     private static Object lock = new Object();
 
     private String modelName = "model1.jdsim";
+    private ObservableHashMap<String, DistributedModule> distributedModels;
 
     private Application() {
+        distributedModels = new ObservableHashMap<>();
     }
 
     public static Application global() {
@@ -32,5 +37,9 @@ public class Application {
 
     public void setModelName(String modelName) {
         this.modelName = modelName;
+    }
+
+    public ObservableHashMap<String, DistributedModule> getDistributedModels() {
+        return distributedModels;
     }
 }
