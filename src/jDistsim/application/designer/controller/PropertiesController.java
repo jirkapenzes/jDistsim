@@ -281,15 +281,25 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
     private void rebuildModules() {
         ArrayList<ModuleUI> modules = new ArrayList<>(getMainFrame().getModel(ModelSpaceModel.class).getModuleList().values());
         PropertiesView view = getMainFrame().getView(PropertiesView.class);
+
+        if (currentSelectedView == ModuleView.Tree) {
+            view.getExpandButton().activate();
+            view.getCollapseButton().activate();
+        } else {
+            view.getExpandButton().deactivate();
+            view.getCollapseButton().deactivate();
+        }
+
         if (modules.isEmpty()) {
             view.setNothingToModuleView(true);
             return;
         }
 
         view.setNothingToModuleView(false);
-        if (currentSelectedView == ModuleView.Tree)
+        if (currentSelectedView == ModuleView.Tree) {
             showModulesAsTreeView(modules);
-        else
+        } else {
             showModulesAsListView(modules);
+        }
     }
 }

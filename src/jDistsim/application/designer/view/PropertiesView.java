@@ -74,6 +74,14 @@ public class PropertiesView extends AbstractView<JPanel> {
         return internalPanel1.getPinnedButton();
     }
 
+    public ImageButton getExpandButton() {
+        return internalPanel2.getExpandButton();
+    }
+
+    public ImageButton getCollapseButton() {
+        return internalPanel2.getCollapseButton();
+    }
+
 
     public void setNothingToModuleView(boolean nothingToModuleView) {
         if (nothingToModuleView)
