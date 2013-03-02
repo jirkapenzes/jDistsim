@@ -47,7 +47,7 @@ public class EntitiesTabPanel extends ListenerablePanel<LogTabListener> {
         tableHeader.setDefaultRenderer(new ValueTableCellHeaderRenderer());
 
         if (entitiesInfoTable.getRowCount() < minimalRow) {
-            for (int i = 0; i < minimalRow + 1; i++) {
+            for (int i = 0; i < minimalRow; i++) {
                 Vector<String> row = new Vector<>();
                 for (int index = 0; index < entitiesInfoTable.getColumnCount(); index++) {
                     row.addElement(new String());
