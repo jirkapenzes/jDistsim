@@ -13,6 +13,8 @@ import jDistsim.ui.module.ModuleView;
  */
 public class DistributedModule extends Module {
 
+    private DistributedModelDefinition distributedModelDefinition;
+
     public DistributedModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
     }
