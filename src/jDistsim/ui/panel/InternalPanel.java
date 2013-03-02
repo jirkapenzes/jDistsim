@@ -3,6 +3,7 @@ package jDistsim.ui.panel;
 import jDistsim.ui.control.GradientTitle;
 import jDistsim.ui.control.IconBar;
 import jDistsim.utils.logging.Logger;
+import jDistsim.utils.ui.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -85,7 +86,7 @@ public class InternalPanel extends JComponent {
             Font titleFont = new Font("Calibri", Font.PLAIN, 12);
             graphics2D.setFont(titleFont);
             graphics2D.setColor(new Color(153, 153, 153));
-            drawCenteredString("Nothing to show", getWidth(), getHeight(), graphics2D);
+            SwingUtil.drawCenteredString("Nothing to show", getWidth(), getHeight(), graphics2D);
         }
 
         if (footerBorderLine) {
@@ -95,12 +96,5 @@ public class InternalPanel extends JComponent {
 
         // g.setBackgroundColor(new Color(192, 192, 192));
         // g.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight());
-    }
-
-    public void drawCenteredString(String string, int width, int height, Graphics graphics) {
-        FontMetrics fontMetrics = graphics.getFontMetrics();
-        int x = (width - fontMetrics.stringWidth(string)) / 2;
-        int y = (fontMetrics.getAscent() + (height - (fontMetrics.getAscent() + fontMetrics.getDescent())) / 2);
-        graphics.drawString(string, x, y);
     }
 }

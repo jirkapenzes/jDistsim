@@ -51,4 +51,11 @@ public final class SwingUtil {
         table.getColumnModel().getColumn(index).setMinWidth(width);
         table.getColumnModel().getColumn(index).setPreferredWidth(width);
     }
+
+    public static void drawCenteredString(String string, int width, int height, Graphics graphics) {
+        FontMetrics fontMetrics = graphics.getFontMetrics();
+        int x = (width - fontMetrics.stringWidth(string)) / 2;
+        int y = (fontMetrics.getAscent() + (height - (fontMetrics.getAscent() + fontMetrics.getDescent())) / 2);
+        graphics.drawString(string, x, y);
+    }
 }
