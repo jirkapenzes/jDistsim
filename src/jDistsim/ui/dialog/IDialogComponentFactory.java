@@ -18,4 +18,6 @@ public interface IDialogComponentFactory {
     JTextField makeTextField(int size);
 
     JCheckBox makeCheckBox(String text);
+
+    JComboBox makeComboBox();
 }

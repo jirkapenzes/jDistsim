@@ -41,4 +41,9 @@ public class DialogComponentFactory implements IDialogComponentFactory {
         checkBox.setBackground(Color.white);
         return checkBox;
     }
+
+    @Override
+    public JComboBox makeComboBox() {
+        return new JComboBox();
+    }
 }

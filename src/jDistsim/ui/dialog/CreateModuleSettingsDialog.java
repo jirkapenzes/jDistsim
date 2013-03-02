@@ -95,7 +95,7 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
     }
 
     @Override
-    protected void okButtonLogic() {
+    protected boolean okButtonLogic() {
         try {
             TypeInputValidator validator = new TypeInputValidator();
             double maxArrivals = validator.validateDouble(maxArrivalsTextField.getText(), "Max arrivals");
@@ -118,8 +118,10 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
             } else {
                 module.setArrivalsType(Create.TimeBetweenArrivalsType.Random_Expo);
             }
+
+            return true;
         } catch (Exception exception) {
-            return;
+            return false;
         }
     }
 

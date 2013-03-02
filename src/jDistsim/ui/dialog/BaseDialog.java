@@ -15,15 +15,18 @@ import java.awt.event.MouseEvent;
  */
 public abstract class BaseDialog extends JDialog {
 
-    protected GridBagConstraints constraints;
+    public enum Result {OK, CANCEL, HELP}
 
+    protected GridBagConstraints constraints;
     private IDialogComponentFactory componentFactory;
+    private Result dialogResult;
 
     private JPanel contentPane;
     private GridBagLayout gridBag;
     private JButton okButton;
     private JButton cancelButton;
     private String title;
+
 
     public BaseDialog(JFrame parent, String title) {
         this(parent, new DialogComponentFactory(), title);
@@ -33,6 +36,7 @@ public abstract class BaseDialog extends JDialog {
         super(parent);
         this.componentFactory = componentFactory;
         this.title = title;
+        this.dialogResult = Result.CANCEL;
     }
 
     protected void build(JComponent component) {
@@ -103,15 +107,21 @@ public abstract class BaseDialog extends JDialog {
     }
 
     private void onCancelButtonMouseClick(MouseEvent mouseEvent) {
+        dialogResult = Result.CANCEL;
         hideDialog();
     }
 
     private void onOkButtonClick(MouseEvent mouseEvent) {
-        okButtonLogic();
+        dialogResult = Result.OK;
+        if (!okButtonLogic()) return;
         hideDialog();
     }
 
-    protected abstract void okButtonLogic();
+    public Result getDialogResult() {
+        return dialogResult;
+    }
+
+    protected abstract boolean okButtonLogic();
 
     private void buildWindowHeader() {
         JLabel label = new JLabel(title);

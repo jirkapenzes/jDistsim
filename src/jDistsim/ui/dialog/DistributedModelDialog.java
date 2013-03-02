@@ -1,5 +1,6 @@
 package jDistsim.ui.dialog;
 
+import jDistsim.application.designer.common.Application;
 import jDistsim.core.simulation.distributed.DistributedModelDefinition;
 import jDistsim.ui.TypeInputValidator;
 
@@ -79,13 +80,15 @@ public class DistributedModelDialog extends BaseDialog {
     }
 
     @Override
-    protected void okButtonLogic() {
+    protected boolean okButtonLogic() {
         try {
+            Iterable<String> models = Application.global().getDistributedModels().keys();
             TypeInputValidator validator = new TypeInputValidator();
             String modelName = validator.validateString(modelNameTextField.getText(), "Model name");
             String rmiModelName = validator.validateString(rmiModelNameTextField.getText(), "RMI model name");
-            rmiModelName = validator.validateSpecialCharacters(rmiModelName, "RMI model name");
-            String address = validator.validateString(rmiModelNameTextField.getText(), "Remote address");
+            rmiModelName = validator.validateSpecialCharacters(rmiModelName, "RMI model name (contains special characters)");
+            rmiModelName = validator.validateDuplicity(models, rmiModelName, "RMI model name (duplicity)");
+            String address = validator.validateString(addressTextField.getText(), "Remote address");
             int port = validator.validateInteger(portTextField.getText(), "Remote port");
             boolean lookahead = lookaheadCheckBox.isSelected();
 
@@ -94,8 +97,9 @@ public class DistributedModelDialog extends BaseDialog {
             distributedModelDefinition.setAddress(address);
             distributedModelDefinition.setPort(port);
             distributedModelDefinition.setLookahead(lookahead);
+            return true;
         } catch (Exception exception) {
-            return;
+            return false;
         }
     }
 
