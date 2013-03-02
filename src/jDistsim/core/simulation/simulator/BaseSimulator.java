@@ -123,7 +123,7 @@ public abstract class BaseSimulator implements ISimulator {
 
                 classification(module);
                 animate(entity);
-                   module.execute(this, entity);
+                module.execute(this, entity);
                 updateEnvironment();
             }
 
