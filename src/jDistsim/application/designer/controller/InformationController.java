@@ -4,6 +4,7 @@ import jDistsim.application.designer.MainFrame;
 import jDistsim.application.designer.controller.tabLogic.EntitiesInfoTabLogic;
 import jDistsim.application.designer.controller.tabLogic.LogTabLogic;
 import jDistsim.application.designer.controller.tabLogic.OutputTabLogic;
+import jDistsim.application.designer.controller.tabLogic.RemoteModelsTabLogic;
 import jDistsim.application.designer.model.InformationModel;
 import jDistsim.application.designer.view.InformationView;
 import jDistsim.core.simulation.simulator.Writer;
@@ -21,6 +22,7 @@ public class InformationController extends AbstractController<InformationModel> 
     private LogTabListener logTabLogic;
     private OutputTabLogic outputTabLogic;
     private EntitiesInfoTabLogic entitiesInfoTabLogic;
+    private RemoteModelsTabLogic remoteModelsTabLogic;
 
     public InformationController(MainFrame mainFrame, InformationModel model) {
         super(mainFrame, model);
@@ -33,9 +35,11 @@ public class InformationController extends AbstractController<InformationModel> 
         logTabLogic = new LogTabLogic(this);
         outputTabLogic = new OutputTabLogic(this);
         entitiesInfoTabLogic = new EntitiesInfoTabLogic(this);
+        remoteModelsTabLogic = new RemoteModelsTabLogic(this);
 
         view.setLogTabListener(logTabLogic);
         view.setOutputListener(outputTabLogic);
+        view.setRemoteModelsListener(remoteModelsTabLogic);
     }
 
     public Writer makeSimulatorWriter() {

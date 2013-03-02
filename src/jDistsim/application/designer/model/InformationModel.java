@@ -16,11 +16,13 @@ public class InformationModel extends AbstractModel {
     private boolean logPanelWordWrap;
     private JTextArea outputPanelTextArea;
     private JTable entitiesInfoTable;
+    private JTable remoteModelsTable;
 
     public InformationModel(MainFrame mainFrame) {
         super(mainFrame);
         outputPanelTextArea = new JTextArea("output is empty");
         entitiesInfoTable = new JTable();
+        remoteModelsTable = new JTable();
     }
 
     @Override
@@ -58,5 +60,9 @@ public class InformationModel extends AbstractModel {
 
     public void setEntitiesInfoTable(JTable entitiesInfoTable) {
         this.entitiesInfoTable = entitiesInfoTable;
+    }
+
+    public JTable getRemoteModelsTable() {
+        return remoteModelsTable;
     }
 }
