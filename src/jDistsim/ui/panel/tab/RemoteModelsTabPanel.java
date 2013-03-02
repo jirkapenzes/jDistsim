@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListener> {
 
     private ControlPanel controlPanel;
+    private ContentPanel contentPanel;
     private JTable table;
 
     public RemoteModelsTabPanel(JTable table) {
@@ -40,7 +41,8 @@ public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListe
 
         controlPanel = new ControlPanel();
         controlPanel.setPreferredSize(new Dimension(40, controlPanel.getHeight()));
-        ContentPanel contentPanel = new ContentPanel();
+        contentPanel = new ContentPanel();
+
         add(controlPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
     }
@@ -55,6 +57,19 @@ public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListe
             TableColumn tableColumn = table.getColumnModel().getColumn(index);
             tableColumn.setCellRenderer(new ValueTableCellRenderer());
         }
+        contentPanel.repaint();
+    }
+
+    public ImageButton getAddButton() {
+        return controlPanel.addButton;
+    }
+
+    public ImageButton getEditButton() {
+        return controlPanel.editButton;
+    }
+
+    public ImageButton getRemoveButton() {
+        return controlPanel.removeButton;
     }
 
     private class ControlPanel extends JComponent {
@@ -96,18 +111,6 @@ public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListe
             add(addButton);
             add(editButton);
             add(removeButton);
-        }
-
-        public ImageButton getAddButton() {
-            return addButton;
-        }
-
-        public ImageButton getEditButton() {
-            return editButton;
-        }
-
-        public ImageButton getRemoveButton() {
-            return removeButton;
         }
 
         @Override
