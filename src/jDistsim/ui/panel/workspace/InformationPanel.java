@@ -3,10 +3,7 @@ package jDistsim.ui.panel.workspace;
 import jDistsim.ui.control.GradientTitle;
 import jDistsim.ui.control.tabControl.TabControl;
 import jDistsim.ui.control.tabControl.TabItem;
-import jDistsim.ui.panel.tab.EntitiesTabPanel;
-import jDistsim.ui.panel.tab.LogTabPanel;
-import jDistsim.ui.panel.tab.NotesTabPanel;
-import jDistsim.ui.panel.tab.OutputTabPanel;
+import jDistsim.ui.panel.tab.*;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.resource.TextResources;
 
@@ -25,6 +22,7 @@ public class InformationPanel extends JPanel {
     private NotesTabPanel notesTabPanel;
     private OutputTabPanel outputTabPanel;
     private EntitiesTabPanel entitiesTabPanel;
+    private RemoteModelsTabPanel remoteModelsTabPanel;
 
     public InformationPanel(JTextArea outputTextArea, JTable entitiesInfoTable) {
         Logger.log("Initialize information panel");
@@ -47,16 +45,17 @@ public class InformationPanel extends JPanel {
         notesTabPanel = new NotesTabPanel();
         outputTabPanel = new OutputTabPanel(outputTextArea);
         entitiesTabPanel = new EntitiesTabPanel(entitiesInfoTable);
+        remoteModelsTabPanel = new RemoteModelsTabPanel();
 
         //panel4.setBackground(Color.yellow);
 
         panel1.setBackground(new Color(231, 231, 231));
         TabControl tabControl = new TabControl();
+        tabControl.addTabItem(new TabItem("Remote models", remoteModelsTabPanel));
         tabControl.addTabItem(new TabItem("Simulator output", outputTabPanel));
         tabControl.addTabItem(new TabItem("Entities", entitiesTabPanel));
         tabControl.addTabItem(new TabItem("Application logs", logTabPanel));
-        tabControl.addTabItem(new TabItem("Network", panel1));
-        tabControl.addTabItem(new TabItem("Remote models", panel1));
+        tabControl.addTabItem(new TabItem("Statistics", panel1));
         tabControl.addTabItem(new TabItem("Notes", notesTabPanel));
 
         panel.add(tabControl, BorderLayout.CENTER);
