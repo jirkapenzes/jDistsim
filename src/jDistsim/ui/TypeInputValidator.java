@@ -60,4 +60,13 @@ public class TypeInputValidator {
     private void showErrorDialog(String message) {
         dialogBuilder.buildErrorDialog(message);
     }
+
+    public String validateDuplicity(Iterable<String> otherData, String input, String inputName) throws TypeInputException {
+        for (String key : otherData) {
+            if (input.equals(key)) {
+                return (String) buildError(inputName);
+            }
+        }
+        return input;
+    }
 }

@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageProducer;
 
 /**
  * Author: Jirka Pénzeš
@@ -18,6 +20,7 @@ public class ImageButton extends JComponent {
     private IIconButtonHoverStyle iconButtonHoverStyle;
     private int paddingSize;
     private boolean active;
+    private boolean deactivateMode;
 
     public ImageButton(Image image) {
         this(image, null);
@@ -40,6 +43,7 @@ public class ImageButton extends JComponent {
         this.iconButtonHoverStyle = iconButtonHoverStyle;
         this.paddingSize = paddingSize;
         this.active = false;
+        this.deactivateMode = false;
 
         initialize(dimension, paddingSize);
     }
@@ -53,22 +57,26 @@ public class ImageButton extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
+                if (deactivateMode) return;
                 if (active) return;
                 iconLabelMouseEntered();
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
+                if (deactivateMode) return;
                 iconLabelMouseExited();
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
+                if (deactivateMode) return;
                 iconLabelMousePressed();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (deactivateMode) return;
                 iconLabelMouseReleased();
             }
 
@@ -91,16 +99,19 @@ public class ImageButton extends JComponent {
     }
 
     private void iconLabelMouseEntered() {
+        if (deactivateMode) return;
         if (iconButtonHoverStyle != null)
             iconButtonHoverStyle.applyHoverStyle(this);
     }
 
     private void iconLabelMousePressed() {
+        if (deactivateMode) return;
         if (iconButtonHoverStyle != null)
             iconButtonHoverStyle.applyPressedStyle(this);
     }
 
     private void iconLabelMouseReleased() {
+        if (deactivateMode) return;
         if (iconButtonHoverStyle != null)
             iconButtonHoverStyle.applyReleaseStyle(this);
     }
@@ -114,7 +125,17 @@ public class ImageButton extends JComponent {
             graphics.setColor(new Color(116, 116, 116));
             graphics.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
-        graphics.drawImage(image, paddingSize, paddingSize, getWidth() - 2 * paddingSize, getHeight() - 2 * paddingSize, this);
+        if (deactivateMode)
+            graphics.drawImage(createDisabledImage(image), paddingSize, paddingSize, getWidth() - 2 * paddingSize, getHeight() - 2 * paddingSize, this);
+        else
+            graphics.drawImage(image, paddingSize, paddingSize, getWidth() - 2 * paddingSize, getHeight() - 2 * paddingSize, this);
+    }
+
+    public static Image createDisabledImage (Image i) {
+        GrayFilter filter = new GrayFilter(true, 60);
+        ImageProducer prod = new FilteredImageSource(i.getSource(), filter);
+        Image grayImage = Toolkit.getDefaultToolkit().createImage(prod);
+        return grayImage;
     }
 
     public boolean isActive() {
@@ -125,4 +146,15 @@ public class ImageButton extends JComponent {
         this.active = active;
         repaint();
     }
+
+    public void deactivate() {
+        this.deactivateMode = true;
+        repaint();
+    }
+
+    public void activate() {
+        this.deactivateMode = false;
+        repaint();
+    }
+
 }
