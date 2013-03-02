@@ -3,6 +3,7 @@ package jDistsim.ui.dialog;
 import jDistsim.application.designer.common.UIConfiguration;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Author: Jirka Pénzeš
@@ -26,5 +27,18 @@ public class DialogComponentFactory implements IDialogComponentFactory {
     @Override
     public JTextField makeTextField() {
         return new JTextField(10);
+    }
+
+    @Override
+    public JTextField makeTextField(int size) {
+        return new JTextField(size);
+    }
+
+
+    @Override
+    public JCheckBox makeCheckBox(String text) {
+        JCheckBox checkBox = new JCheckBox(text);
+        checkBox.setBackground(Color.white);
+        return checkBox;
     }
 }

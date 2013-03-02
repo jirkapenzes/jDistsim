@@ -45,7 +45,9 @@ public abstract class BaseDialog extends JDialog {
     }
 
     private void buildUI() {
-        setTitle("jDistSim dialog");
+        if (getTitle().trim().equals(""))
+            setTitle("jDistSim dialog");
+
         setLayout(new BorderLayout());
         setResizable(false);
         setIconImage(null);

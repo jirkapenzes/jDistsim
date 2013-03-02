@@ -8,9 +8,14 @@ import javax.swing.*;
  * Time: 16:49
  */
 public interface IDialogComponentFactory {
+
     JComponent makeLabel(String text);
 
     JButton makeButton(String text);
 
     JTextField makeTextField();
+
+    JTextField makeTextField(int size);
+
+    JCheckBox makeCheckBox(String text);
 }
