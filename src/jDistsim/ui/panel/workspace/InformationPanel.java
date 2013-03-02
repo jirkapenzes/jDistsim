@@ -24,12 +24,12 @@ public class InformationPanel extends JPanel {
     private EntitiesTabPanel entitiesTabPanel;
     private RemoteModelsTabPanel remoteModelsTabPanel;
 
-    public InformationPanel(JTextArea outputTextArea, JTable entitiesInfoTable) {
+    public InformationPanel(JTextArea outputTextArea, JTable entitiesInfoTable, JTable remoteModelsTable) {
         Logger.log("Initialize information panel");
-        initializeComponents(outputTextArea, entitiesInfoTable);
+        initializeComponents(outputTextArea, entitiesInfoTable, remoteModelsTable);
     }
 
-    private void initializeComponents(JTextArea outputTextArea, JTable entitiesInfoTable) {
+    private void initializeComponents(JTextArea outputTextArea, JTable entitiesInfoTable, JTable remoteModelsTable) {
         setBackground(new Color(240, 240, 240));
         setBorder(new EmptyBorder(1, 0, 1, 0));
         setLayout(new BorderLayout());
@@ -45,7 +45,7 @@ public class InformationPanel extends JPanel {
         notesTabPanel = new NotesTabPanel();
         outputTabPanel = new OutputTabPanel(outputTextArea);
         entitiesTabPanel = new EntitiesTabPanel(entitiesInfoTable);
-        remoteModelsTabPanel = new RemoteModelsTabPanel();
+        remoteModelsTabPanel = new RemoteModelsTabPanel(remoteModelsTable);
 
         //panel4.setBackground(Color.yellow);
 
@@ -89,5 +89,9 @@ public class InformationPanel extends JPanel {
 
     public EntitiesTabPanel getEntitiesTabPanel() {
         return entitiesTabPanel;
+    }
+
+    public RemoteModelsTabPanel getRemoteModelsTabPanel() {
+        return remoteModelsTabPanel;
     }
 }

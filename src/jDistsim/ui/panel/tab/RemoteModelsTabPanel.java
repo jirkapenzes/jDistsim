@@ -2,6 +2,7 @@ package jDistsim.ui.panel.tab;
 
 import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.ui.control.button.ImageButton;
+import jDistsim.ui.panel.listener.RemoteModelsTabListener;
 import jDistsim.ui.renderer.ValueTableCellHeaderRenderer;
 import jDistsim.ui.renderer.ValueTableCellRenderer;
 import jDistsim.ui.skins.ScrollBarUI;
@@ -17,18 +18,19 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 1.3.13
  * Time: 23:20
  */
-public class RemoteModelsTabPanel extends ListenerablePanel {
+public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListener> {
 
     private ControlPanel controlPanel;
+    private JTable table;
 
-    public RemoteModelsTabPanel() {
+    public RemoteModelsTabPanel(JTable table) {
+        this.table = table;
         initialize();
     }
 
@@ -38,12 +40,21 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
 
         controlPanel = new ControlPanel();
         controlPanel.setPreferredSize(new Dimension(40, controlPanel.getHeight()));
-
-        //textAreaPanel = new TextAreaPanel();
         ContentPanel contentPanel = new ContentPanel();
-
         add(controlPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
+    }
+
+    public void renderTable() {
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setReorderingAllowed(false);
+        tableHeader.setResizingAllowed(true);
+        tableHeader.setDefaultRenderer(new ValueTableCellHeaderRenderer());
+
+        for (int index = 0; index < table.getColumnCount(); index++) {
+            TableColumn tableColumn = table.getColumnModel().getColumn(index);
+            tableColumn.setCellRenderer(new ValueTableCellRenderer());
+        }
     }
 
     private class ControlPanel extends JComponent {
@@ -51,7 +62,6 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
         private ImageButton addButton;
         private ImageButton editButton;
         private ImageButton removeButton;
-        private ImageButton trashButton;
 
         public ControlPanel() {
             setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -63,7 +73,7 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
             addButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
-                    //getListener().onWordWrapButtonClick(addButton, mouseEvent);
+                    getListener().onOpenAddDialogButtonClick(mouseEvent, addButton);
                 }
             });
 
@@ -71,7 +81,7 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
             editButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
-                    //getListener().onCopyToClipboardButtonClick(editButton, mouseEvent);
+                    getListener().onOpenEditDialogButtonClick(mouseEvent, editButton);
                 }
             });
 
@@ -79,22 +89,13 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
             removeButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
-                    //getListener().onScrollToEndButtonClick(removeButton, mouseEvent);
-                }
-            });
-
-            trashButton = new ImageButton(Resources.getImage("system/panels/lp_trash.png"), hoverStyle, new Dimension(16, 16), padding);
-            trashButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent mouseEvent) {
-                    //getListener().onTrashButtonClick(trashButton, mouseEvent);
+                    getListener().onOpenRemoveDialogButtonClick(mouseEvent, removeButton);
                 }
             });
 
             add(addButton);
             add(editButton);
             add(removeButton);
-            //add(trashButton);
         }
 
         public ImageButton getAddButton() {
@@ -107,10 +108,6 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
 
         public ImageButton getRemoveButton() {
             return removeButton;
-        }
-
-        public ImageButton getTrashButton() {
-            return trashButton;
         }
 
         @Override
@@ -146,35 +143,6 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
 
         public ContentPanel() {
             setLayout(new BorderLayout());
-
-            Vector columns = new Vector();
-            columns.addElement("Model name");
-            columns.addElement("RMI name");
-            columns.addElement("Remote address");
-            columns.addElement("Port");
-            columns.addElement("Lookahead");
-
-            Vector<Vector<String>> rows = new Vector<>();
-            for (int i = 0; i < 0; i++) {
-                Vector<String> row = new Vector<>();
-                row.addElement("Highway");
-                row.addElement("highway");
-                row.addElement("localhost");
-                row.addElement("4096");
-                row.addElement("true");
-                rows.add(row);
-            }
-
-            JTable table = new JTable(rows, columns);
-            JTableHeader tableHeader = table.getTableHeader();
-            tableHeader.setReorderingAllowed(false);
-            tableHeader.setResizingAllowed(true);
-            tableHeader.setDefaultRenderer(new ValueTableCellHeaderRenderer());
-
-            for (int index = 0; index < table.getColumnCount(); index++) {
-                TableColumn tableColumn = table.getColumnModel().getColumn(index);
-                tableColumn.setCellRenderer(new ValueTableCellRenderer());
-            }
 
             table.setEnabled(false);
             table.setFocusable(false);
@@ -243,7 +211,7 @@ public class RemoteModelsTabPanel extends ListenerablePanel {
             graphics2D.drawLine(0, 0, getWidth(), 0);
             graphics2D.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight() - 1);
 
-            if (true) {
+            if (table.getRowCount() == 0) {
                 Font titleFont = new Font("Calibri", Font.PLAIN, 12);
                 graphics2D.setFont(titleFont);
                 graphics2D.setColor(new Color(153, 153, 153));
