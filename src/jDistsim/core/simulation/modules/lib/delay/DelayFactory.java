@@ -1,31 +1,15 @@
 package jDistsim.core.simulation.modules.lib.delay;
 
-import jDistsim.core.simulation.modules.IModuleFactory;
 import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
+import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
 
 /**
  * Author: Jirka Pénzeš
  * Date: 1.2.13
  * Time: 21:42
  */
-public class DelayFactory implements IModuleFactory {
-
-    private int currentNumber;
-    private ModuleConfiguration moduleConfiguration;
-
-    public DelayFactory() {
-    }
-
-    public String createIdentifier() {
-        return "delay" + ++currentNumber;
-    }
-
-    @Override
-    public void setModuleConfiguration(ModuleConfiguration moduleConfiguration) {
-        this.moduleConfiguration = moduleConfiguration;
-    }
+public class DelayFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {

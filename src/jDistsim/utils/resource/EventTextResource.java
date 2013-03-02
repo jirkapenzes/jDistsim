@@ -15,4 +15,7 @@ public class EventTextResource {
     public static String DISPOSE_EVENT_DESCRIPTION_TEXT = "<html>Some text description about dispose module ...</html>";
     public static String DELAY_EVENT_DESCRIPTION_TITLE = "Delay";
     public static String DELAY_EVENT_DESCRIPTION_TEXT = "<html>Some text description about delay module ...</html>";
+    public static String SENDER_EVENT_DESCRIPTION_TITLE = "Sender";
+    public static String SENDER_EVENT_DESCRIPTION_TEXT = "<html>Some text description about delay module ...</html>";
+
 }
