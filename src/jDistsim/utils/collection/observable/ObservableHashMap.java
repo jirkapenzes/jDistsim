@@ -45,6 +45,18 @@ public class ObservableHashMap<Key, Value extends IObservable> extends Observabl
         return hashMap.values();
     }
 
+    public Iterable<Key> keys() {
+        return hashMap.keySet();
+    }
+
+    public int size() {
+        return hashMap.size();
+    }
+
+    public boolean isEmpty() {
+        return hashMap.isEmpty();
+    }
+
     @Override
     public void update(Observable observable, Object arguments) {
         notifyObservers("itemChanges");
