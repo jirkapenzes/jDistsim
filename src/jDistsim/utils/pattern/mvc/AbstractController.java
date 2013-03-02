@@ -15,7 +15,7 @@ public class AbstractController<TModel extends AbstractModel> {
         this.model = model;
     }
 
-    protected AbstractFrame getMainFrame() {
+    public AbstractFrame getMainFrame() {
         return mainFrame;
     }
 
