@@ -144,7 +144,6 @@ public class LogTabPanel extends ListenerablePanel<LogTabListener> {
             BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{2.0f}, 0.0f);
             graphics2D.setStroke(dashed);
 
-            //graphics2D.drawLine(getWidth() - rightPadding, 1, getWidth() - rightPadding, getHeight() - 2);
             graphics2D.drawLine(getWidth() - 1, 1, getWidth() - 1, getHeight() - 2);
             graphics2D.setStroke(currentStroke);
         }

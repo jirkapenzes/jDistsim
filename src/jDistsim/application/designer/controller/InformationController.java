@@ -5,6 +5,7 @@ import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.model.InformationModel;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.InformationView;
+import jDistsim.core.simulation.distributed.DistributedModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
 import jDistsim.core.simulation.modules.RootModule;
@@ -144,6 +145,10 @@ public class InformationController extends AbstractController<InformationModel> 
                     RootModule rootModule = (RootModule) module;
                     rows.addElement(makeEntityRow(rootModule));
                 }
+                if (module instanceof DistributedModule) {
+                    DistributedModule distributedModule = (DistributedModule) module;
+                    rows.addElement(makeDistributedEntityRow(distributedModule));
+                }
             }
 
             getModel().getEntitiesInfoTable().setModel(new DefaultTableModel(rows, columns));
@@ -176,6 +181,20 @@ public class InformationController extends AbstractController<InformationModel> 
             row.addElement(String.valueOf(rootModule.getMaxArrivals()));
             row.addElement(rootModule.getArrivalsType() + "(" + rootModule.getArrivalsTypeValue() + ")");
             row.addElement(rootModule.getIconName());
+            return row;
+        }
+
+        private Vector<String> makeDistributedEntityRow(DistributedModule distributedModule) {
+            Vector<String> row = new Vector<>();
+            row.addElement("-");
+            row.addElement(distributedModule.getIdentifier());
+            row.addElement("-");
+            row.addElement("true");
+            row.addElement("-");
+            row.addElement("-");
+            row.addElement("-");
+            row.addElement("-");
+            row.addElement("inherit");
             return row;
         }
 
