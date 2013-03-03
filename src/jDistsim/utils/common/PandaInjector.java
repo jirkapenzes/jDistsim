@@ -35,7 +35,6 @@ public class PandaInjector {
                 if (complete()) {
                     makePanda();
                 }
-
             }
         });
     }
