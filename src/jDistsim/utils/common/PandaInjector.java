@@ -40,12 +40,14 @@ public class PandaInjector {
     }
 
     private void makePanda() {
-        Logger.log("Inject panda! :)");
-        Graphics2D graphics2D = (Graphics2D) canvas.getGraphics();
-        Image pandaImage = Resources.getImage("system/entity/panda.png");
-        graphics2D.drawImage(pandaImage, 0, 0, 256, 256, canvas);
-        graphics2D.dispose();
-        reset();
+        if (activate) {
+            Logger.log("Inject panda! :)");
+            Graphics2D graphics2D = (Graphics2D) canvas.getGraphics();
+            Image pandaImage = Resources.getImage("system/entity/panda.png");
+            graphics2D.drawImage(pandaImage, 0, 0, 256, 256, canvas);
+            graphics2D.dispose();
+            reset();
+        }
     }
 
     public void activate() {
