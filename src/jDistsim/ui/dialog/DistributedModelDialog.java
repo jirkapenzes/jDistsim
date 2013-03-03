@@ -57,9 +57,9 @@ public class DistributedModelDialog extends BaseDialog {
 
         constraints.gridwidth = 1;
         constraints.insets = new Insets(0, 0, 8, 5);
-        build(modelNameTextField);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
         build(rmiModelNameTextField);
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        build(modelNameTextField);
 
         constraints.gridwidth = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
