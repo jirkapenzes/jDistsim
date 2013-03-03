@@ -1,8 +1,10 @@
 package jDistsim.application.designer.controller;
 
+import jDistsim.ServiceLocator;
 import jDistsim.application.designer.controller.modelSpaceFeature.util.ConnectorLine;
 import jDistsim.core.simulation.modules.ui.ModuleConnectedPointUI;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
+import jDistsim.utils.common.PandaInjector;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

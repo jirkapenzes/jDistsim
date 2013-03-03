@@ -8,6 +8,7 @@ import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ui.ModuleConnectedPointUI;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
 import jDistsim.utils.common.ModelSpaceListener;
+import jDistsim.utils.common.PandaInjector;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
@@ -137,10 +138,10 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             currentDragModule.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
 
             getModel().getModuleList().put(currentDragModule.getIdentifier(), currentDragModule);
-
             for (ModelSpaceListener listener : modelSpaceListeners)
                 listener.onAddedModule(currentDragModule, this);
 
+            new PandaInjector(view.getContentPane(), currentDragModule).activate();
         } catch (Exception exception) {
             Logger.log(exception);
         }

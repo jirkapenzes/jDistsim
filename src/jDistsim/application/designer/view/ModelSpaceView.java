@@ -1,17 +1,8 @@
 package jDistsim.application.designer.view;
 
-import jDistsim.SampleControl;
 import jDistsim.ui.panel.workspace.ModelSpacePanel;
-import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.AbstractView;
-
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.*;
-import java.io.IOException;
 
 /**
  * Author: Jirka Pénzeš
