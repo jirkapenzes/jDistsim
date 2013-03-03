@@ -19,4 +19,9 @@ public class DialogBuilder implements IDialogBuilder {
     public void buildErrorDialog(String message) {
         JOptionPane.showMessageDialog(frame, message, "jDistSim error", JOptionPane.ERROR_MESSAGE);
     }
+
+    @Override
+    public int buildQuestionDialog(String message) {
+        return JOptionPane.showConfirmDialog(frame, message, "jDistSim question", JOptionPane.YES_NO_OPTION);
+    }
 }

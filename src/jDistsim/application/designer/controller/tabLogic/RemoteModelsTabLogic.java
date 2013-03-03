@@ -13,6 +13,7 @@ import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.observer.IObserver;
 import jDistsim.utils.pattern.observer.Observable;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -27,10 +28,12 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
 
     private InformationController controller;
     private InformationView view;
+    private DialogBuilder dialogBuilder;
 
     public RemoteModelsTabLogic(InformationController controller) {
         this.controller = controller;
         view = controller.getMainFrame().getView(InformationView.class);
+        dialogBuilder = new DialogBuilder(controller.getMainFrame().getFrame());
 
         Application.global().getDistributedModels().addObserver(this);
         rebuildTableModel();
@@ -56,7 +59,7 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         if (selectDialog.getDialogResult() == BaseDialog.Result.OK) {
             DistributedModelDefinition modelDefinition = selectDialog.getModelDefinition();
             if (modelDefinition == null) {
-                new DialogBuilder(controller.getMainFrame().getFrame()).buildErrorDialog("There was no model selected");
+                dialogBuilder.buildErrorDialog("There was no model selected");
                 onOpenEditDialogButtonClick(mouseEvent, sender);
                 return;
             } else {
@@ -68,6 +71,22 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
 
     @Override
     public void onOpenRemoveDialogButtonClick(MouseEvent mouseEvent, Object sender) {
+        DistributedModuleSelectedDialog selectDialog = new DistributedModuleSelectedDialog(
+                controller.getMainFrame().getFrame(), "Select distributed model to remove");
+
+        selectDialog.showDialog();
+        if (selectDialog.getDialogResult() == BaseDialog.Result.OK) {
+            DistributedModelDefinition modelDefinition = selectDialog.getModelDefinition();
+            if (modelDefinition == null) {
+                dialogBuilder.buildErrorDialog("There was no model selected");
+                onOpenEditDialogButtonClick(mouseEvent, sender);
+                return;
+            } else {
+                int result = dialogBuilder.buildQuestionDialog("Really want to delete the distributed model?");
+                if (result == JOptionPane.YES_OPTION)
+                    Application.global().getDistributedModels().remove(modelDefinition.getRmiModelName());
+            }
+        }
     }
 
     private void rebuildTableModel() {

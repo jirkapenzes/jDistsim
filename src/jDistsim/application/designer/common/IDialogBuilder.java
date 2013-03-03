@@ -8,4 +8,6 @@ package jDistsim.application.designer.common;
 public interface IDialogBuilder {
 
     void buildErrorDialog(String message);
+
+    int buildQuestionDialog(String message);
 }
