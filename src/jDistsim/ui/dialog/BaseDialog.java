@@ -27,6 +27,16 @@ public abstract class BaseDialog extends JDialog {
     private JButton cancelButton;
     private String title;
 
+    public BaseDialog(JDialog parent, String title) {
+        this(parent, new DialogComponentFactory(), title);
+    }
+
+    public BaseDialog(JDialog parent, IDialogComponentFactory componentFactory, String title) {
+        super(parent);
+        this.componentFactory = componentFactory;
+        this.title = title;
+        this.dialogResult = Result.CANCEL;
+    }
 
     public BaseDialog(JFrame parent, String title) {
         this(parent, new DialogComponentFactory(), title);
