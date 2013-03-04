@@ -4,6 +4,10 @@ import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.core.simulation.modules.IModuleLibrary;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.ModuleContainer;
+import jDistsim.core.simulation.modules.lib.assign.Assign;
+import jDistsim.core.simulation.modules.lib.assign.AssignFactory;
+import jDistsim.core.simulation.modules.lib.assign.AssignUIFactory;
+import jDistsim.core.simulation.modules.lib.assign.AssignView;
 import jDistsim.core.simulation.modules.lib.create.Create;
 import jDistsim.core.simulation.modules.lib.create.CreateFactory;
 import jDistsim.core.simulation.modules.lib.create.CreateUIFactory;
@@ -62,8 +66,15 @@ public class ModuleLibrary implements IModuleLibrary {
                 .toUIFactory(new DelayUIFactory())
                 .withConfiguration(new ModuleConfiguration("delay", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
-        container.bind(Sender.class, new ModuleContainer())
+        container.bind(Assign.class, new ModuleContainer())
                 .toIndex(4)
+                .toView(new AssignView())
+                .toFactory(new AssignFactory())
+                .toUIFactory(new AssignUIFactory())
+                .withConfiguration(new ModuleConfiguration("assign", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
+                .build();
+        container.bind(Sender.class, new ModuleContainer())
+                .toIndex(5)
                 .toView(new SenderView())
                 .toFactory(new SenderFactory())
                 .toUIFactory(new SenderUIFactory())
