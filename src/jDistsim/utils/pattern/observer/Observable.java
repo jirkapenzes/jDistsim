@@ -11,9 +11,11 @@ import java.util.List;
 public class Observable implements IObservable {
 
     private List<IObserver> observers;
+    private boolean notify;
 
     public Observable() {
         observers = new ArrayList<IObserver>();
+        notify = true;
     }
 
     public void addObserver(IObserver observer) {
@@ -29,12 +31,22 @@ public class Observable implements IObservable {
     }
 
     public void notifyObservers() {
-        notifyObservers(null);
+        if (notify)
+            notifyObservers(null);
     }
 
     public void notifyObservers(Object argument) {
-        for (IObserver observer : observers) {
-            observer.update(this, argument);
-        }
+        if (notify)
+            for (IObserver observer : observers) {
+                observer.update(this, argument);
+            }
+    }
+
+    public void stopNotify() {
+        notify = false;
+    }
+
+    public void startNotify() {
+        notify = true;
     }
 }
