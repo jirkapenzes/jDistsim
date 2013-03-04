@@ -19,10 +19,11 @@ public class ModuleMovingAction extends ModelSpaceListener {
     private boolean isDragged = false;
 
     @Override
-    public void moduleMousePressed(MouseEvent mouseEvent, ModelSpaceController modelSpaceController) {
+    public void moduleMousePressed(MouseEvent mouseEvent, ModelSpaceController controller) {
         switch (mouseEvent.getButton()) {
             case MouseEvent.BUTTON1:
                 mousePositionDown = new Point(mouseEvent.getX(), mouseEvent.getY());
+                controller.unselectedActiveModule();
                 break;
         }
     }
@@ -31,8 +32,6 @@ public class ModuleMovingAction extends ModelSpaceListener {
     public void moduleMotionMouseDragged(MouseEvent mouseEvent, ModelSpaceController controller) {
         isDragged = true;
         ModuleUI moduleUI = getModuleUIFromMouseEvent(mouseEvent);
-        controller.unselectedActiveModule();
-
         Point position = moduleUI.getLocation();
         position.translate(mouseEvent.getX() - mousePositionDown.x, mouseEvent.getY() - mousePositionDown.y);
         moduleUI.setLocation(position);
