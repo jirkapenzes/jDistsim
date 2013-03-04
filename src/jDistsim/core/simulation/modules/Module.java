@@ -37,8 +37,8 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
         inputConnectedPoints = new ObservableList<>(this);
         outputConnectedPoints = new ObservableList<>(this);
 
-        initialize();
         initializeDefaultValues();
+        initialize();
     }
 
     protected abstract void initializeDefaultValues();
