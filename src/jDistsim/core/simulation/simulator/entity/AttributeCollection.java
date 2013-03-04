@@ -19,6 +19,16 @@ public class AttributeCollection implements Iterable<Attribute> {
         attributes = new HashMap<>();
     }
 
+    public void set(Attribute attribute) {
+        if (attributes.containsKey(attribute.getName())) {
+            Attribute att = attributes.get(attribute.getName());
+            att.setName(attribute.getName());
+            att.setValue(attribute.getValue());
+        } else {
+            put(attribute);
+        }
+    }
+
     public void put(String name, String value) {
         put(new Attribute(name, value));
     }
@@ -52,11 +62,19 @@ public class AttributeCollection implements Iterable<Attribute> {
         return attributes.values().iterator();
     }
 
+    public boolean contains(Attribute attribute) {
+        return attributes.containsKey(attribute.getName());
+    }
+
     public int size() {
         return attributes.size();
     }
 
     public boolean isEmpty() {
         return attributes.isEmpty();
+    }
+
+    public void clear() {
+        attributes.clear();
     }
 }
