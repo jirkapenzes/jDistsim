@@ -182,6 +182,9 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
                 if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE) {
                     modulePointA.disconnect(modulePointB);
 
+                    modulePointA.getParent().notifyObservers();
+                    modulePointB.getParent().notifyObservers();
+
                     view.getContentPane().remove(getModel().getCurrentSelectedLine());
                     view.getContentPane().repaint();
                     view.getContentPane().requestFocus();

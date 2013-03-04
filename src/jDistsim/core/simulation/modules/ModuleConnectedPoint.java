@@ -40,6 +40,7 @@ public class ModuleConnectedPoint extends Observable {
 
     public void removeDependency(Module module) {
         dependencies.remove(module);
+        setChanged();
     }
 
     public void removeDependency(String identifier) {
