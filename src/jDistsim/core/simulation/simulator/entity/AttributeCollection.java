@@ -51,4 +51,12 @@ public class AttributeCollection implements Iterable<Attribute> {
     public Iterator<Attribute> iterator() {
         return attributes.values().iterator();
     }
+
+    public int size() {
+        return attributes.size();
+    }
+
+    public boolean isEmpty() {
+        return attributes.isEmpty();
+    }
 }
