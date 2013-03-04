@@ -22,7 +22,7 @@ import java.util.Vector;
  */
 public class EntitiesTabPanel extends ListenerablePanel<LogTabListener> {
 
-    private int minimalRow = 6;
+    private int minimalRow = 7;
     private JTable entitiesInfoTable;
     private JScrollPane scrollPane;
 
