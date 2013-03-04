@@ -21,7 +21,9 @@ public class DialogComponentFactory implements IDialogComponentFactory {
 
     @Override
     public JButton makeButton(String text) {
-        return new JButton(text);
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(70, 24));
+        return button;
     }
 
     @Override
