@@ -66,6 +66,7 @@ public class AttributeSettingsDialog extends BaseDialog {
         try {
             TypeInputValidator validator = new TypeInputValidator();
             String name = validator.validateString(nameTextField.getText(), "name");
+            name = validator.validateSpecialCharacters(name, "name");
             String value = validator.validateString(valueTextField.getText(), "value");
 
             attribute.setName(name);

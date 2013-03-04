@@ -37,7 +37,7 @@ public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
     }
 
     @Override
-    protected boolean okButtonLogic() {
+    protected boolean doLogic() {
         try {
             TypeInputValidator validator = new TypeInputValidator();
             int delayTime = validator.validateInteger(delayTimeTextField.getText(), "Delay time");

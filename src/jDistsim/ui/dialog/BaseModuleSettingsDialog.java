@@ -24,4 +24,17 @@ public abstract class BaseModuleSettingsDialog<TModule extends Module> extends B
         setTitle("Module settings dialog");
         this.module = module;
     }
+
+    @Override
+    protected boolean okButtonLogic() {
+        module.stopNotify();
+        boolean logicResult = doLogic();
+        module.startNotify();
+        if (logicResult)
+            module.notifyObservers("properties");
+
+        return logicResult;
+    }
+
+    protected abstract boolean doLogic();
 }

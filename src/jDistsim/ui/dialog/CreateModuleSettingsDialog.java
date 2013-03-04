@@ -95,7 +95,7 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
     }
 
     @Override
-    protected boolean okButtonLogic() {
+    protected boolean doLogic() {
         try {
             TypeInputValidator validator = new TypeInputValidator();
             double maxArrivals = validator.validateDouble(maxArrivalsTextField.getText(), "Max arrivals");
