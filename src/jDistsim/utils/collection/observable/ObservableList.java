@@ -33,26 +33,26 @@ public class ObservableList<Item extends Observable> extends Observable implemen
     public void add(Item item) {
         itemList.add(item);
         item.addObserver(this);
-        notifyObservers("add");
+        setChanged();
     }
 
     public void add(int index, Item item) {
         itemList.add(index, item);
         item.addObserver(this);
-        notifyObservers("add");
+        setChanged();
     }
 
     public boolean remove(Item item) {
         boolean result = itemList.remove(item);
         item.removeObserver(this);
-        notifyObservers("remove");
+        setChanged();
         return result;
     }
 
     public Item remove(int index) {
         Item oldItem = itemList.remove(index);
         oldItem.removeObserver(this);
-        notifyObservers("remove");
+        setChanged();
         return oldItem;
     }
 
@@ -62,7 +62,7 @@ public class ObservableList<Item extends Observable> extends Observable implemen
 
     public void clear() {
         itemList.clear();
-        notifyObservers("clear");
+        setChanged();
     }
 
     @Override
@@ -72,6 +72,7 @@ public class ObservableList<Item extends Observable> extends Observable implemen
 
     @Override
     public void update(Observable observable, Object arguments) {
+        setChanged();
         notifyObservers("itemChanges");
     }
 }

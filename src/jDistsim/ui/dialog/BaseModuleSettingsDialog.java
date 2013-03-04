@@ -27,12 +27,9 @@ public abstract class BaseModuleSettingsDialog<TModule extends Module> extends B
 
     @Override
     protected boolean okButtonLogic() {
-        module.stopNotify();
         boolean logicResult = doLogic();
-        module.startNotify();
         if (logicResult)
             module.notifyObservers("properties");
-
         return logicResult;
     }
 

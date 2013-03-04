@@ -38,10 +38,7 @@ public class PropertiesModel extends AbstractModel implements IObserver {
 
     @Override
     public void update(Observable observable, Object arguments) {
-        if (arguments.equals("moduleList"))
-            notifyObservers("moduleSpace");
-
-        if (arguments.equals("currentActiveModule"))
-            notifyObservers("currentActiveModule");
+        setChanged();
+        notifyObservers();
     }
 }

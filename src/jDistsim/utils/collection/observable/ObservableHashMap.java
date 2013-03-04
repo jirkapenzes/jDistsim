@@ -23,7 +23,7 @@ public class ObservableHashMap<Key, Value extends IObservable> extends Observabl
     public void put(Key key, Value value) {
         hashMap.put(key, value);
         value.addObserver(this);
-        notifyObservers("put");
+        setChanged();
     }
 
     public Value get(Key key) {
@@ -33,7 +33,7 @@ public class ObservableHashMap<Key, Value extends IObservable> extends Observabl
     public Value remove(Key key) {
         Value value = hashMap.remove(key);
         value.removeObserver(this);
-        notifyObservers("remove");
+        setChanged();
         return value;
     }
 
@@ -59,6 +59,7 @@ public class ObservableHashMap<Key, Value extends IObservable> extends Observabl
 
     @Override
     public void update(Observable observable, Object arguments) {
+        setChanged();
         notifyObservers("itemChanges");
     }
 }

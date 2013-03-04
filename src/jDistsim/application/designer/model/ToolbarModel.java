@@ -20,12 +20,4 @@ public class ToolbarModel extends AbstractModel {
     public void initialize() {
     }
 
-    public boolean isRelations() {
-        return relations;
-    }
-
-    public void setRelations(boolean relations) {
-        this.relations = relations;
-        notifyObservers("relations");
-    }
 }

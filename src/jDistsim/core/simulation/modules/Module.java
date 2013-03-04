@@ -32,7 +32,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     public Module(ModuleView view, ModuleConfiguration moduleConfiguration) {
         this.identifier = moduleConfiguration.getBaseIdentifier();
         this.view = view;
-        this.properties = new ModuleProperties(this);
+        this.properties = new ModuleProperties();
 
         inputConnectedPoints = new ObservableList<>(this);
         outputConnectedPoints = new ObservableList<>(this);
@@ -79,7 +79,6 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
         properties.get("identifier").setValue(identifier);
-        //notifyObservers("identifier");
     }
 
     public String getIdentifier() {
@@ -110,10 +109,12 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
 
     public void addInputPoint(ModuleConnectedPoint moduleConnectedPoint) {
         inputConnectedPoints.add(moduleConnectedPoint);
+        inputConnectedPoints.notifyObservers();
     }
 
     public void addOutputPoint(ModuleConnectedPoint moduleConnectedPoint) {
         outputConnectedPoints.add(moduleConnectedPoint);
+        outputConnectedPoints.notifyObservers();
     }
 
     public ReadOnlyList<ModuleConnectedPoint> getInputConnectedPoints() {
@@ -153,8 +154,10 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
         if (observable == outputConnectedPoints)
             setOutputPointsProperties();
 
-        Logger.log("module property changed");
-        notifyObservers("propertyChanged");
+        properties.set(new ModuleProperty("correct", isValid(), "correct"));
+        setChildProperty();
+        setChanged();
+        notifyObservers();
     }
 
     private void setOutputPointsProperties() {
@@ -170,6 +173,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
             properties.set(new ModuleProperty(pointName + ".isFull", connectedPoint.isFull(), description + " is full"));
             properties.set(new ModuleProperty(pointName + ".occupied", connectedPoint.getDependencies().size(), description + " occupied"));
         }
+        hasChanged();
     }
 
     private void setInputPointsProperties() {
@@ -185,13 +189,17 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
             properties.set(new ModuleProperty(pointName + ".isFull", connectedPoint.isFull(), description + " is full"));
             properties.set(new ModuleProperty(pointName + ".occupied", connectedPoint.getDependencies().size(), description + " occupied"));
         }
+        hasChanged();
     }
 
-    public void refreshProperties() {
+    private void refreshProperties() {
+        //stopNotify();
         properties.set(new ModuleProperty("correct", isValid(), "correct"));
         setInputPointsProperties();
         setOutputPointsProperties();
         setChildProperty();
+        //startNotify();
+        //notifyObservers("propertyChanged");
     }
 
     protected abstract void setChildProperty();

@@ -32,6 +32,7 @@ public class ModuleKeysAction extends ModelSpaceListener {
                         }
                     }
                     modelSpaceController.getModel().getModuleList().remove(module.getIdentifier());
+                    modelSpaceController.getModel().getModuleList().notifyObservers();
                     modelSpaceController.getView().getContentPane().remove(module);
                     modelSpaceController.unselectedActiveModule();
                     modelSpaceController.getView().getContentPane().repaint();

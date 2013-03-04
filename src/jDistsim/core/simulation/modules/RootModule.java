@@ -44,7 +44,7 @@ public abstract class RootModule extends Module {
 
     public void setFirsCreation(double firsCreation) {
         this.firsCreation = firsCreation;
-        notifyObservers("firsCreation");
+        setChanged();
     }
 
     public String getBaseEntityName() {
@@ -53,7 +53,7 @@ public abstract class RootModule extends Module {
 
     public void setBaseEntityName(String baseEntityName) {
         this.baseEntityName = baseEntityName;
-        notifyObservers("baseEntityName");
+        setChanged();
     }
 
     public TimeBetweenArrivalsType getArrivalsType() {
@@ -62,7 +62,7 @@ public abstract class RootModule extends Module {
 
     public void setArrivalsType(TimeBetweenArrivalsType arrivalsType) {
         this.arrivalsType = arrivalsType;
-        notifyObservers("arrivalsType");
+        setChanged();
     }
 
     public double getArrivalsTypeValue() {
@@ -71,7 +71,7 @@ public abstract class RootModule extends Module {
 
     public void setArrivalsTypeValue(double arrivalsTypeValue) {
         this.arrivalsTypeValue = arrivalsTypeValue;
-        notifyObservers("arrivalsTypeValue ");
+        setChanged();
     }
 
     public int getEntityPerInterval() {
@@ -80,7 +80,7 @@ public abstract class RootModule extends Module {
 
     public void setEntityPerInterval(int entityPerInterval) {
         this.entityPerInterval = entityPerInterval;
-        notifyObservers("entityPerInterval");
+        setChanged();
     }
 
     public double getMaxArrivals() {
@@ -89,7 +89,7 @@ public abstract class RootModule extends Module {
 
     public void setMaxArrivals(double maxArrivals) {
         this.maxArrivals = maxArrivals;
-        notifyObservers("maxArrivals");
+        setChanged();
     }
 
     public String getIconName() {
@@ -98,7 +98,7 @@ public abstract class RootModule extends Module {
 
     public void setIconName(String iconName) {
         this.iconName = iconName;
-        notifyObservers("iconName");
+        setChanged();
     }
 
 }

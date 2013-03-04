@@ -51,10 +51,8 @@ public class ModuleConnectedPointUI {
         connectedPoint.addDependency(connectedPointB.getOwner().getModule());
         connectedPointB.getParent().addDependency(owner.getModule());
         ModuleConnector moduleConnector = new ModuleConnector(owner, this, connectedPointB.getOwner(), connectedPointB);
-
         dependencies.put(connectedPointB, moduleConnector);
         connectedPointB.dependencies.put(this, moduleConnector);
-
         return moduleConnector;
     }
 

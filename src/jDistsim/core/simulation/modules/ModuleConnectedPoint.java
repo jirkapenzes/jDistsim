@@ -10,10 +10,9 @@ import java.util.ArrayList;
  * Date: 4.12.12
  * Time: 21:48
  */
-public class ModuleConnectedPoint extends Observable  {
+public class ModuleConnectedPoint extends Observable {
 
     private int capacity;
-
     private ArrayList<Module> dependencies;
 
     public ModuleConnectedPoint(int capacity) {
@@ -36,7 +35,7 @@ public class ModuleConnectedPoint extends Observable  {
             throw new ModuleConnectedPointFullCapacityException("Capacity is full");
 
         dependencies.add(dependencyModule);
-        notifyObservers("addDependency");
+        setChanged();
     }
 
     public void removeDependency(Module module) {
@@ -50,7 +49,7 @@ public class ModuleConnectedPoint extends Observable  {
                 return;
             }
         }
-        notifyObservers("removeDependency");
+        setChanged();
     }
 
     public boolean isFull() {
@@ -67,6 +66,6 @@ public class ModuleConnectedPoint extends Observable  {
 
     public void removeAllDependencies() {
         dependencies.clear();
-        notifyObservers("removeAllDependencies");
+        setChanged();
     }
 }

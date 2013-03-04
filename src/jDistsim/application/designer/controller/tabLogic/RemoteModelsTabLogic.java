@@ -47,6 +47,7 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         if (dialog.getDialogResult() == BaseDialog.Result.OK) {
             DistributedModelDefinition modelDefinition = dialog.getDistributedModelDefinition();
             Application.global().getDistributedModels().put(modelDefinition.getRmiModelName(), modelDefinition);
+            Application.global().getDistributedModels().notifyObservers();
         }
     }
 
@@ -83,8 +84,10 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
                 return;
             } else {
                 int result = dialogBuilder.buildQuestionDialog("Really want to delete the distributed model?");
-                if (result == JOptionPane.YES_OPTION)
+                if (result == JOptionPane.YES_OPTION) {
                     Application.global().getDistributedModels().remove(modelDefinition.getRmiModelName());
+                    Application.global().getDistributedModels().notifyObservers();
+                }
             }
         }
     }

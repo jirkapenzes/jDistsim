@@ -16,7 +16,6 @@ import jDistsim.utils.pattern.observer.Observable;
 public class ModelSpaceModel extends AbstractModel implements IObserver {
 
     private ModuleUI currentActiveModule;
-    private boolean relations;
     private ModuleUI currentDragModule;
     private ConnectorLine currentSelectedLine;
     private ObservableHashMap<String, ModuleUI> moduleList;
@@ -27,30 +26,17 @@ public class ModelSpaceModel extends AbstractModel implements IObserver {
 
     @Override
     public void initialize() {
-        ToolbarModel toolbarModel = getMainFrame().getModel(ToolbarModel.class);
-        toolbarModel.addObserver(this);
-
         moduleList = new ObservableHashMap<>();
         moduleList.addObserver(this);
-    }
-
-    public boolean isRelations() {
-        return relations;
-    }
-
-    public void setRelations(boolean relations) {
-        this.relations = relations;
-        notifyObservers("relations");
     }
 
     public ModuleUI getCurrentActiveModule() {
         return currentActiveModule;
     }
 
-
     public void setCurrentActiveModule(ModuleUI currentActiveModule) {
         this.currentActiveModule = currentActiveModule;
-        notifyObservers("currentActiveModule");
+        setChanged();
     }
 
     public ConnectorLine getCurrentSelectedLine() {
@@ -59,7 +45,7 @@ public class ModelSpaceModel extends AbstractModel implements IObserver {
 
     public void setCurrentSelectedLine(ConnectorLine currentSelectedLine) {
         this.currentSelectedLine = currentSelectedLine;
-        notifyObservers("currentSelectedLine");
+        setChanged();
     }
 
     public ModuleUI getCurrentDragModule() {
@@ -76,13 +62,7 @@ public class ModelSpaceModel extends AbstractModel implements IObserver {
 
     @Override
     public void update(Observable observable, Object arguments) {
-        if (observable instanceof ToolbarModel) {
-            ToolbarModel toolbarModel = (ToolbarModel) observable;
-            setRelations(toolbarModel.isRelations());
-        }
-
-        if (observable instanceof ObservableHashMap) {
-            notifyObservers("moduleList");
-        }
+        setChanged();
+        notifyObservers("moduleList");
     }
 }

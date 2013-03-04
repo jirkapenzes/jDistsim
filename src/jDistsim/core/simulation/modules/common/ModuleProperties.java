@@ -15,15 +15,14 @@ import java.util.List;
 public class ModuleProperties {
 
     private ObservableHashMap<String, ModuleProperty> observableHashMap;
-    private Module module;
 
-    public ModuleProperties(Module module) {
-        this.module = module;
+    public ModuleProperties() {
         observableHashMap = new ObservableHashMap<>();
     }
 
     public void set(ModuleProperty moduleProperty) {
         observableHashMap.put(moduleProperty.getKey(), moduleProperty);
+        observableHashMap.notifyObservers();
     }
 
     public ModuleProperty get(String propertyName) {
@@ -34,7 +33,6 @@ public class ModuleProperties {
     }
 
     public List<ModuleProperty> getAll() {
-        module.refreshProperties();
         List<ModuleProperty> properties = new ArrayList<>(observableHashMap.values());
         Collections.sort(properties);
         return properties;

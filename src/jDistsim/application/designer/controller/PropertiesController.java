@@ -231,15 +231,8 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
 
     @Override
     public void update(Observable observable, Object arguments) {
-        if (arguments.equals("moduleSpace"))
-            rebuildModules();
-
-        if (arguments.equals("currentActiveModule"))
-            rebuildProperties();
-
-        if (observable instanceof Module) {
-            rebuildProperties();
-        }
+        rebuildModules();
+        rebuildProperties();
     }
 
     private void rebuildProperties() {

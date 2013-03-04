@@ -12,8 +12,6 @@ import jDistsim.utils.common.PandaInjector;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
-import jDistsim.utils.pattern.observer.IObserver;
-import jDistsim.utils.pattern.observer.Observable;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -27,7 +25,7 @@ import java.util.List;
  * Date: 24.11.12
  * Time: 15:01
  */
-public class ModelSpaceController extends AbstractController<ModelSpaceModel> implements DropTargetListener, IObserver {
+public class ModelSpaceController extends AbstractController<ModelSpaceModel> implements DropTargetListener {
 
     private ModelSpaceView view;
     private List<ModelSpaceListener> modelSpaceListeners;
@@ -40,8 +38,6 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
     }
 
     private void initialize() {
-        getModel().addObserver(this);
-
         modelSpaceListeners.add(new ModuleConnectorAction());
         modelSpaceListeners.add(new ModuleMovingAction());
         modelSpaceListeners.add(new SelectedActiveModuleAction());
@@ -65,7 +61,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
                 modelSpaceListener.onModelUnselectedActiveModule(getModel().getCurrentActiveModule(), this);
 
-            getModel().setCurrentActiveModule(null);
+            getModel().notifyObservers();
             repaint();
         }
     }
@@ -82,6 +78,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             for (ModelSpaceListener modelSpaceListener : modelSpaceListeners)
                 modelSpaceListener.onModelSelectedActiveModule(module, this);
 
+        getModel().notifyObservers();
         repaint();
     }
 
@@ -138,6 +135,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             currentDragModule.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
 
             getModel().getModuleList().put(currentDragModule.getIdentifier(), currentDragModule);
+            getModel().getModuleList().notifyObservers();
             for (ModelSpaceListener listener : modelSpaceListeners)
                 listener.onAddedModule(currentDragModule, this);
 
@@ -145,10 +143,6 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         } catch (Exception exception) {
             Logger.log(exception);
         }
-    }
-
-    @Override
-    public void update(Observable observable, Object arguments) {
     }
 
     private void repaint() {
@@ -164,6 +158,8 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
             return;
         }
 
+        modulePointA.getParent().notifyObservers();
+        modulePointB.getParent().notifyObservers();
         getModel().getModuleList().notifyObservers("connect");
         moduleConnector.getConnectorLine().addMouseListener(new MouseAdapter() {
             @Override
