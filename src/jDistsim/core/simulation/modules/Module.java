@@ -154,6 +154,10 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
         if (observable == outputConnectedPoints)
             setOutputPointsProperties();
 
+         rebuild();
+    }
+
+    public void rebuild() {
         properties.set(new ModuleProperty("correct", isValid(), "correct"));
         setChildProperty();
         setChanged();
@@ -190,16 +194,6 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
             properties.set(new ModuleProperty(pointName + ".occupied", connectedPoint.getDependencies().size(), description + " occupied"));
         }
         hasChanged();
-    }
-
-    private void refreshProperties() {
-        //stopNotify();
-        properties.set(new ModuleProperty("correct", isValid(), "correct"));
-        setInputPointsProperties();
-        setOutputPointsProperties();
-        setChildProperty();
-        //startNotify();
-        //notifyObservers("propertyChanged");
     }
 
     protected abstract void setChildProperty();

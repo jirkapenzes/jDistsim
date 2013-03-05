@@ -4,6 +4,7 @@ import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
+import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.AttributeCollection;
 import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.ui.module.ModuleView;
@@ -33,6 +34,10 @@ public class Assign extends Module {
     @Override
     protected void logic(ISimulator simulator, Entity entity) {
         double localTime = simulator.getLocalTime();
+
+        for (Attribute attribute : attributes) {
+            entity.getAttributes().set(attribute);
+        }
 
         for (Module module : getAllOutputDependencies())
             simulator.plan(localTime, module, entity);

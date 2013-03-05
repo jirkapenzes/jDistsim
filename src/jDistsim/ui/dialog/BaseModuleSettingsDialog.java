@@ -28,8 +28,10 @@ public abstract class BaseModuleSettingsDialog<TModule extends Module> extends B
     @Override
     protected boolean okButtonLogic() {
         boolean logicResult = doLogic();
-        if (logicResult)
+        if (logicResult) {
+            module.rebuild();
             module.notifyObservers("properties");
+        }
         return logicResult;
     }
 
