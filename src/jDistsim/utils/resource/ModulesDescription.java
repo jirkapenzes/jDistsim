@@ -19,6 +19,8 @@ public class ModulesDescription {
                 return EventTextResource.SENDER_EVENT_DESCRIPTION_TITLE;
             case "assign":
                 return "Assign";
+            case "receiver":
+                return "receiver";
             default:
                 throw new RuntimeException("Title description not found");
         }
@@ -35,6 +37,8 @@ public class ModulesDescription {
             case "sender":
                 return EventTextResource.SENDER_EVENT_DESCRIPTION_TEXT;
             case "assign":
+                return EventTextResource.DELAY_EVENT_DESCRIPTION_TEXT;
+            case "receiver":
                 return EventTextResource.DELAY_EVENT_DESCRIPTION_TEXT;
             default:
                 throw new RuntimeException("Text description not found");
