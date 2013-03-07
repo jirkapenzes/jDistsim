@@ -84,6 +84,6 @@ public class DistributedModelDefinition extends Observable {
 
     @Override
     public String toString() {
-        return String.format("%s:%d/%s.%s", getAddress(), getPort(), getRmiModelName(), isLookahead());
+        return getAddress() + ":" + getPort() + "/" + getRmiModelName() + "." + isLookahead();
     }
 }
