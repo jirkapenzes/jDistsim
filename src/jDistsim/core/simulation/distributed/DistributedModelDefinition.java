@@ -81,4 +81,9 @@ public class DistributedModelDefinition extends Observable {
     public static DistributedModelDefinition createNull() {
         return new DistributedModelDefinition("null", "null", "null", -1, false);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s:%d/%s.%s", getAddress(), getPort(), getRmiModelName(), isLookahead());
+    }
 }
