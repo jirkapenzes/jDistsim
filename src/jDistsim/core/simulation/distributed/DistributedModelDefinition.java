@@ -79,7 +79,7 @@ public class DistributedModelDefinition extends Observable {
     }
 
     public static DistributedModelDefinition createNull() {
-        return new DistributedModelDefinition("null", "null", "null", -1, false);
+        return new DistributedModelDefinition("null", "null", "null", 0, false);
     }
 
     @Override
