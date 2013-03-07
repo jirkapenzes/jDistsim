@@ -19,6 +19,10 @@ import jDistsim.core.simulation.modules.lib.delay.DelayView;
 import jDistsim.core.simulation.modules.lib.dispose.Dispose;
 import jDistsim.core.simulation.modules.lib.dispose.DisposeFactory;
 import jDistsim.core.simulation.modules.lib.dispose.DisposeView;
+import jDistsim.core.simulation.modules.lib.receiver.Receiver;
+import jDistsim.core.simulation.modules.lib.receiver.ReceiverFactory;
+import jDistsim.core.simulation.modules.lib.receiver.ReceiverUIFactory;
+import jDistsim.core.simulation.modules.lib.receiver.ReceiverView;
 import jDistsim.core.simulation.modules.lib.sender.Sender;
 import jDistsim.core.simulation.modules.lib.sender.SenderFactory;
 import jDistsim.core.simulation.modules.lib.sender.SenderUIFactory;
@@ -79,6 +83,13 @@ public class ModuleLibrary implements IModuleLibrary {
                 .toFactory(new SenderFactory())
                 .toUIFactory(new SenderUIFactory())
                 .withConfiguration(new ModuleConfiguration("sender", UIConfiguration.getInstance().getColorSchemeForDistributedModule()))
+                .build();
+        container.bind(Receiver.class, new ModuleContainer())
+                .toIndex(6)
+                .toView(new ReceiverView())
+                .toFactory(new ReceiverFactory())
+                .toUIFactory(new ReceiverUIFactory())
+                .withConfiguration(new ModuleConfiguration("receiver", UIConfiguration.getInstance().getColorSchemeForDistributedModule()))
                 .build();
     }
 
