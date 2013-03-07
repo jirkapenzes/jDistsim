@@ -20,7 +20,6 @@ public class DescriptionDispatcher implements IModuleDescription {
         this.configuration = configuration;
     }
 
-
     @Override
     public String getTitle() {
         return description.resolveTitle(configuration.getBaseIdentifier());

@@ -154,7 +154,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
         if (observable == outputConnectedPoints)
             setOutputPointsProperties();
 
-         rebuild();
+        rebuild();
     }
 
     public void rebuild() {
