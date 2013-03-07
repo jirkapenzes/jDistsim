@@ -2,8 +2,6 @@ package jDistsim.core.simulation.distributed;
 
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
-import jDistsim.core.simulation.simulator.ISimulator;
-import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.ui.module.ModuleView;
 
 /**
@@ -11,7 +9,7 @@ import jDistsim.ui.module.ModuleView;
  * Date: 1.3.13
  * Time: 20:43
  */
-public class DistributedModule extends Module {
+public abstract class DistributedModule extends Module {
 
     private DistributedModelDefinition distributedModelDefinition;
 
@@ -21,21 +19,5 @@ public class DistributedModule extends Module {
 
     public DistributedModelDefinition getDistributedModelDefinition() {
         return distributedModelDefinition;
-    }
-
-    @Override
-    protected void initializeDefaultValues() {
-    }
-
-    @Override
-    protected void resetStates(ISimulator simulator) {
-    }
-
-    @Override
-    protected void logic(ISimulator simulator, Entity entity) {
-    }
-
-    @Override
-    protected void setChildProperty() {
     }
 }
