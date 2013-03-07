@@ -9,7 +9,7 @@ import javax.swing.*;
  */
 public interface IDialogComponentFactory {
 
-    JComponent makeLabel(String text);
+    JLabel makeLabel(String text);
 
     JButton makeButton(String text);
 

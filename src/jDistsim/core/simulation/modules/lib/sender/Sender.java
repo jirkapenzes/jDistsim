@@ -13,6 +13,7 @@ import jDistsim.ui.module.ModuleView;
  */
 public class Sender extends DistributedModule {
 
+
     public Sender(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
     }
@@ -31,5 +32,12 @@ public class Sender extends DistributedModule {
 
     @Override
     protected void setChildProperty() {
+        /*
+        getProperties().set(new ModuleProperty("address", modelDefinition.getAddress(), "d.address"));
+        getProperties().set(new ModuleProperty("rmiModelName", modelDefinition.getRmiModelName(), "d.rmi-name"));
+        getProperties().set(new ModuleProperty("port", modelDefinition.getPort(), "d.port"));
+        getProperties().set(new ModuleProperty("modelName", modelDefinition.getModelName(), "d.name"));
+        getProperties().set(new ModuleProperty("lookahead", modelDefinition.isLookahead(), "d.lookahead"));
+        */
     }
 }
