@@ -17,6 +17,10 @@ public class ModuleProperty extends Observable implements Comparable<ModulePrope
         this.key = key;
     }
 
+    public ModuleProperty(String key, Object value) {
+        this(key, value, key);
+    }
+
     public ModuleProperty(String key, Object value, String text) {
         this.key = key;
         this.value = value;
