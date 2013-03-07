@@ -75,7 +75,7 @@ public class DistributedModelDefinition extends Observable {
     }
 
     public static DistributedModelDefinition createDefault() {
-        return new DistributedModelDefinition("Remote model", "remote-model1", "localhost", 1089, false);
+        return new DistributedModelDefinition("Remote model", "remote_model1", "localhost", 1089, false);
     }
 
     public static DistributedModelDefinition createNull() {
