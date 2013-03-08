@@ -17,11 +17,19 @@ public class Counter {
         currentValue = initialValue;
     }
 
+    public int getCurrentValue() {
+        return currentValue;
+    }
+
     public int nextValue() {
         return ++currentValue;
     }
 
-    public int getCurrentValue() {
-        return currentValue;
+    public void increment() {
+        currentValue++;
+    }
+
+    public void decrement() {
+        currentValue--;
     }
 }
