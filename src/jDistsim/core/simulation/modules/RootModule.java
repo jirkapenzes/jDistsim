@@ -25,6 +25,7 @@ public abstract class RootModule extends Module {
 
     public RootModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
+        createdModule = true;
     }
 
     public abstract void logic(ISimulator simulator);

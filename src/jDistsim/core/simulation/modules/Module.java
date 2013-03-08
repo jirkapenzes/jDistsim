@@ -24,6 +24,7 @@ import java.util.List;
 public abstract class Module extends Observable implements IObserver, Cloneable {
 
     private String identifier;
+    protected boolean createdModule = false;
     private final ModuleView view;
     private final ObservableList<ModuleConnectedPoint> inputConnectedPoints;
     private final ObservableList<ModuleConnectedPoint> outputConnectedPoints;
@@ -142,7 +143,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     }
 
     public boolean isCreateModule() {
-        return this instanceof RootModule;
+        return createdModule;
     }
 
     @Override
