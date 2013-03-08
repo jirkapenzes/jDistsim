@@ -51,6 +51,16 @@ public class TypeInputValidator {
         return input;
     }
 
+
+    public String validateComboBoxValue(int index, String value, String inputName) throws TypeInputException {
+        return index == 0 ? (String) buildError(inputName) : value;
+    }
+
+    public void validateNull(Object object, String inputName) throws TypeInputException {
+        if (object == null)
+            buildError(inputName);
+    }
+
     private Object buildError(String inputName) throws TypeInputException {
         String message = "Invalid " + inputName + " value ";
         showErrorDialog(message);
