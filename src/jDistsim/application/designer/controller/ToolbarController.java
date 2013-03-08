@@ -3,6 +3,7 @@ package jDistsim.application.designer.controller;
 import jDistsim.application.designer.controller.modelSpaceFeature.ModuleAnimator;
 import jDistsim.application.designer.model.ToolbarModel;
 import jDistsim.application.designer.view.ToolbarView;
+import jDistsim.core.simulation.distributed.DistributedSimulator;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
 import jDistsim.core.simulation.model.ISimulationModelValidator;
 import jDistsim.core.simulation.model.SimulationModelBuilder;
