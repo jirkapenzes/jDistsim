@@ -23,17 +23,17 @@ public class ReceiverView extends ModuleView {
 
     @Override
     protected void initializeConnectedPoints(int width, int height) {
-        inputPoints.add(new Point(0, height / 2));
+        outputPoints.add(new Point(width - 1, height / 2));
     }
 
     @Override
     public Polygon getBounds(int width, int height) {
         Polygon polygon = new Polygon();
-        polygon.addPoint(0, height / 2 - 1);
-        polygon.addPoint(PointUtilities.byPercentageOnLine(40, width), 1);
-        polygon.addPoint(width - 1, 1);
-        polygon.addPoint(width - 1, height - 1);
-        polygon.addPoint(PointUtilities.byPercentageOnLine(40, width), height - 1);
+        polygon.addPoint(1, 1);
+        polygon.addPoint(PointUtilities.byPercentageOnLine(60, width), 1);
+        polygon.addPoint(width - 1, height / 2 - 1);
+        polygon.addPoint(PointUtilities.byPercentageOnLine(60, width), height - 1);
+        polygon.addPoint(1, height - 1);
         return polygon;
     }
 }
