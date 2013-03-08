@@ -14,7 +14,7 @@ public class ReceiverFactory extends BaseModuleFactory {
     @Override
     public Module create() {
         Module module = new Receiver(new ReceiverView(moduleConfiguration.getColorScheme()), moduleConfiguration);
-        module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
+        module.addOutputPoint(new ModuleConnectedPoint(1));
         return module;
     }
 }

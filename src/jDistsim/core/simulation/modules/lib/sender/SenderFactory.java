@@ -14,7 +14,7 @@ public class SenderFactory extends BaseModuleFactory {
     @Override
     public Module create() {
         Module module = new Sender(new SenderView(moduleConfiguration.getColorScheme()), moduleConfiguration);
-        module.addOutputPoint(new ModuleConnectedPoint(1));
+        module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }
 }
