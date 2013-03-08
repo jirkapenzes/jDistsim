@@ -4,7 +4,7 @@ import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.controller.InformationController;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.InformationView;
-import jDistsim.core.simulation.distributed.DistributedModule;
+import jDistsim.core.simulation.distributed.DistributedReceiveModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.RootModule;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
@@ -42,8 +42,8 @@ public class EntitiesInfoTabLogic implements IObserver {
                 RootModule rootModule = (RootModule) module;
                 rows.addElement(makeEntityRow(rootModule));
             }
-            if (module instanceof DistributedModule) {
-                DistributedModule distributedModule = (DistributedModule) module;
+            if (module instanceof DistributedReceiveModule) {
+                DistributedReceiveModule distributedModule = (DistributedReceiveModule) module;
                 rows.addElement(makeDistributedEntityRow(distributedModule));
             }
         }
@@ -82,10 +82,10 @@ public class EntitiesInfoTabLogic implements IObserver {
         return row;
     }
 
-    private Vector<String> makeDistributedEntityRow(DistributedModule distributedModule) {
+    private Vector<String> makeDistributedEntityRow(DistributedReceiveModule distributedReceiveModule) {
         Vector<String> row = new Vector<>();
-        row.addElement("-");
-        row.addElement(distributedModule.getIdentifier());
+        row.addElement(distributedReceiveModule.getAuthorizedEntityName());
+        row.addElement(distributedReceiveModule.getIdentifier());
         row.addElement("-");
         row.addElement("true");
         row.addElement("-");
