@@ -69,7 +69,7 @@ public class ModulesPanel extends InternalPanel {
                 if (((DefaultMutableTreeNode) value).isRoot())
                     label.setIcon(new ImageIcon(Resources.getImage("system/t_icon_model.png")));
                 else {
-                    if (label.getText().contains("create")) {
+                    if (label.getText().contains("create") || label.getText().contains("receiver")) {
                         label.setIcon(new ImageIcon(Resources.getImage("system/t_icon_create.png")));
                     } else {
                         label.setIcon(new ImageIcon(Resources.getImage("system/t_icon_classic.png")));
