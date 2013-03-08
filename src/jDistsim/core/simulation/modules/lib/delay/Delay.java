@@ -14,7 +14,7 @@ import jDistsim.ui.module.ModuleView;
  */
 public class Delay extends Module {
 
-    private int delayTime = 1;
+    private int delayTime;
 
     public Delay(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
@@ -22,11 +22,11 @@ public class Delay extends Module {
 
     @Override
     protected void initializeDefaultValues() {
+        delayTime = 1;
     }
 
     @Override
     protected void resetStates(ISimulator simulator) {
-
     }
 
     @Override

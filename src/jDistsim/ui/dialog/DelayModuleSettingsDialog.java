@@ -26,6 +26,7 @@ public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
 
     @Override
     protected void buildWindowBody() {
+        setSize(140, 170);
         delayTimeTextField = getComponentFactory().makeTextField();
 
         constraints.gridwidth = GridBagConstraints.REMAINDER;
