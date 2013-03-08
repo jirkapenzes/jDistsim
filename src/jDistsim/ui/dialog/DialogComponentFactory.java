@@ -1,6 +1,9 @@
 package jDistsim.ui.dialog;
 
 import jDistsim.application.designer.common.UIConfiguration;
+import jDistsim.ui.control.button.ImageButton;
+import jDistsim.utils.resource.Resources;
+import jDistsim.utils.ui.control.IconBackgroundColorHoverStyle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,5 +50,10 @@ public class DialogComponentFactory implements IDialogComponentFactory {
     @Override
     public JComboBox makeComboBox() {
         return new JComboBox();
+    }
+
+    @Override
+    public ImageButton makeImageButton(String imageUrl) {
+        return new ImageButton(Resources.getImage(imageUrl),  new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 3);
     }
 }

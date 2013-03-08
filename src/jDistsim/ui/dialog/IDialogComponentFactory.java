@@ -1,5 +1,7 @@
 package jDistsim.ui.dialog;
 
+import jDistsim.ui.control.button.ImageButton;
+
 import javax.swing.*;
 
 /**
@@ -20,4 +22,6 @@ public interface IDialogComponentFactory {
     JCheckBox makeCheckBox(String text);
 
     JComboBox makeComboBox();
+
+    ImageButton makeImageButton(String imageUrl);
 }
