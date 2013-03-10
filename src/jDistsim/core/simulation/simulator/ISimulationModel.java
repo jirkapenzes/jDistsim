@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.simulator;
 
+import jDistsim.core.simulation.distributed.DistributedReceiveModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.RootModule;
 
@@ -11,6 +12,8 @@ import jDistsim.core.simulation.modules.RootModule;
 public interface ISimulationModel {
 
     String getModelName();
+
+    DistributedReceiveModule getReceiver(String entityName);
 
     Iterable<RootModule> getRootModules();
 
