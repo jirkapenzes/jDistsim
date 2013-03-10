@@ -14,6 +14,7 @@ public class DistributedModelDefinition extends Observable {
     private String address;
     private int port;
     private boolean lookahead;
+    private boolean receive;
 
     public DistributedModelDefinition(String rmiModelName, String address, int port) {
         this.rmiModelName = rmiModelName;
@@ -21,12 +22,13 @@ public class DistributedModelDefinition extends Observable {
         this.port = port;
     }
 
-    public DistributedModelDefinition(String modelName, String rmiModelName, String address, int port, boolean lookahead) {
+    public DistributedModelDefinition(String modelName, String rmiModelName, String address, int port, boolean lookahead, boolean receive) {
         this.modelName = modelName;
         this.rmiModelName = rmiModelName;
         this.address = address;
         this.port = port;
         this.lookahead = lookahead;
+        this.receive = receive;
     }
 
     public String getModelName() {
@@ -35,7 +37,7 @@ public class DistributedModelDefinition extends Observable {
 
     public void setModelName(String modelName) {
         this.modelName = modelName;
-        notifyObservers("modelName");
+        setChanged();
     }
 
     public String getRmiModelName() {
@@ -44,7 +46,7 @@ public class DistributedModelDefinition extends Observable {
 
     public void setRmiModelName(String rmiModelName) {
         this.rmiModelName = rmiModelName;
-        notifyObservers("rmiModelName");
+        setChanged();
     }
 
     public boolean isLookahead() {
@@ -53,7 +55,7 @@ public class DistributedModelDefinition extends Observable {
 
     public void setLookahead(boolean lookahead) {
         this.lookahead = lookahead;
-        notifyObservers("lookahead");
+        setChanged();
     }
 
     public int getPort() {
@@ -62,7 +64,7 @@ public class DistributedModelDefinition extends Observable {
 
     public void setPort(int port) {
         this.port = port;
-        notifyObservers("port");
+        setChanged();
     }
 
     public String getAddress() {
@@ -71,15 +73,24 @@ public class DistributedModelDefinition extends Observable {
 
     public void setAddress(String address) {
         this.address = address;
-        notifyObservers("address");
+        setChanged();
+    }
+
+    public boolean isReceive() {
+        return receive;
+    }
+
+    public void setReceive(boolean receive) {
+        this.receive = receive;
+        setChanged();
     }
 
     public static DistributedModelDefinition createDefault() {
-        return new DistributedModelDefinition("Remote model", "remote_model1", "localhost", 1089, false);
+        return new DistributedModelDefinition("Remote model", "remote_model1", "localhost", 1089, false, false);
     }
 
     public static DistributedModelDefinition createNull() {
-        return new DistributedModelDefinition("null", "null", "null", 0, false);
+        return new DistributedModelDefinition("null", "null", "null", 0, false, false);
     }
 
     @Override
