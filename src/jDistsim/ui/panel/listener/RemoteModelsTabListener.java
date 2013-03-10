@@ -16,4 +16,6 @@ public interface RemoteModelsTabListener extends IPanelListener {
     void onOpenEditDialogButtonClick(MouseEvent mouseEvent, Object sender);
 
     void onOpenRemoveDialogButtonClick(MouseEvent mouseEvent, Object sender);
+
+    void onOpenLocalSettingsDialog(MouseEvent mouseEvent, Object sender);
 }
