@@ -19,6 +19,7 @@ public class DistributedModelDialog extends BaseDialog {
     private JTextField addressTextField;
     private JTextField portTextField;
     private JCheckBox lookaheadCheckBox;
+    private JCheckBox receiveCheckBox;
     private DistributedModelDefinition distributedModelDefinition;
 
     public DistributedModelDialog(JFrame parent) {
@@ -48,7 +49,8 @@ public class DistributedModelDialog extends BaseDialog {
         addressTextField = getComponentFactory().makeTextField();
         portTextField = getComponentFactory().makeTextField(5);
         lookaheadCheckBox = getComponentFactory().makeCheckBox("lookahead  (sending  null messages)");
-        setSize(new Dimension(getWidth(), 210));
+        receiveCheckBox = getComponentFactory().makeCheckBox("receive model");
+        setSize(new Dimension(getWidth(), 230));
 
         constraints.gridwidth = 1;
         build(getComponentFactory().makeLabel("RMI model name"));
@@ -77,6 +79,7 @@ public class DistributedModelDialog extends BaseDialog {
         constraints.insets = new Insets(0, 0, 0, 0);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         build(lookaheadCheckBox);
+        build(receiveCheckBox);
     }
 
     @Override
@@ -91,12 +94,14 @@ public class DistributedModelDialog extends BaseDialog {
             String address = validator.validateString(addressTextField.getText(), "Remote address");
             int port = validator.validateInteger(portTextField.getText(), "Remote port");
             boolean lookahead = lookaheadCheckBox.isSelected();
+            boolean receive = receiveCheckBox.isSelected();
 
             distributedModelDefinition.setModelName(modelName);
             distributedModelDefinition.setRmiModelName(rmiModelName);
             distributedModelDefinition.setAddress(address);
             distributedModelDefinition.setPort(port);
             distributedModelDefinition.setLookahead(lookahead);
+            distributedModelDefinition.setReceive(receive);
             return true;
         } catch (Exception exception) {
             return false;
