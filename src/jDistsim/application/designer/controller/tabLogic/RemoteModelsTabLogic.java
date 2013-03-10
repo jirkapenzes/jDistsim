@@ -8,6 +8,7 @@ import jDistsim.core.simulation.distributed.DistributedModelDefinition;
 import jDistsim.ui.dialog.BaseDialog;
 import jDistsim.ui.dialog.DistributedModelDialog;
 import jDistsim.ui.dialog.DistributedModuleSelectedDialog;
+import jDistsim.ui.dialog.LocalNetworkSettingsDialog;
 import jDistsim.ui.panel.listener.RemoteModelsTabListener;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.observer.IObserver;
@@ -36,8 +37,10 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         dialogBuilder = new DialogBuilder(controller.getMainFrame().getFrame());
 
         Application.global().getDistributedModels().addObserver(this);
+        Application.global().getNetworkSettings().addObserver(this);
         rebuildTableModel();
         invalidateButtons();
+        refreshInfoLabel();
     }
 
     @Override
@@ -92,6 +95,16 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         }
     }
 
+    @Override
+    public void onOpenLocalSettingsDialog(MouseEvent mouseEvent, Object sender) {
+        LocalNetworkSettingsDialog dialog = new LocalNetworkSettingsDialog(controller.getMainFrame().getFrame(), "Local settings");
+        dialog.showDialog();
+
+        if (dialog.getDialogResult() == BaseDialog.Result.OK) {
+
+        }
+    }
+
     private void rebuildTableModel() {
         Collection<DistributedModelDefinition> distributedModels = Application.global().getDistributedModels().values();
         Vector<String> columns = makeColumns();
@@ -112,6 +125,7 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         Vector<String> row = new Vector<>();
         row.addElement(modelDefinition.getModelName());
         row.addElement(modelDefinition.getRmiModelName());
+        row.addElement(String.valueOf(modelDefinition.isReceive()));
         row.addElement(modelDefinition.getAddress());
         row.addElement(String.valueOf(modelDefinition.getPort()));
         row.addElement(String.valueOf(modelDefinition.isLookahead()));
@@ -122,6 +136,7 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         Vector columns = new Vector();
         columns.addElement("Model name");
         columns.addElement("RMI name");
+        columns.addElement("Receive");
         columns.addElement("Remote address");
         columns.addElement("Port");
         columns.addElement("Lookahead");
@@ -142,5 +157,10 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
     public void update(Observable observable, Object arguments) {
         rebuildTableModel();
         invalidateButtons();
+        refreshInfoLabel();
+    }
+
+    private void refreshInfoLabel() {
+        view.getContentPane().getRemoteModelsTabPanel().getLocalInfoLabel().setText("Local settings: " + Application.global().getNetworkSettings());
     }
 }
