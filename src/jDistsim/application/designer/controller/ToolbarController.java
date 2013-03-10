@@ -1,5 +1,6 @@
 package jDistsim.application.designer.controller;
 
+import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.controller.modelSpaceFeature.ModuleAnimator;
 import jDistsim.application.designer.model.ToolbarModel;
 import jDistsim.application.designer.view.ToolbarView;
@@ -46,7 +47,7 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
         ISimulationModel simulationModel = SimulationModelBuilder.buildSimulationModelFromUI(modules);
         ISimulationModelValidator modelValidator = new SimulationModelValidator();
 
-        simulator = new DistributedSimulator(modelValidator);
+        simulator = new DistributedSimulator(modelValidator, Application.global().getNetworkSettings());
         simulator.setAnimator(new ModuleAnimator(modelSpaceController.getModel().getModuleList(), modelSpaceController.getView().getContentPane()));
         simulator.getOutput().getWriters().add(informationController.makeSimulatorWriter());
         simulator.getOutput().getWriters().add(new SimulatorLoggerHandler());
