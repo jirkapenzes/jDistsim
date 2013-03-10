@@ -72,6 +72,10 @@ public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListe
         return controlPanel.removeButton;
     }
 
+    public JLabel getLocalInfoLabel() {
+        return contentPanel.infoLabel;
+    }
+
     private class ControlPanel extends JComponent {
 
         private ImageButton addButton;
@@ -144,6 +148,8 @@ public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListe
 
     private class ContentPanel extends JComponent {
 
+        private JLabel infoLabel;
+
         public ContentPanel() {
             setLayout(new BorderLayout());
 
@@ -187,16 +193,21 @@ public class RemoteModelsTabPanel extends ListenerablePanel<RemoteModelsTabListe
                 }
             };
             ma.setPreferredSize(new Dimension(getWidth(), 24));
-            JLabel label = new JLabel("Local settings: localhost:4095/model1");
-            label.setForeground(new Color(99, 99, 99));
-            label.setFont(UIConfiguration.getInstance().getDefaultFont(11));
+            infoLabel = new JLabel();
+            infoLabel.setForeground(new Color(99, 99, 99));
+            infoLabel.setFont(UIConfiguration.getInstance().getDefaultFont(11));
 
             IconBackgroundColorHoverStyle hoverStyle = new IconBackgroundColorHoverStyle();
             int padding = 1;
-            ImageButton settingsButton = new ImageButton(Resources.getImage("system/panels/mt_config.png"), hoverStyle, new Dimension(16, 16), padding);
-
+            final ImageButton settingsButton = new ImageButton(Resources.getImage("system/panels/mt_config.png"), hoverStyle, new Dimension(16, 16), padding);
+            settingsButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().onOpenLocalSettingsDialog(e, settingsButton);
+                }
+            });
             ma.add(settingsButton);
-            ma.add(label);
+            ma.add(infoLabel);
             setBorder(new EmptyBorder(1, 0, 0, 0));
 
             add(scrollPane, BorderLayout.CENTER);
