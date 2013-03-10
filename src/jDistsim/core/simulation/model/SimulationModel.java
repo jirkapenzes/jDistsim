@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.model;
 
+import jDistsim.core.simulation.distributed.DistributedReceiveModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.RootModule;
 import jDistsim.core.simulation.simulator.ISimulationModel;
@@ -16,11 +17,13 @@ import java.util.List;
 public class SimulationModel implements ISimulationModel {
 
     private List<RootModule> rootModules;
+    private HashMap<String, DistributedReceiveModule> receiveModules;
     private HashMap<String, Module> modules;
     private String modelName;
 
-    public SimulationModel(List<Module> modules,String modelName) {
+    public SimulationModel(List<Module> modules, String modelName) {
         this.modules = new HashMap<>();
+        this.receiveModules = new HashMap<>();
         this.rootModules = new ArrayList<>();
         this.modelName = modelName;
 
@@ -32,6 +35,10 @@ public class SimulationModel implements ISimulationModel {
             if (module instanceof RootModule) {
                 rootModules.add((RootModule) module);
             }
+            if (module instanceof DistributedReceiveModule) {
+                DistributedReceiveModule distributedReceiveModule = (DistributedReceiveModule) module;
+                receiveModules.put(distributedReceiveModule.getAuthorizedEntityName(), distributedReceiveModule);
+            }
             this.modules.put(module.getIdentifier(), module);
         }
     }
@@ -39,6 +46,13 @@ public class SimulationModel implements ISimulationModel {
     @Override
     public String getModelName() {
         return modelName;
+    }
+
+    @Override
+    public DistributedReceiveModule getReceiver(String entityName) {
+        if (receiveModules.containsKey(entityName))
+            return receiveModules.get(entityName);
+        return null;
     }
 
     @Override
