@@ -35,6 +35,9 @@ public class ModuleAnimator implements ISimulationAnimator {
         ModuleUI moduleUIFrom = modules.get(moduleFrom);
         ModuleUI moduleUITo = modules.get(moduleTo);
 
+        if (moduleUIFrom == null || moduleTo == null)
+            return;
+
         ConnectorLine connectorLine = null;
         for (ModuleConnectedPointUI connectedPointUI : moduleUIFrom.getConnectedPoints()) {
             for (ModuleConnector moduleConnector : connectedPointUI.getDependencies().values()) {
