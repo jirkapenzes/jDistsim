@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.validator;
 
+import jDistsim.core.simulation.distributed.DistributedReceiveModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
 import jDistsim.core.simulation.modules.RootModule;
@@ -45,6 +46,12 @@ public class SimulationModelValidator implements ISimulationModelValidator {
         int numberOfRootModules = 0;
         for (RootModule ignored : simulationModel.getRootModules())
             numberOfRootModules++;
+
+        for (Module module : simulationModel.getModules()) {
+            if (module instanceof DistributedReceiveModule) {
+                numberOfRootModules++;
+            }
+        }
 
         if (numberOfRootModules == 0)
             exceptions.add(new ValidatorException("Model", "it does not contain the root modules"));
