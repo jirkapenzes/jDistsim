@@ -1,11 +1,13 @@
 package jDistsim.core.simulation.simulator.entity;
 
+import java.io.Serializable;
+
 /**
  * Author: Jirka Pénzeš
  * Date: 22.2.13
  * Time: 16:42
  */
-public class Attribute {
+public class Attribute implements Serializable {
 
     public String name;
     public String value;

@@ -1,11 +1,13 @@
 package jDistsim.core.simulation.simulator.entity;
 
+import java.io.Serializable;
+
 /**
  * Author: Jirka Pénzeš
  * Date: 18.2.13
  * Time: 22:09
  */
-public class Entity {
+public class Entity implements Serializable {
 
     private String entityIdentifier;
     private String creator;

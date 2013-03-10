@@ -2,6 +2,7 @@ package jDistsim.core.simulation.simulator.entity;
 
 import jDistsim.core.simulation.exception.ReservedAttributeNameException;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -10,7 +11,7 @@ import java.util.Iterator;
  * Date: 22.2.13
  * Time: 16:43
  */
-public class AttributeCollection implements Iterable<Attribute> {
+public class AttributeCollection implements Iterable<Attribute>, Serializable {
 
     private HashMap<String, Attribute> attributes;
     private String[] reservedWords = {"identifier"};
