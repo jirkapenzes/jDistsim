@@ -15,9 +15,11 @@ public class Application {
 
     private String modelName = "model1.jdsim";
     private ObservableHashMap<String, DistributedModelDefinition> distributedModels;
+    private LocalNetworkSettings networkSettings;
 
     private Application() {
         distributedModels = new ObservableHashMap<>();
+        networkSettings = LocalNetworkSettings.createNull();
     }
 
     public static Application global() {
@@ -41,5 +43,9 @@ public class Application {
 
     public ObservableHashMap<String, DistributedModelDefinition> getDistributedModels() {
         return distributedModels;
+    }
+
+    public LocalNetworkSettings getNetworkSettings() {
+        return networkSettings;
     }
 }
