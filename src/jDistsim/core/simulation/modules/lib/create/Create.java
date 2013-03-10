@@ -1,5 +1,7 @@
 package jDistsim.core.simulation.modules.lib.create;
 
+import jDistsim.core.simulation.exception.EntityNotCreatedException;
+import jDistsim.core.simulation.modules.ITimeAffectModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.RootModule;
@@ -9,7 +11,6 @@ import jDistsim.core.simulation.simulator.SimulatorOutput;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.AttributeCollection;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.core.simulation.exception.EntityNotCreatedException;
 import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.common.Counter;
 
@@ -20,7 +21,7 @@ import java.util.Random;
  * Date: 21.2.13
  * Time: 22:36
  */
-public class Create extends RootModule {
+public class Create extends RootModule implements ITimeAffectModule {
 
     private AttributeCollection initialEntityAttributes;
     private Counter entityCounter;
@@ -99,5 +100,10 @@ public class Create extends RootModule {
         } catch (CloneNotSupportedException exception) {
             throw new EntityNotCreatedException(getIdentifier());
         }
+    }
+
+    @Override
+    public double getMinimalAffectTime() {
+        return arrivalsTypeValue;
     }
 }

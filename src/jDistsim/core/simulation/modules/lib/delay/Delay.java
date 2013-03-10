@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.modules.lib.delay;
 
+import jDistsim.core.simulation.modules.ITimeAffectModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
@@ -12,7 +13,7 @@ import jDistsim.ui.module.ModuleView;
  * Date: 21.2.13
  * Time: 22:37
  */
-public class Delay extends Module {
+public class Delay extends Module implements ITimeAffectModule {
 
     private int delayTime;
 
@@ -48,5 +49,10 @@ public class Delay extends Module {
 
     public void setDelayTime(int delayTime) {
         this.delayTime = delayTime;
+    }
+
+    @Override
+    public double getMinimalAffectTime() {
+        return delayTime;
     }
 }
