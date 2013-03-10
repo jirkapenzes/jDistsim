@@ -15,6 +15,7 @@ import jDistsim.core.simulation.exception.TimeNotSynchronizedException;
 import jDistsim.core.simulation.validator.ValidatorException;
 import jDistsim.core.simulation.validator.ValidatorResult;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -22,14 +23,13 @@ import java.util.Date;
  * Date: 18.2.13
  * Time: 10:38
  */
-public abstract class BaseSimulator implements ISimulator {
+public abstract class BaseSimulator implements ISimulator, Serializable {
 
     private double localTime;
     private boolean run;
     private Calendar<ScheduleEvent> calendar;
     private SimulatorEnvironment environment;
     private SimulatorOutput output;
-    private SimulatorNotifier notifier;
     private ISimulatorEndCondition endCondition;
     private ISimulationModelValidator modelValidator;
     private ISimulationAnimator animator;
@@ -97,6 +97,8 @@ public abstract class BaseSimulator implements ISimulator {
             prepareOutput();
             showSimulatorInfo();
             validateModel(simulationModel);
+
+            prepare(simulationModel);
             initializeSimulator(simulationModel);
             initializeModules(simulationModel);
 
@@ -104,6 +106,7 @@ public abstract class BaseSimulator implements ISimulator {
             if (simulationModel == null)
                 return;
 
+            output.sendToOutput(SimulatorOutput.MessageType.Standard, "Start simulation");
             run = true;
             while (run && !endCondition.occurred(environment)) {
                 while (calendar.isEmpty() || !canExecute()) ;
@@ -136,6 +139,8 @@ public abstract class BaseSimulator implements ISimulator {
         output.drawSeparateLine();
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "End of simulation");
     }
+
+    protected abstract void prepare(ISimulationModel simulationModel);
 
     private void animate(Entity entity) {
         if (entity == null) return;
@@ -174,7 +179,7 @@ public abstract class BaseSimulator implements ISimulator {
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "End of simulation -> explicit stop");
     }
 
-    private void validateModel(ISimulationModel simulationModel) {
+    protected void validateModel(ISimulationModel simulationModel) {
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "Validate model");
         ValidatorResult validatorResult = modelValidator.validateModel(simulationModel);
 
@@ -190,7 +195,7 @@ public abstract class BaseSimulator implements ISimulator {
         throw new ModelNotValidException(validatorResult);
     }
 
-    private void initializeSimulator(ISimulationModel simulationModel) {
+    protected void initializeSimulator(ISimulationModel simulationModel) {
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize simulator");
 
         getEnvironment().setModelName(simulationModel.getModelName());
@@ -214,6 +219,4 @@ public abstract class BaseSimulator implements ISimulator {
         entity.getAttributes().put("currentModule", module.getIdentifier());
         // output.sendToOutput(entity.getAttributes().get("previousModule").getValue() + " -> " + entity.getAttributes().get("currentModule").getValue());
     }
-
-
 }
