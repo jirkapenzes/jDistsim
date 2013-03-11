@@ -31,10 +31,9 @@ public class StatusBarModel extends AbstractModel {
         return leftContentText;
     }
 
-    //TODO FIXNOUT A OPRAVIT!
     public void setLeftContentText(String leftContentText) {
         this.leftContentText = leftContentText;
-        //notifyObservers();
+        setChanged();
     }
 
     public String getRightContentText() {
@@ -43,6 +42,6 @@ public class StatusBarModel extends AbstractModel {
 
     public void setRightContentText(String rightContentText) {
         this.rightContentText = rightContentText;
-        //notifyObservers();
+        setChanged();
     }
 }

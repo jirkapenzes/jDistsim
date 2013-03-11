@@ -33,6 +33,7 @@ public class StatusBarController extends AbstractController<StatusBarModel> impl
             @Override
             public void ActionPerformed(ActionArgument actionArgument) {
                 getModel().setRightContentText("Current used memory " + memoryMonitoring.getUsedMemory() + "M of " + memoryMonitoring.getTotalMemory() + "M");
+                getModel().notifyObservers();
             }
         });
         new Thread(memoryMonitoring).start();
@@ -40,7 +41,8 @@ public class StatusBarController extends AbstractController<StatusBarModel> impl
 
     @Override
     public void publish(LogMessage logMessage) {
-        getModel().setLeftContentText(logMessage.toString());
+        //getModel().setLeftContentText(logMessage.toString());
+        //getModel().notifyObservers();
     }
 
     @Override
