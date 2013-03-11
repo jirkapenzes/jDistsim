@@ -20,6 +20,8 @@ import java.util.ArrayList;
  */
 public class EnvironmentPanel extends JComponent {
 
+    private JPanel controlPanel;
+
     public EnvironmentPanel() {
         setBorder(new EmptyBorder(0, 0, 0, 0));
         setLayout(new BorderLayout(0, 0));
@@ -66,7 +68,7 @@ public class EnvironmentPanel extends JComponent {
         table.setTableHeader(null);
         table.setGridColor(new Color(212, 212, 212));
 
-        JPanel controlPanel = new JPanel();
+        controlPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 3,3));
         controlPanel.setOpaque(false);
         controlPanel.setBorder(new EmptyBorder(1, 1, 1, 1));
         controlPanel.setPreferredSize(new Dimension(30, getWidth()));
@@ -85,6 +87,10 @@ public class EnvironmentPanel extends JComponent {
 
         add(controlPanel, BorderLayout.WEST);
         add(tablePanel, BorderLayout.CENTER);
+    }
+
+    public JPanel getControlPanel() {
+        return controlPanel;
     }
 
     @Override
