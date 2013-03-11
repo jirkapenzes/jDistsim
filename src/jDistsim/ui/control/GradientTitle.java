@@ -69,7 +69,7 @@ public class GradientTitle extends JComponent {
 
         Container container = new Container();
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
-        container.add(minimizeImageButton);
+        // container.add(minimizeImageButton);
 
         add(container, BorderLayout.EAST);
         add(labelTitle, BorderLayout.WEST);
