@@ -61,13 +61,14 @@ public class MainFrame extends AbstractFrame {
         controllers.bind(ToolbarController.class, new ToolbarController(this, getModel(ToolbarModel.class)));
         controllers.bind(PropertiesController.class, new PropertiesController(this, getModel(PropertiesModel.class)));
         controllers.bind(InformationController.class, new InformationController(this, getModel(InformationModel.class)));
+        controllers.bind(MenuController.class, new MenuController(this, getModel(MenuModel.class)));
         Logger.log("Register all controllers: done");
     }
 
     @Override
     protected JFrame layout() {
         Logger.log("Component factory build main frame");
-        JFrame mainFrame = componentFactory.frame(TextResources.APPLICATION_NAME, getView(DesignerView.class).getContentPane(), new MenuBar());
+        JFrame mainFrame = componentFactory.frame(TextResources.APPLICATION_NAME, getView(DesignerView.class).getContentPane(), new MenuBar(getController(MenuController.class)));
         ServiceLocator.getInstance().bind(IDialogBuilder.class, new DialogBuilder(mainFrame));
         return mainFrame;
     }
