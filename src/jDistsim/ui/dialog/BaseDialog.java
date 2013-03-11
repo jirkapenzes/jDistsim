@@ -21,6 +21,7 @@ public abstract class BaseDialog extends JDialog {
     private IDialogComponentFactory componentFactory;
     private Result dialogResult;
 
+    protected JPanel gridPanel;
     private JPanel contentPane;
     private GridBagLayout gridBag;
     private JButton okButton;
@@ -58,7 +59,7 @@ public abstract class BaseDialog extends JDialog {
         return componentFactory;
     }
 
-    private void buildUI() {
+    private void buildUI(boolean modal) {
         if (getTitle().trim().equals(""))
             setTitle("jDistSim dialog");
 
@@ -67,7 +68,8 @@ public abstract class BaseDialog extends JDialog {
         setIconImage(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(new Dimension(300, 240));
-        setModal(true);
+        if (modal)
+            setModal(true);
         setLocationRelativeTo(getParent());
 
         gridBag = new GridBagLayout();
@@ -75,7 +77,7 @@ public abstract class BaseDialog extends JDialog {
         contentPane.setBackground(Color.WHITE);
         constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        JPanel gridPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        gridPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         gridPanel.setBackground(Color.white);
         gridPanel.add(contentPane);
         add(gridPanel, BorderLayout.CENTER);
@@ -157,7 +159,11 @@ public abstract class BaseDialog extends JDialog {
     }
 
     public void showDialog() {
-        buildUI();
+        showDialog(true);
+    }
+
+    public void showDialog(boolean modal) {
+        buildUI(modal);
         initializeUI();
         setVisible(true);
     }
