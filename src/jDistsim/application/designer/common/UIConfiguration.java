@@ -1,10 +1,13 @@
 package jDistsim.application.designer.common;
 
+import jDistsim.ui.control.button.ImageButton;
 import jDistsim.ui.module.ColorScheme;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.singleton.SingletonFactory;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -13,8 +16,11 @@ import java.awt.*;
  */
 public final class UIConfiguration {
 
+    private List<ImageButton> buttonRegister;
+
     public UIConfiguration() {
         Logger.log("Created designer ui configuration");
+        buttonRegister = new ArrayList<>();
     }
 
     public static UIConfiguration getInstance() {
@@ -51,5 +57,9 @@ public final class UIConfiguration {
 
     public ColorScheme getColorSchemeForAnimateActionModule() {
         return new ColorScheme(new Color(242, 191, 149), new Color(239, 175, 123), new Color(64, 64, 64));
+    }
+
+    public List<ImageButton> buttonRegister() {
+        return buttonRegister;
     }
 }
