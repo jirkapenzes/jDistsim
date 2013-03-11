@@ -5,6 +5,9 @@ import jDistsim.application.designer.common.IDialogBuilder;
 import jDistsim.ui.exception.TypeInputException;
 import jDistsim.utils.logging.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Author: Jirka Pénzeš
  * Date: 26.2.13
@@ -71,12 +74,24 @@ public class TypeInputValidator {
         dialogBuilder.buildErrorDialog(message);
     }
 
-    public String validateDuplicity(Iterable<String> otherData, String input, String inputName) throws TypeInputException {
+    public String validateDuplicity(Iterable<String> otherData, String input, String inputName, List<String> ignored) throws TypeInputException {
         for (String key : otherData) {
+            if (ignored.contains(key))
+                continue;
             if (input.equals(key)) {
                 return (String) buildError(inputName);
             }
         }
         return input;
+    }
+
+    public String validateDuplicity(Iterable<String> otherData, String input, String inputName) throws TypeInputException {
+        return validateDuplicity(otherData, input, inputName, new ArrayList<String>());
+    }
+
+    public String validateDuplicity(Iterable<String> otherData, String input, String inputName, String ignored) throws TypeInputException {
+        List<String> ignores = new ArrayList<>();
+        ignores.add(ignored);
+        return validateDuplicity(otherData, input, inputName, ignores);
     }
 }
