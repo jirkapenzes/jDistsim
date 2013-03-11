@@ -2,15 +2,11 @@ package jDistsim.ui.control;
 
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.ui.skins.ScrollBarUI;
-import jDistsim.utils.logging.LogMessage;
-import jDistsim.utils.logging.Logger;
-import jDistsim.utils.logging.handlers.ILoggerHandler;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.util.Iterator;
 
 /**
  * Author: Jirka Pénzeš
@@ -21,8 +17,21 @@ public class LogTextArea extends JComponent {
 
     private ControlPanel controlPanel;
     private TextAreaPanel textAreaPanel;
+    private boolean border;
+    private JTextArea textArea;
 
     public LogTextArea() {
+        this(true);
+    }
+
+    public LogTextArea(boolean border) {
+        this(border, new JTextArea());
+    }
+
+    public LogTextArea(boolean border, JTextArea textArea) {
+        this.textArea = textArea;
+        this.border = border;
+
         initialize();
     }
 
@@ -41,7 +50,7 @@ public class LogTextArea extends JComponent {
     }
 
     public JTextArea getTextArea() {
-        return textAreaPanel.textArea;
+        return textArea;
     }
 
     public void setAutoCaretPosition(boolean autoCaretPosition) {
@@ -51,6 +60,19 @@ public class LogTextArea extends JComponent {
 
     public void setWordWrap(boolean wordWrap) {
         textAreaPanel.setWordWrap(wordWrap);
+    }
+
+    public void setCaretPosition() {
+        textAreaPanel.setCaretPosition();
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 
     public class ControlPanel extends JComponent {
@@ -77,11 +99,12 @@ public class LogTextArea extends JComponent {
             graphics2D.setColor(new Color(240, 240, 240));
             graphics2D.fillRect(getWidth() - rightPadding, 0, getWidth(), getHeight());
 
-            graphics2D.setColor(new Color(192, 192, 192));
-            graphics2D.drawLine(0, 0, getWidth() - 1, 0);
-            graphics2D.drawLine(0, 0, 0, getHeight() - 1);
-            graphics2D.drawLine(0, getHeight() - 1, getWidth() - 1, getHeight() - 1);
-
+            if (border) {
+                graphics2D.setColor(new Color(192, 192, 192));
+                graphics2D.drawLine(0, 0, getWidth() - 1, 0);
+                graphics2D.drawLine(0, 0, 0, getHeight() - 1);
+                graphics2D.drawLine(0, getHeight() - 1, getWidth() - 1, getHeight() - 1);
+            }
             graphics2D.setColor(new Color(128, 128, 128));
             Stroke currentStroke = graphics2D.getStroke();
             BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{2.0f}, 0.0f);
@@ -92,18 +115,16 @@ public class LogTextArea extends JComponent {
         }
     }
 
-    public class TextAreaPanel extends JComponent implements ILoggerHandler {
+    public class TextAreaPanel extends JComponent {
 
-        private JTextArea textArea;
         private boolean isCaret;
 
         public TextAreaPanel() {
             setBorder(new EmptyBorder(1, 1, 1, 1));
 
-            textArea = new JTextArea();
             textArea.setFont(new Font("Consolas", Font.PLAIN, 11));
             textArea.setBorder(new EmptyBorder(3, 6, 1, 2));
-            textArea.setForeground(new Color(70, 70, 70));
+            textArea.setForeground(new Color(40, 40, 40));
             //textArea.setEnabled(false);
             textArea.setEditable(false);
             JScrollPane scrollPane = new JScrollPane(textArea);
@@ -111,15 +132,6 @@ public class LogTextArea extends JComponent {
             scrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI());
             scrollPane.setBorder(null);
 
-            Iterator<LogMessage> iterator = Logger.getMessages();
-
-            while (iterator.hasNext()) {
-                LogMessage logMessage = iterator.next();
-                publishToTextArea(logMessage);
-            }
-            setCaretPosition();
-
-            Logger.getLoggerHandlerManager().addHandler(this);
             setLayout(new BorderLayout());
             add(scrollPane, BorderLayout.CENTER);
         }
@@ -132,10 +144,12 @@ public class LogTextArea extends JComponent {
             graphics2D.setColor(Color.white);
             graphics2D.fillRect(0, 0, getWidth(), getHeight());
 
-            graphics2D.setColor(new Color(192, 192, 192));
-            graphics2D.drawLine(0, 0, getWidth() - 1, 0);
-            graphics2D.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight() - 1);
-            graphics2D.drawLine(0, getHeight() - 1, getWidth() - 1, getHeight() - 1);
+            if (border) {
+                graphics2D.setColor(new Color(192, 192, 192));
+                graphics2D.drawLine(0, 0, getWidth() - 1, 0);
+                graphics2D.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight() - 1);
+                graphics2D.drawLine(0, getHeight() - 1, getWidth() - 1, getHeight() - 1);
+            }
         }
 
         public JTextArea getTextArea() {
@@ -160,24 +174,6 @@ public class LogTextArea extends JComponent {
             if (isCaret()) {
                 textArea.setCaretPosition(textArea.getDocument().getLength());
             }
-        }
-
-        @Override
-        public void publish(LogMessage logMessage) {
-            publishToTextArea(logMessage);
-        }
-
-        public void publishToTextArea(LogMessage logMessage) {
-            addLineToTextArea("[" + logMessage.getLevel() + "] " + logMessage.getText());
-        }
-
-        private void addLineToTextArea(String text) {
-            if (textArea.getText().equals("")) {
-                textArea.append(text);
-            } else {
-                textArea.append("\n" + text);
-            }
-            setCaretPosition();
         }
 
         public boolean isCaret() {
