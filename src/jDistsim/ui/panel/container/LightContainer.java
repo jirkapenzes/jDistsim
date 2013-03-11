@@ -1,5 +1,6 @@
 package jDistsim.ui.panel.container;
 
+import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.ui.control.button.ImageButton;
 
 import javax.swing.*;
@@ -29,12 +30,16 @@ public class LightContainer extends JPanel {
         setContentPane(contentPane);
     }
 
+    public LightContainer(String titleText, JComponent contentPane) {
+        this(titleText, 24, contentPane);
+    }
+
     public ImageButton getImageButton() {
         return imageButton;
     }
 
     public void setImageButton(ImageButton imageButton) {
-        if(this.imageButton != null)
+        if (this.imageButton != null)
             remove(imageButton);
 
         this.imageButton = imageButton;
@@ -50,13 +55,13 @@ public class LightContainer extends JPanel {
         titleContentPane.setOpaque(false);
 
         JLabel titleLabel = new JLabel();
-        titleLabel.setBorder(new EmptyBorder(5, 5, 2, 0));
+        titleLabel.setBorder(new EmptyBorder(5, 5, 5, 0));
         titleLabel.setText(titleText);
-        titleLabel.setForeground(new Color(50, 50, 50));
-        titleLabel.setFont(new Font("Consolas", Font.PLAIN, 10));
+        titleLabel.setForeground(new Color(0, 0, 0));
+        titleLabel.setFont(UIConfiguration.getInstance().getDefaultFont(true));
 
         titleContentPane.add(titleLabel, BorderLayout.WEST);
-        //add(titleContentPane, BorderLayout.NORTH);
+        add(titleContentPane, BorderLayout.NORTH);
     }
 
     public void setContentPane(JComponent contentPane) {
@@ -81,16 +86,17 @@ public class LightContainer extends JPanel {
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gradientPaint = new GradientPaint(0, 0, new Color(240, 240, 240), 0, titleHeight, new Color(214, 214, 214));
+        //GradientPaint gradientPaint = new GradientPaint(0, 0, new Color(240, 240, 240), 0, titleHeight, new Color(214, 214, 214));
 
-        Paint currentPaint = graphics2D.getPaint();
-        graphics2D.setPaint(gradientPaint);
+        //Paint currentPaint = graphics2D.getPaint();
+        //graphics2D.setPaint(gradientPaint);
+        graphics.setColor(new Color(205, 205, 205));
         graphics2D.fill(new Rectangle2D.Double(0, 0, getWidth(), titleHeight));
 
-        graphics2D.setPaint(currentPaint);
+        //graphics2D.setPaint(currentPaint);
         graphics2D.setColor(new Color(192, 192, 192));
 
-        graphics2D.setColor(new Color(192, 192, 192));
+        graphics2D.setColor(new Color(156, 156, 156));
         graphics2D.drawLine(0, titleHeight, getWidth(), titleHeight);
         graphics2D.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
