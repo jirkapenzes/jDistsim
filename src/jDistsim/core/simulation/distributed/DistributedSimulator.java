@@ -27,8 +27,7 @@ import java.util.HashMap;
  */
 public class DistributedSimulator extends BaseSimulator {
 
-    private HashMap<String, ReceiverContainer> receivers;
-    private HashMap<String, SenderContainer> senders;
+    private HashMap<String, ModelContainer> models;
     private HashMap<String, DistributedReceiveModule> receiverModules;
 
     private boolean executeCondition;
@@ -36,13 +35,13 @@ public class DistributedSimulator extends BaseSimulator {
     private boolean isDistributed;
     private double lookahead = 0;
     private LocalNetworkSettings networkSettings;
+    private boolean ready = false;
 
     public DistributedSimulator(ISimulationModelValidator modelValidator, LocalNetworkSettings networkSettings) {
         super(modelValidator);
         this.networkSettings = networkSettings;
         communication = new Communication(networkSettings);
-        receivers = new HashMap<>();
-        senders = new HashMap<>();
+        models = new HashMap<>();
         receiverModules = new HashMap<>();
     }
 
@@ -52,7 +51,7 @@ public class DistributedSimulator extends BaseSimulator {
                 DistributedSenderModule distributedSenderModule = (DistributedSenderModule) module;
 
                 // TODO spíš použít long identifier pro distribuovaný modul
-                senders.put(distributedSenderModule.getDistributedModelDefinition().getRmiModelName(), new SenderContainer(distributedSenderModule.getDistributedModelDefinition()));
+                models.put(distributedSenderModule.getDistributedModelDefinition().getRmiModelName(), new ModelContainer(distributedSenderModule.getDistributedModelDefinition()));
             }
 
             // calculate minimal lookahead time
@@ -66,7 +65,8 @@ public class DistributedSimulator extends BaseSimulator {
         // TODO netahat to z jádra aplikace
         for (DistributedModelDefinition modelDefinition : Application.global().getDistributedModels().values()) {
             if (modelDefinition.isReceive()) {
-                receivers.put(modelDefinition.getRmiModelName(), new ReceiverContainer(modelDefinition));
+                if (!models.containsKey(modelDefinition.getRmiModelName()))
+                    models.put(modelDefinition.getRmiModelName(), new ModelContainer(modelDefinition));
             }
         }
     }
@@ -88,10 +88,10 @@ public class DistributedSimulator extends BaseSimulator {
             DistributedModule distributedModule = (DistributedModule) module;
             String modelName = distributedModule.getDistributedModelDefinition().getRmiModelName();
 
-            if (!receivers.containsKey(modelName))
+            if (!models.containsKey(modelName))
                 throw new CommunicationException();
 
-            ReceiverContainer container = receivers.get(modelName);
+            ModelContainer container = models.get(modelName);
             container.getCounter().decrement();
 
             if (container.getModelDefinition().isLookahead()) {
@@ -104,7 +104,7 @@ public class DistributedSimulator extends BaseSimulator {
     }
 
     private void checkExecuteCondition() {
-        for (ReceiverContainer modelContainer : receivers.values()) {
+        for (ModelContainer modelContainer : models.values()) {
             if (modelContainer.getCounter().getCurrentValue() == 0) {
                 executeCondition = false;
                 return;
@@ -113,11 +113,11 @@ public class DistributedSimulator extends BaseSimulator {
         executeCondition = true;
     }
 
-    private void checkLookahead(ReceiverContainer receiverContainer) {
+    private void checkLookahead(ModelContainer modelContainer) {
         try {
-            double lookahead = receiverContainer.getRemote().getLookahead();
-            plan(getLocalTime() + lookahead, new NullModule(receiverContainer.getModelDefinition()), null);
-            receiverContainer.getCounter().increment();
+            double lookahead = modelContainer.getRemote().getLookahead();
+            plan(getLocalTime() + lookahead, new NullModule(modelContainer.getModelDefinition()), null);
+            modelContainer.getCounter().increment();
         } catch (RemoteException e) {
             Logger.log(e);
             throw new DistributedException(e.getMessage());
@@ -151,39 +151,29 @@ public class DistributedSimulator extends BaseSimulator {
                 }
             }
 
-            getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Found " + (receivers.size() + senders.size()) + " dependency distributed models");
+            getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Found " + models.size() + " dependency distributed models");
             getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Register local network model");
             communication.start(this);
             getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Find distributed remote models");
 
-            for (SenderContainer senderContainer : senders.values()) {
-                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Wait for " + senderContainer);
-                IRemote remote = communication.bind(senderContainer.getModelDefinition());
-                senderContainer.setRemote(remote);
-                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Remote model " + senderContainer + " has been found");
+            for (ModelContainer modelContainer : models.values()) {
+                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Wait for " + modelContainer);
+                IRemote remote = communication.bind(modelContainer.getModelDefinition());
+                modelContainer.setRemote(remote);
+                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Remote model " + modelContainer + " has been found");
 
                 boolean authorize = remote.authorize(networkSettings.getModelName());
                 if (!authorize) {
                     // throw new DistributedException("Model " + remoteObjectName + " not authorized");
                 }
             }
-
-            for (ReceiverContainer receiverContainer : receivers.values()) {
-                if (senders.containsKey(receiverContainer.getModelDefinition().getRmiModelName())) {
-                    receiverContainer.setRemote(senders.get(receiverContainer.getModelDefinition().getRmiModelName()).getRemote());
-                    continue;
-                }
-                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Wait for " + receiverContainer);
-                IRemote remote = communication.bind(receiverContainer.getModelDefinition());
-                receiverContainer.setRemote(remote);
-                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Remote model " + receiverContainer + " has been found");
-
-                boolean authorize = remote.authorize(networkSettings.getModelName());
-                if (!authorize) {
-                    // throw new DistributedException("Model " + remoteObjectName + " not authorized");
-                }
+            ready = true;
+            getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Wait for ready all models");
+            for (ModelContainer modelContainer : models.values()) {
+                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Wait for ready -> " + modelContainer.getModelDefinition().getRmiModelName());
+                modelContainer.getRemote().waitForReady();
             }
-
+            getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Prepare method done");
         } catch (Exception exception) {
             getOutput().sendToOutput(SimulatorOutput.MessageType.Error, exception.getMessage());
             throw new DistributedException(exception.getMessage());
@@ -198,10 +188,9 @@ public class DistributedSimulator extends BaseSimulator {
         if (!isDistributed) return;
 
         getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize lookahead messages");
-
-        for (ReceiverContainer receiverContainer : receivers.values()) {
-            if (receiverContainer.getModelDefinition().isLookahead()) {
-                checkLookahead(receiverContainer);
+        for (ModelContainer modelContainer : models.values()) {
+            if (modelContainer.getModelDefinition().isLookahead()) {
+                checkLookahead(modelContainer);
             }
         }
         checkExecuteCondition();
@@ -215,7 +204,7 @@ public class DistributedSimulator extends BaseSimulator {
     public void addDistributeModule(double time, Entity entity, String modelName) {
         getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Receive new entity");
         String authorizedEntityName = entity.getAttributes().get("d.entity").getValue();
-        if (!receivers.containsKey(modelName)) {
+        if (!models.containsKey(modelName)) {
             getOutput().sendToOutput(SimulatorOutput.MessageType.Warning, "Unknown model name");
             return;
         }
@@ -223,10 +212,9 @@ public class DistributedSimulator extends BaseSimulator {
             getOutput().sendToOutput(SimulatorOutput.MessageType.Warning, "Unknown entity authorized name");
             return;
         }
-
         DistributedReceiveModule receiveModule = receiverModules.get(authorizedEntityName).clone();
-        receivers.get(modelName).getCounter().increment();
-        receiveModule.setDistributedModelDefinition(receivers.get(modelName).getModelDefinition());
+        models.get(modelName).getCounter().increment();
+        receiveModule.setDistributedModelDefinition(models.get(modelName).getModelDefinition());
         plan(time, receiveModule, entity);
         checkExecuteCondition();
     }
@@ -236,7 +224,7 @@ public class DistributedSimulator extends BaseSimulator {
     }
 
     public IRemote getRemote(String rmiModelName) {
-        return senders.get(rmiModelName).getRemote();
+        return models.get(rmiModelName).getRemote();
     }
 
 
@@ -244,44 +232,22 @@ public class DistributedSimulator extends BaseSimulator {
         return networkSettings;
     }
 
-    private class ReceiverContainer {
+    public boolean isReady() {
+        return ready;
+    }
+
+    private class ModelContainer {
         private Counter counter;
         private DistributedModelDefinition modelDefinition;
         private IRemote remote;
 
-        private ReceiverContainer(DistributedModelDefinition modelDefinition) {
+        private ModelContainer(DistributedModelDefinition modelDefinition) {
             this.counter = new Counter();
             this.modelDefinition = modelDefinition;
         }
 
         public Counter getCounter() {
             return counter;
-        }
-
-        public DistributedModelDefinition getModelDefinition() {
-            return modelDefinition;
-        }
-
-        public IRemote getRemote() {
-            return remote;
-        }
-
-        public void setRemote(IRemote remote) {
-            this.remote = remote;
-        }
-
-        @Override
-        public String toString() {
-            return modelDefinition.getRmiModelName();
-        }
-    }
-
-    private class SenderContainer {
-        private DistributedModelDefinition modelDefinition;
-        private IRemote remote;
-
-        private SenderContainer(DistributedModelDefinition modelDefinition) {
-            this.modelDefinition = modelDefinition;
         }
 
         public DistributedModelDefinition getModelDefinition() {

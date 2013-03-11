@@ -18,6 +18,7 @@ import java.rmi.registry.Registry;
 public class Communication {
 
     private LocalNetworkSettings networkSettings;
+    private IRemote remote;
 
     public Communication(LocalNetworkSettings networkSettings) {
         this.networkSettings = networkSettings;
@@ -27,7 +28,7 @@ public class Communication {
         try {
             validateNetworkSettings(networkSettings);
             Registry registry = LocateRegistry.createRegistry(networkSettings.getPort());
-            IRemote remote = new RmiRemote(simulator);
+            remote = new RmiRemote(simulator);
             registry.rebind(networkSettings.getModelName(), remote);
         } catch (RemoteException exception) {
             throw new DistributedException();
@@ -58,5 +59,13 @@ public class Communication {
 
     public void stop() {
 
+    }
+
+    public void waitForReady() {
+        try {
+            remote.waitForReady();
+        } catch (RemoteException e) {
+            throw new RmiRemoteObjectNotFoundException();
+        }
     }
 }
