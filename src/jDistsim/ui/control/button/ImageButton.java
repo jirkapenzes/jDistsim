@@ -157,4 +157,11 @@ public class ImageButton extends JComponent {
         repaint();
     }
 
+    public IIconButtonHoverStyle getIconButtonHoverStyle() {
+        return iconButtonHoverStyle;
+    }
+
+    public void setIconButtonHoverStyle(IIconButtonHoverStyle iconButtonHoverStyle) {
+        this.iconButtonHoverStyle = iconButtonHoverStyle;
+    }
 }

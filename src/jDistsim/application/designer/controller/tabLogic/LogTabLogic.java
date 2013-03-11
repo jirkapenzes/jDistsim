@@ -26,37 +26,37 @@ public class LogTabLogic implements LogTabListener {
         this.controller = controller;
         logTabPanel = controller.getMainFrame().getView(InformationView.class).getContentPane().getLogTabPanel();
         if (controller.getModel().isLogPanelScrollToEnd())
-            logTabPanel.getControlPanel().getScrollToEndButton().setActive(true);
+            logTabPanel.getScrollToEndButton().setActive(true);
     }
 
 
     @Override
     public void onTrashButtonClick(Object sender, MouseEvent mouseEvent) {
-        logTabPanel.getTextAreaPanel().getTextArea().setText("");
+        logTabPanel.getLogTextArea().getTextArea().setText("");
         Logger.log("Clear application log output textarea");
     }
 
     @Override
     public void onWordWrapButtonClick(Object sender, MouseEvent mouseEvent) {
-        ImageButton imageButton = logTabPanel.getControlPanel().getWordWrapButton();
+        ImageButton imageButton = logTabPanel.getWordWrapButton();
         imageButton.setActive(!imageButton.isActive());
-        logTabPanel.getTextAreaPanel().setWordWrap(imageButton.isActive());
+        logTabPanel.getLogTextArea().setWordWrap(imageButton.isActive());
         controller.getModel().setLogPanelWordWrap(imageButton.isActive());
         Logger.log("Set word wrapping on application textarea: " + imageButton.isActive());
     }
 
     @Override
     public void onScrollToEndButtonClick(Object sender, MouseEvent mouseEvent) {
-        ImageButton imageButton = logTabPanel.getControlPanel().getScrollToEndButton();
+        ImageButton imageButton = logTabPanel.getScrollToEndButton();
         imageButton.setActive(!imageButton.isActive());
-        logTabPanel.getTextAreaPanel().setAutoCaretPosition(imageButton.isActive());
+        logTabPanel.getLogTextArea().setAutoCaretPosition(imageButton.isActive());
         controller.getModel().setLogPanelScrollToEnd(imageButton.isActive());
         Logger.log("Set scroll to end on application textarea: " + imageButton.isActive());
     }
 
     @Override
     public void onCopyToClipboardButtonClick(Object sender, MouseEvent mouseEvent) {
-        String logText = logTabPanel.getTextAreaPanel().getTextArea().getText();
+        String logText = logTabPanel.getLogTextArea().getTextArea().getText();
         StringSelection selection = new StringSelection(logText);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
