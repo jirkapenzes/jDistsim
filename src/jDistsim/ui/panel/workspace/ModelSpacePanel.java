@@ -52,22 +52,19 @@ public class ModelSpacePanel extends JPanel {
         graphics2D.setColor(Color.white);
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
 
-        for (int i = 0; i < getHeight(); i = i + 10) {
-            if (i % 6 == 0) {
-                graphics2D.setColor(new Color(210, 210, 210));
-            } else {
-                graphics2D.setColor(new Color(241, 241, 241));
-            }
+        graphics2D.setColor(new Color(241, 241, 241));
+        for (int i = 0; i < getHeight(); i = i + 8) {
             graphics2D.drawLine(0, i, getWidth(), i);
         }
+        for (int i = 0; i < getWidth(); i = i + 8) {
+            graphics2D.drawLine(i, 0, i, getHeight());
+        }
 
-
-        for (int i = 0; i < getWidth(); i = i + 10) {
-            if (i % 6 == 0) {
-                graphics2D.setColor(new Color(210, 210, 210));
-            } else {
-                graphics2D.setColor(new Color(241, 241, 241));
-            }
+        graphics2D.setColor(new Color(210, 210, 210));
+        for (int i = 0; i < getHeight(); i = i + 32) {
+            graphics2D.drawLine(0, i, getWidth(), i);
+        }
+        for (int i = 0; i < getWidth(); i = i + 32) {
             graphics2D.drawLine(i, 0, i, getHeight());
         }
     }
