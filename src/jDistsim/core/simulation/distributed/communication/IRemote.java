@@ -17,4 +17,6 @@ public interface IRemote extends Remote {
     public double getLookahead() throws RemoteException;
 
     public void process(double time, Entity entity, String requester) throws RemoteException;
+
+    public void waitForReady() throws RemoteException;
 }
