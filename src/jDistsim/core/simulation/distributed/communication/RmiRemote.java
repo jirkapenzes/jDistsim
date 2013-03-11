@@ -29,19 +29,32 @@ public class RmiRemote extends UnicastRemoteObject implements IRemote {
     @Override
     public boolean authorize(String modelName) throws RemoteException {
         boolean exist = Application.global().getDistributedModels().containsKey(modelName);
-        Logger.log("Authorize request -> " + modelName + " -> " + exist);
+        Logger.log("[RMI] Authorize request -> " + modelName + " -> " + exist);
         return exist;
     }
 
     @Override
     public double getLookahead() throws RemoteException {
         double lookahead = simulator.getLookahead();
-        Logger.log("Lookahead request -> " + lookahead);
+        Logger.log("[RMI] Lookahead request -> " + lookahead);
         return lookahead;
     }
 
     @Override
     public void process(double time, Entity entity, String requester) throws RemoteException {
+        Logger.log("[RMI] process -> " + time + "; " + entity.getIdentifier() + "; " + requester);
         simulator.addDistributeModule(time, entity, requester);
+    }
+
+    @Override
+    public void waitForReady() throws RemoteException {
+        Logger.log("[RMI] wait for ready");
+        while (!simulator.isReady()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Logger.log(e);
+            }
+        }
     }
 }
