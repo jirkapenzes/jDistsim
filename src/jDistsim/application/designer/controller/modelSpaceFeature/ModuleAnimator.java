@@ -35,8 +35,15 @@ public class ModuleAnimator implements ISimulationAnimator {
         ModuleUI moduleUIFrom = modules.get(moduleFrom);
         ModuleUI moduleUITo = modules.get(moduleTo);
 
-        if (moduleUIFrom == null || moduleTo == null)
+        if (moduleUIFrom == null && moduleUITo == null)
             return;
+
+        if (moduleUIFrom == null) {
+            moduleUITo.setColorScheme(colorScheme);
+            waitTime(100);
+            moduleUITo.setDefaultBackgroundColor();
+            return;
+        }
 
         ConnectorLine connectorLine = null;
         for (ModuleConnectedPointUI connectedPointUI : moduleUIFrom.getConnectedPoints()) {
