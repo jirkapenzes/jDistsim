@@ -15,12 +15,14 @@ public class InformationModel extends AbstractModel {
     private boolean logPanelScrollToEnd;
     private boolean logPanelWordWrap;
     private JTextArea outputPanelTextArea;
+    private JTextArea outputDialogTextArea;
     private JTable entitiesInfoTable;
     private JTable remoteModelsTable;
 
     public InformationModel(MainFrame mainFrame) {
         super(mainFrame);
         outputPanelTextArea = new JTextArea("output is empty");
+        outputDialogTextArea = new JTextArea("output is empty");
         entitiesInfoTable = new JTable();
         remoteModelsTable = new JTable();
     }
@@ -64,5 +66,9 @@ public class InformationModel extends AbstractModel {
 
     public JTable getRemoteModelsTable() {
         return remoteModelsTable;
+    }
+
+    public JTextArea getOutputDialogTextArea() {
+        return outputDialogTextArea;
     }
 }
