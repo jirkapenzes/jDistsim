@@ -21,9 +21,11 @@ public class DistributedModelDialog extends BaseDialog {
     private JCheckBox lookaheadCheckBox;
     private JCheckBox receiveCheckBox;
     private DistributedModelDefinition distributedModelDefinition;
+    private boolean editWindow = true;
 
     public DistributedModelDialog(JFrame parent) {
         this(parent, DistributedModelDefinition.createDefault());
+        editWindow = false;
     }
 
     public DistributedModelDialog(JFrame parent, DistributedModelDefinition distributedModelDefinition) {
@@ -90,7 +92,11 @@ public class DistributedModelDialog extends BaseDialog {
             String modelName = validator.validateString(modelNameTextField.getText(), "Model name");
             String rmiModelName = validator.validateString(rmiModelNameTextField.getText(), "RMI model name");
             rmiModelName = validator.validateSpecialCharacters(rmiModelName, "RMI model name (contains special characters)");
-            rmiModelName = validator.validateDuplicity(models, rmiModelName, "RMI model name (duplicity)");
+            if (editWindow)
+                rmiModelName = validator.validateDuplicity(models, rmiModelName, "RMI model name (duplicity)", distributedModelDefinition.getRmiModelName());
+            else
+                rmiModelName = validator.validateDuplicity(models, rmiModelName, "RMI model name (duplicity)");
+
             String address = validator.validateString(addressTextField.getText(), "Remote address");
             int port = validator.validateInteger(portTextField.getText(), "Remote port");
             boolean lookahead = lookaheadCheckBox.isSelected();

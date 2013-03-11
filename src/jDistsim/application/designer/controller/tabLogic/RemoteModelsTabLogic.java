@@ -69,6 +69,8 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
             } else {
                 DistributedModelDialog dialog = new DistributedModelDialog(controller.getMainFrame().getFrame(), modelDefinition);
                 dialog.showDialog();
+                Application.global().getDistributedModels().setChanged();
+                Application.global().getDistributedModels().notifyObservers();
             }
         }
     }
