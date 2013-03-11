@@ -1,6 +1,6 @@
 package jDistsim.ui.panel;
 
-import jDistsim.ui.skins.ScrollBarUI;
+import jDistsim.ui.control.LogTextArea;
 import jDistsim.utils.ui.SwingUtil;
 
 import javax.swing.*;
@@ -15,31 +15,23 @@ import java.awt.*;
 public class OutputPanel extends JComponent {
 
     private int leftPadding = 6;
-    private JTextArea textArea;
+    private LogTextArea logTextArea;
 
     public OutputPanel(JTextArea textArea) {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(0, 0, 0, 0));
 
-        this.textArea = textArea;
-        this.textArea.setFont(new Font("Consolas", Font.PLAIN, 11));
-        this.textArea.setBorder(new EmptyBorder(3, 6, 1, 2));
-        this.textArea.setForeground(new Color(20, 20, 20));
-        this.textArea.setEditable(false);
-
-        JScrollPane scrollPane = new JScrollPane(this.textArea);
-        scrollPane.setBorder(null);
-
-        JScrollBar scrollBar = scrollPane.getVerticalScrollBar();
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollBar.setUI(new ScrollBarUI());
-
         JPanel emptyPanel = new JPanel();
         emptyPanel.setOpaque(false);
         SwingUtil.setAbsoluteDimension(emptyPanel, leftPadding, getHeight());
 
-        add(emptyPanel, BorderLayout.WEST);
-        add(scrollPane, BorderLayout.CENTER);
+        //add(emptyPanel, BorderLayout.WEST);
+        logTextArea = new LogTextArea(false, textArea);
+        add(logTextArea, BorderLayout.CENTER);
+    }
+
+    public LogTextArea getLogTextArea() {
+        return logTextArea;
     }
 
     @Override
