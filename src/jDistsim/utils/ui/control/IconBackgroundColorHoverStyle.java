@@ -17,12 +17,13 @@ public class IconBackgroundColorHoverStyle implements IIconButtonHoverStyle {
     private Color pressedBorderColor;
 
     public IconBackgroundColorHoverStyle() {
-        this(new Color(181, 190, 214));
+        this(new Color(209, 226, 242));
     }
 
     public IconBackgroundColorHoverStyle(Color hoverBackgroundColor) {
-        this(hoverBackgroundColor, new Color(8, 36, 107), new Color(142,224, 130), new Color(72, 122, 65));
+        this(hoverBackgroundColor, new Color(120, 174, 229), new Color(181, 190, 214),  new Color(8, 36, 107));
     }
+
 
     public IconBackgroundColorHoverStyle(Color hoverBackgroundColor, Color pressedBackgroundColor, Color pressedBorderColor) {
         this(hoverBackgroundColor, new Color(8, 36, 107), pressedBackgroundColor, pressedBorderColor);
