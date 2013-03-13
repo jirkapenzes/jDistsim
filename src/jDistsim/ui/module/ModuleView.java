@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class ModuleView implements IModuleView {
 
     private JComponent view;
-    private ColorScheme colorScheme;
+    protected ColorScheme colorScheme;
     private ColorScheme defaultColorScheme;
 
     protected final List<Point> inputPoints;
