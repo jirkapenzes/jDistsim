@@ -8,6 +8,10 @@ import jDistsim.core.simulation.modules.lib.assign.Assign;
 import jDistsim.core.simulation.modules.lib.assign.AssignFactory;
 import jDistsim.core.simulation.modules.lib.assign.AssignUIFactory;
 import jDistsim.core.simulation.modules.lib.assign.AssignView;
+import jDistsim.core.simulation.modules.lib.condition.Condition;
+import jDistsim.core.simulation.modules.lib.condition.ConditionFactory;
+import jDistsim.core.simulation.modules.lib.condition.ConditionUIFactory;
+import jDistsim.core.simulation.modules.lib.condition.ConditionView;
 import jDistsim.core.simulation.modules.lib.create.Create;
 import jDistsim.core.simulation.modules.lib.create.CreateFactory;
 import jDistsim.core.simulation.modules.lib.create.CreateUIFactory;
@@ -88,15 +92,22 @@ public class ModuleLibrary implements IModuleLibrary {
                 .toUIFactory(new OutputerUIFactory())
                 .withConfiguration(new ModuleConfiguration("outputer", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
-        container.bind(Sender.class, new ModuleContainer())
+        container.bind(Condition.class, new ModuleContainer())
                 .toIndex(6)
+                .toView(new ConditionView())
+                .toFactory(new ConditionFactory())
+                .toUIFactory(new ConditionUIFactory())
+                .withConfiguration(new ModuleConfiguration("condition", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
+                .build();
+        container.bind(Sender.class, new ModuleContainer())
+                .toIndex(7)
                 .toView(new SenderView())
                 .toFactory(new SenderFactory())
                 .toUIFactory(new SenderUIFactory())
                 .withConfiguration(new ModuleConfiguration("sender", UIConfiguration.getInstance().getColorSchemeForDistributedModule()))
                 .build();
         container.bind(Receiver.class, new ModuleContainer())
-                .toIndex(7)
+                .toIndex(8)
                 .toView(new ReceiverView())
                 .toFactory(new ReceiverFactory())
                 .toUIFactory(new ReceiverUIFactory())
