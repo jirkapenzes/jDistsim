@@ -1,5 +1,6 @@
 package jDistsim.ui.panel.listener;
 
+import jDistsim.ui.control.LogTextArea;
 import jDistsim.utils.ui.IPanelListener;
 
 import java.awt.event.MouseEvent;
@@ -13,9 +14,7 @@ public interface OutputTabListener extends IPanelListener {
 
     public void onTrashButtonClick(Object sender, MouseEvent mouseEvent);
 
-    public void onWordWrapButtonClick(Object sender, MouseEvent mouseEvent);
-
-    public void onScrollToEndButtonClick(Object sender, MouseEvent mouseEvent);
+    public void onScrollToEndButtonClick(Object sender, LogTextArea logTextArea, MouseEvent mouseEvent);
 
     public void onCopyToClipboardButtonClick(Object sender, MouseEvent mouseEvent);
 

@@ -65,7 +65,7 @@ public class SimulatorOutputDialog extends BaseDialog {
         scrollToEndButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                listener.onScrollToEndButtonClick(scrollToEndButton, mouseEvent);
+                listener.onScrollToEndButtonClick(scrollToEndButton, outputPanel.getLogTextArea(), mouseEvent);
             }
         });
 
