@@ -80,7 +80,7 @@ public class OutputTabPanel extends ListenerablePanel<OutputTabListener> {
         scrollToEndButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                getListener().onScrollToEndButtonClick(scrollToEndButton, mouseEvent);
+                getListener().onScrollToEndButtonClick(scrollToEndButton, outputPanel.getLogTextArea(), mouseEvent);
             }
         });
 
