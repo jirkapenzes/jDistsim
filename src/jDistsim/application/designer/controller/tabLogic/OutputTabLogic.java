@@ -2,10 +2,16 @@ package jDistsim.application.designer.controller.tabLogic;
 
 import jDistsim.application.designer.controller.InformationController;
 import jDistsim.core.simulation.simulator.Writer;
+import jDistsim.ui.control.LogTextArea;
+import jDistsim.ui.control.button.ImageButton;
 import jDistsim.ui.dialog.SimulatorOutputDialog;
 import jDistsim.ui.panel.listener.OutputTabListener;
+import jDistsim.utils.logging.Logger;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 
 /**
@@ -42,22 +48,27 @@ public class OutputTabLogic implements OutputTabListener, Writer {
 
     @Override
     public void onTrashButtonClick(Object sender, MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        controller.getModel().getOutputDialogTextArea().setText(new String());
+        controller.getModel().getOutputPanelTextArea().setText(new String());
+        Logger.log("Clear simulator UI output");
     }
 
     @Override
-    public void onWordWrapButtonClick(Object sender, MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void onScrollToEndButtonClick(Object sender, MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void onScrollToEndButtonClick(Object sender, LogTextArea logTextArea, MouseEvent mouseEvent) {
+        ImageButton imageButton = (ImageButton) sender;
+        imageButton.setActive(!imageButton.isActive());
+        logTextArea.setAutoCaretPosition(imageButton.isActive());
+        controller.getModel().setLogPanelScrollToEnd(imageButton.isActive());
+        Logger.log("Set scroll to end on simulator output textarea: " + imageButton.isActive());
     }
 
     @Override
     public void onCopyToClipboardButtonClick(Object sender, MouseEvent mouseEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        String logText = controller.getModel().getOutputPanelTextArea().getText();
+        StringSelection selection = new StringSelection(logText);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
+        Logger.log("Log from simulator output copy to clipboard");
     }
 
     @Override
