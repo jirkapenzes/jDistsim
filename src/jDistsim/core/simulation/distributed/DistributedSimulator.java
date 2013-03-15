@@ -33,7 +33,7 @@ public class DistributedSimulator extends BaseSimulator {
     private boolean executeCondition;
     private Communication communication;
     private boolean isDistributed;
-    private double lookahead = 0;
+    private double minimalLookahead = 0;
     private LocalNetworkSettings networkSettings;
     private boolean ready = false;
 
@@ -54,11 +54,11 @@ public class DistributedSimulator extends BaseSimulator {
                 models.put(distributedSenderModule.getDistributedModelDefinition().getRmiModelName(), new ModelContainer(distributedSenderModule.getDistributedModelDefinition()));
             }
 
-            // calculate minimal lookahead time
+            // calculate minimal minimalLookahead time
             if (module instanceof ITimeAffectModule) {
                 ITimeAffectModule timeAffectModule = (ITimeAffectModule) module;
-                if (timeAffectModule.getMinimalAffectTime() < lookahead || lookahead == 0) {
-                    lookahead = timeAffectModule.getMinimalAffectTime();
+                if (timeAffectModule.getMinimalAffectTime() < minimalLookahead || minimalLookahead == 0) {
+                    minimalLookahead = timeAffectModule.getMinimalAffectTime();
                 }
             }
         }
@@ -187,11 +187,11 @@ public class DistributedSimulator extends BaseSimulator {
         super.initializeSimulator(simulationModel);
         if (!isDistributed) return;
 
-        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize lookahead messages");
+        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize minimalLookahead messages");
         for (ModelContainer modelContainer : models.values()) {
-            if (modelContainer.getModelDefinition().isLookahead()) {
-                checkLookahead(modelContainer);
-            }
+                if (modelContainer.getModelDefinition().isLookahead()) {
+                    checkLookahead(modelContainer);
+                }
         }
         checkExecuteCondition();
     }
@@ -219,8 +219,8 @@ public class DistributedSimulator extends BaseSimulator {
         checkExecuteCondition();
     }
 
-    public double getLookahead() {
-        return lookahead;
+    public double getMinimalLookahead() {
+        return minimalLookahead;
     }
 
     public IRemote getRemote(String rmiModelName) {
