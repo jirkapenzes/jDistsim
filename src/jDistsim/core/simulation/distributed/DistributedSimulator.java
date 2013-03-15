@@ -189,9 +189,9 @@ public class DistributedSimulator extends BaseSimulator {
 
         getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize minimalLookahead messages");
         for (ModelContainer modelContainer : models.values()) {
-                if (modelContainer.getModelDefinition().isLookahead()) {
-                    checkLookahead(modelContainer);
-                }
+            if (modelContainer.getModelDefinition().isLookahead()) {
+                checkLookahead(modelContainer);
+            }
         }
         checkExecuteCondition();
     }
@@ -219,7 +219,7 @@ public class DistributedSimulator extends BaseSimulator {
         checkExecuteCondition();
     }
 
-    public double getMinimalLookahead() {
+    public double getLookahead() {
         return minimalLookahead;
     }
 
