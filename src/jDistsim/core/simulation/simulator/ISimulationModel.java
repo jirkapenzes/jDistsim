@@ -15,6 +15,8 @@ public interface ISimulationModel {
 
     DistributedReceiveModule getReceiver(String entityName);
 
+    int getNumberOfRootModules();
+
     Iterable<RootModule> getRootModules();
 
     Iterable<Module> getModules();

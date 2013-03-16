@@ -25,14 +25,15 @@ import java.util.Date;
  */
 public abstract class BaseSimulator implements ISimulator, Serializable {
 
+    protected Calendar<ScheduleEvent> calendar;
     private double localTime;
     private boolean run;
-    private Calendar<ScheduleEvent> calendar;
     private SimulatorEnvironment environment;
     private SimulatorOutput output;
     private ISimulatorEndCondition endCondition;
     private ISimulationModelValidator modelValidator;
     private ISimulationAnimator animator;
+    protected volatile Object lock = new Object();
 
     public BaseSimulator(ISimulationModelValidator modelValidator) {
         this(modelValidator, new ISimulatorEndCondition() {
@@ -99,8 +100,8 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
             validateModel(simulationModel);
 
             prepare(simulationModel);
-            initializeSimulator(simulationModel);
             initializeModules(simulationModel);
+            initializeSimulator(simulationModel);
 
             output.drawSeparateLine();
             if (simulationModel == null)
@@ -112,7 +113,7 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
                 while (calendar.isEmpty() || !canExecute()) ;
                 if (!run) break;
 
-                ScheduleEvent scheduleEvent = calendar.poll();
+                ScheduleEvent scheduleEvent = calendar.peek();
                 if (scheduleEvent == null)
                     throw new EventNotFoundException();
 
@@ -127,6 +128,8 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
                 classification(module);
                 animate(entity);
                 module.execute(this, entity);
+
+                calendar.remove(scheduleEvent);
                 updateEnvironment();
             }
 
