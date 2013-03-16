@@ -1,7 +1,6 @@
 package jDistsim.core.simulation.modules.lib.create;
 
 import jDistsim.core.simulation.exception.EntityNotCreatedException;
-import jDistsim.core.simulation.modules.ITimeAffectModule;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.RootModule;
@@ -21,7 +20,7 @@ import java.util.Random;
  * Date: 21.2.13
  * Time: 22:36
  */
-public class Create extends RootModule implements ITimeAffectModule {
+public class Create extends RootModule  {
 
     private AttributeCollection initialEntityAttributes;
     private Counter entityCounter;
@@ -79,11 +78,6 @@ public class Create extends RootModule implements ITimeAffectModule {
     public void logic(ISimulator simulator) {
         double currentTime = simulator.getLocalTime();
 
-        if (entityCounter.getCurrentValue() >= maxArrivals) {
-            simulator.getOutput().sendToOutput(SimulatorOutput.MessageType.Warning, "Entity not created -> max arrivals -> true");
-            return;
-        }
-
         for (Module module : getAllOutputDependencies()) {
             for (int index = 0; index < entityPerInterval; index++) {
                 Entity entity = makeEntity(simulator);
@@ -92,6 +86,10 @@ public class Create extends RootModule implements ITimeAffectModule {
         }
 
         try {
+            if (entityCounter.getCurrentValue() >= maxArrivals) {
+                simulator.getOutput().sendToOutput(SimulatorOutput.MessageType.Warning, "Entity not created -> max arrivals -> true");
+                return;
+            }
             double timeInterval = arrivalsTypeValue;
             if (arrivalsType == TimeBetweenArrivalsType.Random_Expo)
                 timeInterval = Math.round((random.nextDouble() * arrivalsTypeValue + 1) * 100) / 100;
@@ -100,10 +98,5 @@ public class Create extends RootModule implements ITimeAffectModule {
         } catch (CloneNotSupportedException exception) {
             throw new EntityNotCreatedException(getIdentifier());
         }
-    }
-
-    @Override
-    public double getMinimalAffectTime() {
-        return arrivalsTypeValue;
     }
 }
