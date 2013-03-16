@@ -15,6 +15,7 @@ import jDistsim.core.simulation.simulator.ISimulationModel;
 import jDistsim.core.simulation.simulator.SimulatorOutput;
 import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.utils.common.Counter;
+import jDistsim.utils.common.ThreadWaiter;
 import jDistsim.utils.logging.Logger;
 
 import java.rmi.RemoteException;
@@ -115,9 +116,22 @@ public class DistributedSimulator extends BaseSimulator {
 
     private void checkLookahead(ModelContainer modelContainer) {
         try {
-            double lookahead = modelContainer.getRemote().getLookahead();
-            plan(getLocalTime() + lookahead, new NullModule(modelContainer.getModelDefinition()), null);
-            modelContainer.getCounter().increment();
+            synchronized (lock) {
+                getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Send lookahead");
+                double lookahead = modelContainer.getRemote().getLookahead(getLocalTime());
+                if (lookahead == 0) {
+                    Logger.log("Get 0.0 time in lookahead and wait for new attempt [1]");
+                    ThreadWaiter.waitCurrentThreadFor(1000);
+                    lookahead = modelContainer.getRemote().getLookahead(getLocalTime());
+                }
+                if (lookahead != 0) {
+                    getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Plan null module");
+                    plan(getLocalTime() + lookahead, new NullModule(modelContainer.getModelDefinition()), null);
+                    modelContainer.getCounter().increment();
+                } else {
+                    getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Get " + lookahead + " and not plan");
+                }
+            }
         } catch (RemoteException e) {
             Logger.log(e);
             throw new DistributedException(e.getMessage());
@@ -187,7 +201,11 @@ public class DistributedSimulator extends BaseSimulator {
         super.initializeSimulator(simulationModel);
         if (!isDistributed) return;
 
-        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize minimalLookahead messages");
+        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize distributed lookahead");
+        if (simulationModel.getNumberOfRootModules() == 0)
+            return;
+
+        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Getting lookahead messages");
         for (ModelContainer modelContainer : models.values()) {
             if (modelContainer.getModelDefinition().isLookahead()) {
                 checkLookahead(modelContainer);
@@ -202,7 +220,7 @@ public class DistributedSimulator extends BaseSimulator {
     }
 
     public void addDistributeModule(double time, Entity entity, String modelName) {
-        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Receive new entity");
+        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Receive new entity ");
         String authorizedEntityName = entity.getAttributes().get("d.entity").getValue();
         if (!models.containsKey(modelName)) {
             getOutput().sendToOutput(SimulatorOutput.MessageType.Warning, "Unknown model name");
@@ -215,12 +233,18 @@ public class DistributedSimulator extends BaseSimulator {
         DistributedReceiveModule receiveModule = receiverModules.get(authorizedEntityName).clone();
         models.get(modelName).getCounter().increment();
         receiveModule.setDistributedModelDefinition(models.get(modelName).getModelDefinition());
+        getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Descriptor -> " + entity.getIdentifier() + " at time " + time);
         plan(time, receiveModule, entity);
         checkExecuteCondition();
     }
 
-    public double getLookahead() {
-        return minimalLookahead;
+    public double getLookahead(double requesterTime) {
+        Logger.log("State: calendar -> " + calendar.size() + "; minimal lookahead: " + minimalLookahead);
+        if (calendar.isEmpty())
+            return minimalLookahead;
+
+        double dif = getLocalTime() - requesterTime;
+        return dif > 0 ? dif : 0;
     }
 
     public IRemote getRemote(String rmiModelName) {

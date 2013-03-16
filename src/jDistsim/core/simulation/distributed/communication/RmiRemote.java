@@ -34,9 +34,9 @@ public class RmiRemote extends UnicastRemoteObject implements IRemote {
     }
 
     @Override
-    public double getLookahead() throws RemoteException {
-        double lookahead = simulator.getLookahead();
-        Logger.log("[RMI] Lookahead request -> " + lookahead);
+    public double getLookahead(double requesterTime) throws RemoteException {
+        double lookahead = simulator.getLookahead(requesterTime);
+        Logger.log("[RMI] Lookahead request -> " + lookahead + " -> with time " + requesterTime);
         return lookahead;
     }
 

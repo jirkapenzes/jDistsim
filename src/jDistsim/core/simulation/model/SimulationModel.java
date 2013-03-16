@@ -56,6 +56,11 @@ public class SimulationModel implements ISimulationModel {
     }
 
     @Override
+    public int getNumberOfRootModules() {
+        return rootModules.size();
+    }
+
+    @Override
     public Iterable<RootModule> getRootModules() {
         return rootModules;
     }

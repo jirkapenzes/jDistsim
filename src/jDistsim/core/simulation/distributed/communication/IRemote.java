@@ -14,7 +14,7 @@ public interface IRemote extends Remote {
 
     public boolean authorize(String modelName) throws RemoteException;
 
-    public double getLookahead() throws RemoteException;
+    public double getLookahead(double requesterTime) throws RemoteException;
 
     public void process(double time, Entity entity, String requester) throws RemoteException;
 
