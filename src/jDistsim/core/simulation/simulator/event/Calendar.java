@@ -53,4 +53,8 @@ public class Calendar<TEvent extends ScheduleEvent> implements Iterable<TEvent> 
     public Iterator<TEvent> iterator() {
         return queue.iterator();
     }
+
+    public void remove(TEvent event) {
+        queue.remove(event);
+    }
 }
