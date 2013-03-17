@@ -96,6 +96,7 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
     public void simulate(ISimulationModel simulationModel) throws SimulatorCoreException {
         try {
             prepareOutput();
+            prepareEnvironment();
             showSimulatorInfo();
             validateModel(simulationModel);
 
@@ -141,6 +142,17 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
         }
         output.drawSeparateLine();
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "End of simulation");
+    }
+
+    private void prepareEnvironment() {
+        output.sendToOutput(SimulatorOutput.MessageType.Standard, "Prepare environment");
+        getEnvironment().clear();
+        output.sendToOutput(SimulatorOutput.MessageType.Standard, "Initialize environment");
+        getEnvironment().setSimulatorAtt("simulator", getLocalTime());
+        getEnvironment().setDistributedAtt("distributed", "true");
+        getEnvironment().setNetworkAtt("network", "true");
+        getEnvironment().setModulesAtt("modules", "true");
+        getEnvironment().notifyObservers();
     }
 
     protected abstract void prepare(ISimulationModel simulationModel);
