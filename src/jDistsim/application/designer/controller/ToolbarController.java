@@ -2,6 +2,7 @@ package jDistsim.application.designer.controller;
 
 import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.controller.modelSpaceFeature.ModuleAnimator;
+import jDistsim.application.designer.controller.tabLogic.OutputTabLogic;
 import jDistsim.application.designer.model.ToolbarModel;
 import jDistsim.application.designer.view.ToolbarView;
 import jDistsim.core.simulation.distributed.DistributedSimulator;
@@ -41,6 +42,7 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
     public void onSimulationStartButtonClick(MouseEvent mouseEvent, Object sender) {
         InformationController informationController = getMainFrame().getController(InformationController.class);
         ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
+        OutputTabLogic outputTabLogic = informationController.getOutputTabLogic();
 
         Collection<ModuleUI> modules = modelSpaceController.getModel().getModuleList().values();
 
@@ -51,6 +53,7 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
         simulator.setAnimator(new ModuleAnimator(modelSpaceController.getModel().getModuleList(), modelSpaceController.getView().getContentPane()));
         simulator.getOutput().getWriters().add(informationController.makeSimulatorWriter());
         simulator.getOutput().getWriters().add(new SimulatorLoggerHandler());
+        simulator.getEnvironment().addObserver(outputTabLogic);
 
         SimulatorRunner simulatorRunner = new SimulatorRunner(simulator, simulationModel);
         simulatorRunner.start();
