@@ -120,7 +120,6 @@ public class RemoteModelsTabLogic implements RemoteModelsTabListener, IObserver 
         InformationView view = controller.getMainFrame().getView(InformationView.class);
         view.renderRemoteModelsTable();
         Logger.log("Rebuild remote models table");
-
     }
 
     private Vector<String> makeRow(DistributedModelDefinition modelDefinition) {
