@@ -1,17 +1,15 @@
 package jDistsim.ui.panel;
 
 import jDistsim.application.designer.common.UIConfiguration;
-import jDistsim.core.simulation.modules.common.ModuleProperty;
+import jDistsim.ui.renderer.ValueTableCellRenderer;
 import jDistsim.ui.skins.ScrollBarUI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Author: Jirka Pénzeš
@@ -21,36 +19,13 @@ import java.util.ArrayList;
 public class EnvironmentPanel extends JComponent {
 
     private JPanel controlPanel;
+    private JTable table;
+    private JScrollPane scrollPane;
 
-    public EnvironmentPanel() {
+    public EnvironmentPanel(JTable table) {
         setBorder(new EmptyBorder(0, 0, 0, 0));
         setLayout(new BorderLayout(0, 0));
-
-        JTable table = new JTable();
-        ArrayList<ModuleProperty> properties = new ArrayList<>();
-        properties.add(new ModuleProperty("Local time", "10", "Text"));
-        properties.add(new ModuleProperty("Created entities: ", "54", "Text"));
-        properties.add(new ModuleProperty("Processed modules", "576", "Text"));
-        properties.add(new ModuleProperty("Key", "Value", "Text"));
-        properties.add(new ModuleProperty("Key", "Value", "Text"));
-        properties.add(new ModuleProperty("Processed modules", "576", "Text"));
-        properties.add(new ModuleProperty("Processed modules", "576", "Text"));
-        properties.add(new ModuleProperty("Key", "Value", "Text"));
-        properties.add(new ModuleProperty("Created entities: ", "54", "Text"));
-        properties.add(new ModuleProperty("Processed modules", "576", "Text"));
-        properties.add(new ModuleProperty("Key", "Value", "Text"));
-        properties.add(new ModuleProperty("Key", "Value", "Text"));
-
-        Object[][] data = new Object[properties.size()][3];
-        for (int index = 0; index < properties.size(); index++) {
-            ModuleProperty property = properties.get(index);
-
-            data[index][0] = property.getKey() + ": " + property.getValue();
-            data[index][1] = property.getValue();
-            data[index][2] = property.getKey();
-        }
-
-        table.setModel(new DefaultTableModel(data, new Object[]{"text"}));
+        this.table = table;
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setReorderingAllowed(false);
@@ -64,16 +39,16 @@ public class EnvironmentPanel extends JComponent {
         table.setBorder(new EmptyBorder(1, 1, 1, 1));
         table.setOpaque(false);
         //table.setShowGrid(false);
-        table.setShowVerticalLines(false);
         table.setTableHeader(null);
+        table.setShowVerticalLines(false);
         table.setGridColor(new Color(212, 212, 212));
 
-        controlPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 3,3));
+        controlPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 3, 3));
         controlPanel.setOpaque(false);
         controlPanel.setBorder(new EmptyBorder(1, 1, 1, 1));
         controlPanel.setPreferredSize(new Dimension(30, getWidth()));
 
-        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
@@ -105,6 +80,15 @@ public class EnvironmentPanel extends JComponent {
 
         graphics2D.setColor(new Color(212, 212, 212));
         graphics2D.drawLine(30, 0, 30, getHeight());
+    }
+
+    public void renderTable() {
+        for (int index = 0; index < table.getColumnCount(); index++) {
+            TableColumn tableColumn = table.getColumnModel().getColumn(index);
+            tableColumn.setCellRenderer(new ValueTableCellRenderer());
+        }
+
+        repaint();
     }
 
     private class TableCellRenderer extends DefaultTableCellRenderer {
