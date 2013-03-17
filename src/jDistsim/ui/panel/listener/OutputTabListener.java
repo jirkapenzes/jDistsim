@@ -19,4 +19,12 @@ public interface OutputTabListener extends IPanelListener {
     public void onCopyToClipboardButtonClick(Object sender, MouseEvent mouseEvent);
 
     public void onSimulatorOutputDialogOpenButtonClick(Object sender, MouseEvent mouseEvent);
+
+    public void onLocalEnvironmentButtonClick(Object sender, MouseEvent mouseEvent);
+
+    public void onModulesEnvironmentButtonClick(Object sender, MouseEvent mouseEvent);
+
+    public void onNetworkEnvironmentButtonClick(Object sender, MouseEvent mouseEvent);
+
+    public void onMessagesEnvironmentButtonClick(Object sender, MouseEvent mouseEvent);
 }

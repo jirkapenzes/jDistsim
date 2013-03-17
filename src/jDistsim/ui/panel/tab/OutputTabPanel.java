@@ -25,16 +25,19 @@ public class OutputTabPanel extends ListenerablePanel<OutputTabListener> {
     private ImageButton copyToClipboardButton;
     private ImageButton scrollToEndButton;
     private ImageButton trashButton;
-    private ImageButton mainStatisticsButton;
-    private ImageButton remoteStatisticsButton;
-    private ImageButton moduleStatisticsButton;
-    private ImageButton otherStatisticsButton;
+    private ImageButton localStatistics;
+    private ImageButton networkStatistics;
+    private ImageButton modulesStatistics;
+    private ImageButton distributedStatistics;
     private JTextArea textArea;
+    private JTable table;
 
     private LightContainer outputContainer;
+    private EnvironmentPanel environmentPanel;
 
-    public OutputTabPanel(JTextArea textArea) {
+    public OutputTabPanel(JTextArea textArea, JTable table) {
         this.textArea = textArea;
+        this.table = table;
         initialize();
     }
 
@@ -42,7 +45,7 @@ public class OutputTabPanel extends ListenerablePanel<OutputTabListener> {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        LightContainer environmentContainer = makeEnvironment();
+        LightContainer environmentContainer = makeEnvironment(table);
         environmentContainer.setPreferredSize(new Dimension(190, getHeight()));
 
         outputContainer = makeSimulatorOutput();
@@ -107,48 +110,84 @@ public class OutputTabPanel extends ListenerablePanel<OutputTabListener> {
         return outputContainer;
     }
 
-    private LightContainer makeEnvironment() {
-        EnvironmentPanel environmentPanel = new EnvironmentPanel();
+    private LightContainer makeEnvironment(JTable table) {
+        environmentPanel = new EnvironmentPanel(table);
         LightContainer environmentContainer = new LightContainer("Environment", environmentPanel);
 
         IconBackgroundColorHoverStyle buttonHoverStyle = new IconBackgroundColorHoverStyle();
         int buttonPadding = 3;
 
-        mainStatisticsButton = new ImageButton(Resources.getImage("system/panels/op_main.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
-        mainStatisticsButton.addMouseListener(new MouseAdapter() {
+        localStatistics = new ImageButton(Resources.getImage("system/panels/op_other.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
+        localStatistics.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                getListener().onCopyToClipboardButtonClick(copyToClipboardButton, mouseEvent);
+                getListener().onLocalEnvironmentButtonClick(localStatistics, mouseEvent);
             }
         });
-        moduleStatisticsButton = new ImageButton(Resources.getImage("system/panels/op_local.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
-        moduleStatisticsButton.addMouseListener(new MouseAdapter() {
+        modulesStatistics = new ImageButton(Resources.getImage("system/panels/op_main.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
+        modulesStatistics.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                getListener().onCopyToClipboardButtonClick(copyToClipboardButton, mouseEvent);
+                getListener().onModulesEnvironmentButtonClick(modulesStatistics, mouseEvent);
             }
         });
-        remoteStatisticsButton = new ImageButton(Resources.getImage("system/panels/op_remote.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
-        remoteStatisticsButton.addMouseListener(new MouseAdapter() {
+        distributedStatistics = new ImageButton(Resources.getImage("system/panels/op_remote.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
+        distributedStatistics.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                getListener().onCopyToClipboardButtonClick(copyToClipboardButton, mouseEvent);
+                getListener().onMessagesEnvironmentButtonClick(distributedStatistics, mouseEvent);
+            }
+        });
+        networkStatistics = new ImageButton(Resources.getImage("system/panels/op_local.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
+        networkStatistics.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                getListener().onNetworkEnvironmentButtonClick(networkStatistics, mouseEvent);
             }
         });
 
-        otherStatisticsButton = new ImageButton(Resources.getImage("system/panels/op_other.png"), buttonHoverStyle, new Dimension(16, 16), buttonPadding);
-        otherStatisticsButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                getListener().onTrashButtonClick(trashButton, mouseEvent);
-            }
-        });
-        otherStatisticsButton.setActive(true);
-        environmentPanel.getControlPanel().add(otherStatisticsButton);
-        environmentPanel.getControlPanel().add(mainStatisticsButton);
-        environmentPanel.getControlPanel().add(moduleStatisticsButton);
-        environmentPanel.getControlPanel().add(remoteStatisticsButton);
+
+        environmentPanel.getControlPanel().add(localStatistics);
+        environmentPanel.getControlPanel().add(modulesStatistics);
+        environmentPanel.getControlPanel().add(networkStatistics);
+        environmentPanel.getControlPanel().add(distributedStatistics);
 
         return environmentContainer;
+    }
+
+    public ImageButton getCopyToClipboardButton() {
+        return copyToClipboardButton;
+    }
+
+    public ImageButton getScrollToEndButton() {
+        return scrollToEndButton;
+    }
+
+    public ImageButton getTrashButton() {
+        return trashButton;
+    }
+
+    public ImageButton getLocalStatistics() {
+        return localStatistics;
+    }
+
+    public ImageButton getNetworkStatistics() {
+        return networkStatistics;
+    }
+
+    public ImageButton getModulesStatistics() {
+        return modulesStatistics;
+    }
+
+    public ImageButton getDistributedStatistics() {
+        return distributedStatistics;
+    }
+
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+    public void renderEnvironmentTable() {
+        environmentPanel.renderTable();
     }
 }

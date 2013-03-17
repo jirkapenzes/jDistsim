@@ -4,6 +4,8 @@ import jDistsim.application.designer.MainFrame;
 import jDistsim.utils.pattern.mvc.AbstractModel;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.Vector;
 
 /**
  * Author: Jirka Pénzeš
@@ -18,6 +20,11 @@ public class InformationModel extends AbstractModel {
     private JTextArea outputDialogTextArea;
     private JTable entitiesInfoTable;
     private JTable remoteModelsTable;
+    private DefaultTableModel localStatisticsTable;
+    private DefaultTableModel networkStatisticsTable;
+    private DefaultTableModel modulesStatisticsTable;
+    private DefaultTableModel messagesStatisticsTable;
+    private JTable environmentTable;
 
     public InformationModel(MainFrame mainFrame) {
         super(mainFrame);
@@ -25,6 +32,12 @@ public class InformationModel extends AbstractModel {
         outputDialogTextArea = new JTextArea("output is empty");
         entitiesInfoTable = new JTable();
         remoteModelsTable = new JTable();
+
+        localStatisticsTable = new DefaultTableModel(new Vector(), new Vector<Vector<String>>());
+        networkStatisticsTable = new DefaultTableModel(new Vector(), new Vector<Vector<String>>());
+        modulesStatisticsTable = new DefaultTableModel(new Vector(), new Vector<Vector<String>>());
+        messagesStatisticsTable = new DefaultTableModel(new Vector(), new Vector<Vector<String>>());
+        environmentTable = new JTable();
     }
 
     @Override
@@ -70,5 +83,41 @@ public class InformationModel extends AbstractModel {
 
     public JTextArea getOutputDialogTextArea() {
         return outputDialogTextArea;
+    }
+
+    public DefaultTableModel getLocalStatisticsTable() {
+        return localStatisticsTable;
+    }
+
+    public DefaultTableModel getNetworkStatisticsTable() {
+        return networkStatisticsTable;
+    }
+
+    public DefaultTableModel getModulesStatisticsTable() {
+        return modulesStatisticsTable;
+    }
+
+    public DefaultTableModel getMessagesStatisticsTable() {
+        return messagesStatisticsTable;
+    }
+
+    public JTable getEnvironmentTable() {
+        return environmentTable;
+    }
+
+    public void setMessagesStatisticsTable(DefaultTableModel messagesStatisticsTable) {
+        this.messagesStatisticsTable = messagesStatisticsTable;
+    }
+
+    public void setModulesStatisticsTable(DefaultTableModel modulesStatisticsTable) {
+        this.modulesStatisticsTable = modulesStatisticsTable;
+    }
+
+    public void setNetworkStatisticsTable(DefaultTableModel networkStatisticsTable) {
+        this.networkStatisticsTable = networkStatisticsTable;
+    }
+
+    public void setLocalStatisticsTable(DefaultTableModel localStatisticsTable) {
+        this.localStatisticsTable = localStatisticsTable;
     }
 }

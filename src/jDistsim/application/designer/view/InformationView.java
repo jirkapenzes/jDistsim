@@ -36,7 +36,7 @@ public class InformationView extends AbstractView<InformationPanel> {
     @Override
     protected InformationPanel layout() {
         InformationModel model = getMainFrame().getModel(InformationModel.class);
-        informationPanel = new InformationPanel(model.getOutputPanelTextArea(), model.getEntitiesInfoTable(), model.getRemoteModelsTable());
+        informationPanel = new InformationPanel(model.getOutputPanelTextArea(), model.getEntitiesInfoTable(), model.getRemoteModelsTable(), model.getEnvironmentTable());
         return informationPanel;
     }
 
