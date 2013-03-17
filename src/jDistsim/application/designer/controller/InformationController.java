@@ -45,4 +45,20 @@ public class InformationController extends AbstractController<InformationModel> 
     public Writer makeSimulatorWriter() {
         return outputTabLogic;
     }
+
+    public LogTabListener getLogTabLogic() {
+        return logTabLogic;
+    }
+
+    public OutputTabLogic getOutputTabLogic() {
+        return outputTabLogic;
+    }
+
+    public EntitiesInfoTabLogic getEntitiesInfoTabLogic() {
+        return entitiesInfoTabLogic;
+    }
+
+    public RemoteModelsTabLogic getRemoteModelsTabLogic() {
+        return remoteModelsTabLogic;
+    }
 }
