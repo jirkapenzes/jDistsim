@@ -57,4 +57,18 @@ public class Calendar<TEvent extends ScheduleEvent> implements Iterable<TEvent> 
     public void remove(TEvent event) {
         queue.remove(event);
     }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (TEvent event : queue) {
+            String tmp = event.getEventContainer().getModule().getIdentifier().toUpperCase().substring(0, 1) + ": " + event.getTime();
+            result += tmp + " ";
+        }
+        return result;
+    }
+
+    public void clear() {
+        queue.clear();
+    }
 }
