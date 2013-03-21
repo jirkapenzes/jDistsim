@@ -57,6 +57,10 @@ public class Communication {
         }
     }
 
+    public LocalNetworkSettings getNetworkSettings() {
+        return networkSettings;
+    }
+
     public void stop() {
 
     }
