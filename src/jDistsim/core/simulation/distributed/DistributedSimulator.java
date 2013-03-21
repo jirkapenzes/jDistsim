@@ -14,12 +14,15 @@ import jDistsim.core.simulation.simulator.BaseSimulator;
 import jDistsim.core.simulation.simulator.ISimulationModel;
 import jDistsim.core.simulation.simulator.SimulatorOutput;
 import jDistsim.core.simulation.simulator.entity.Entity;
+import jDistsim.core.simulation.simulator.event.ScheduleEvent;
 import jDistsim.utils.common.Counter;
 import jDistsim.utils.common.ThreadWaiter;
 import jDistsim.utils.logging.Logger;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -37,6 +40,7 @@ public class DistributedSimulator extends BaseSimulator {
     private double minimalLookahead = 0;
     private LocalNetworkSettings networkSettings;
     private boolean ready = false;
+    private double safeTime;
 
     public DistributedSimulator(ISimulationModelValidator modelValidator, LocalNetworkSettings networkSettings) {
         super(modelValidator);
@@ -93,14 +97,22 @@ public class DistributedSimulator extends BaseSimulator {
                 throw new CommunicationException();
 
             ModelContainer container = models.get(modelName);
-            container.getCounter().decrement();
 
+            if (module instanceof NullModule) {
+                NullModule nullModule = (NullModule) module;
+                container.getNullModulles().remove(nullModule);
+                if (!nullModule.isActual())
+                    return;
+            }
+
+            container.getCounter().decrement();
             if (container.getModelDefinition().isLookahead()) {
                 if (container.getCounter().getCurrentValue() == 0) {
                     checkLookahead(container);
                 }
             }
             checkExecuteCondition();
+            getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "-> counter: " + container.getCounter().getCurrentValue());
         }
     }
 
@@ -117,20 +129,31 @@ public class DistributedSimulator extends BaseSimulator {
     private void checkLookahead(ModelContainer modelContainer) {
         try {
             synchronized (lock) {
+                int numberOfNullModules = getNumberOfNullModules();
+                if (numberOfNullModules == calendar.size()) {
+                    calendar.clear();
+                    return;
+                }
                 getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Send lookahead");
-                double lookahead = modelContainer.getRemote().getLookahead(getLocalTime());
+                double lookahead = modelContainer.getRemote().getLookahead(getLocalTime(), communication.getNetworkSettings().getModelName());
                 if (lookahead == 0) {
                     Logger.log("Get 0.0 time in lookahead and wait for new attempt [1]");
                     ThreadWaiter.waitCurrentThreadFor(1000);
-                    lookahead = modelContainer.getRemote().getLookahead(getLocalTime());
+                    lookahead = modelContainer.getRemote().getLookahead(getLocalTime(), communication.getNetworkSettings().getModelName());
                 }
                 if (lookahead != 0) {
-                    getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Plan null module");
-                    plan(getLocalTime() + lookahead, new NullModule(modelContainer.getModelDefinition()), null);
+                    getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Plan null module on time " + (getLocalTime() + lookahead));
+                    NullModule module = new NullModule(modelContainer.getModelDefinition());
+                    plan(getLocalTime() + lookahead, module, null);
+                    modelContainer.getNullModulles().add(module);
                     modelContainer.getCounter().increment();
                 } else {
                     getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Get " + lookahead + " and not plan");
                 }
+                if (safeTime == -1)
+                    safeTime = getLocalTime() + lookahead;
+                else
+                    safeTime = Math.min(safeTime, getLocalTime() + lookahead);
             }
         } catch (RemoteException e) {
             Logger.log(e);
@@ -140,15 +163,30 @@ public class DistributedSimulator extends BaseSimulator {
         }
     }
 
+    private void removeAllNullMessages(String modelName) {
+        synchronized (lock) {
+            getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Remove all null modules from " + modelName);
+            ModelContainer container = models.get(modelName);
+
+            for (NullModule nullModule : container.getNullModulles()) {
+                nullModule.setActual(false);
+                container.getCounter().decrement();
+            }
+            container.getNullModulles().clear();
+        }
+    }
+
     @Override
     protected boolean canExecute() {
-        return isDistributed ? executeCondition : true;
+        return isDistributed ? executeCondition || calendar.peek().getTime() <= safeTime : true;
     }
 
     @Override
     protected void prepare(ISimulationModel simulationModel) {
         try {
             isDistributed = isDistributed(simulationModel);
+            safeTime = -1;
+
             if (isDistributed) {
                 getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Simulation model is distributed");
             } else {
@@ -197,6 +235,11 @@ public class DistributedSimulator extends BaseSimulator {
     }
 
     @Override
+    protected void fillEnvironment() {
+        getEnvironment().setSimulatorAtt("safe-time", safeTime);
+    }
+
+    @Override
     protected void initializeSimulator(ISimulationModel simulationModel) {
         super.initializeSimulator(simulationModel);
         if (!isDistributed) return;
@@ -234,16 +277,23 @@ public class DistributedSimulator extends BaseSimulator {
         models.get(modelName).getCounter().increment();
         receiveModule.setDistributedModelDefinition(models.get(modelName).getModelDefinition());
         getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Descriptor -> " + entity.getIdentifier() + " at time " + time);
+        removeAllNullMessages(modelName);
         plan(time, receiveModule, entity);
         checkExecuteCondition();
     }
 
-    public double getLookahead(double requesterTime) {
+    public double getLookahead(double requesterTime, String requester) {
         Logger.log("State: calendar -> " + calendar.size() + "; minimal lookahead: " + minimalLookahead);
         if (calendar.isEmpty())
             return minimalLookahead;
 
-        double dif = getLocalTime() - requesterTime;
+        double immediateTime = calendar.peek().getTime();
+        double dif = immediateTime - requesterTime + minimalLookahead;
+
+        if (dif == 0) {
+            //if (models.get(requester).getCounter().getCurrentValue() > 0)
+            //dif = minimalLookahead;
+        }
         return dif > 0 ? dif : 0;
     }
 
@@ -260,14 +310,25 @@ public class DistributedSimulator extends BaseSimulator {
         return ready;
     }
 
+    public int getNumberOfNullModules() {
+        int count = 0;
+        for (ScheduleEvent scheduleEvent : calendar) {
+            if (scheduleEvent.getEventContainer().getModule() instanceof NullModule)
+                count++;
+        }
+        return count;
+    }
+
     private class ModelContainer {
         private Counter counter;
         private DistributedModelDefinition modelDefinition;
         private IRemote remote;
+        private List nullModulles;
 
         private ModelContainer(DistributedModelDefinition modelDefinition) {
             this.counter = new Counter();
             this.modelDefinition = modelDefinition;
+            this.nullModulles = new ArrayList<>();
         }
 
         public Counter getCounter() {
@@ -289,6 +350,10 @@ public class DistributedSimulator extends BaseSimulator {
         @Override
         public String toString() {
             return modelDefinition.getRmiModelName();
+        }
+
+        public List<NullModule> getNullModulles() {
+            return nullModulles;
         }
     }
 }
