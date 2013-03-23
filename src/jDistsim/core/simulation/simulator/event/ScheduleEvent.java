@@ -1,6 +1,7 @@
 package jDistsim.core.simulation.simulator.event;
 
 import jDistsim.core.simulation.distributed.DistributedModule;
+import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.lib.NullModule;
 
 /**
@@ -10,12 +11,25 @@ import jDistsim.core.simulation.modules.lib.NullModule;
  */
 public class ScheduleEvent implements Comparable<ScheduleEvent> {
 
+    private enum Priority {
+        Low, Normal, High
+    }
+
     private final double time;
     private final EventContainer eventContainer;
+    private Priority priority;
 
     public ScheduleEvent(double time, EventContainer eventContainer) {
         this.time = time;
         this.eventContainer = eventContainer;
+        this.priority = makePriority();
+    }
+
+    private Priority makePriority() {
+        Module module = eventContainer.getModule();
+        if (module instanceof NullModule) return Priority.Low;
+        if (module instanceof DistributedModule) return Priority.Normal;
+        return Priority.High;
     }
 
     public double getTime() {
@@ -31,10 +45,7 @@ public class ScheduleEvent implements Comparable<ScheduleEvent> {
         Double timeA = new Double(getTime());
         Double timeB = new Double(scheduleModule.getTime());
         if (timeA.compareTo(timeB) == 0) {
-            if (scheduleModule.getEventContainer().getModule() instanceof NullModule ||
-                    scheduleModule.getEventContainer().getModule() instanceof DistributedModule) {
-                return -1;
-            }
+            return -1 * priority.compareTo(scheduleModule.priority);
         }
         return new Double(getTime()).compareTo(scheduleModule.getTime());
     }
