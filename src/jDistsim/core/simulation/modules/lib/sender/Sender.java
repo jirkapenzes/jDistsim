@@ -19,7 +19,6 @@ import jDistsim.ui.module.ModuleView;
  */
 public class Sender extends DistributedSenderModule {
 
-
     public Sender(ModuleView view, ModuleConfiguration moduleConfiguration) {
         super(view, moduleConfiguration);
     }
@@ -42,7 +41,7 @@ public class Sender extends DistributedSenderModule {
             remote.process(simulator.getLocalTime(), entity, simulator.getNetwork().getModelName());
         } catch (Exception exception) {
             simulator.getOutput().sendToOutput(SimulatorOutput.MessageType.Error, "Error sending");
-            throw new DistributedException();
+            throw new DistributedException(exception.getMessage());
         }
     }
 
