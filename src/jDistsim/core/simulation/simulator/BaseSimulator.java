@@ -1,19 +1,22 @@
 package jDistsim.core.simulation.simulator;
 
-import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.RootModule;
 import jDistsim.core.simulation.animation.ISimulationAnimator;
-import jDistsim.core.simulation.model.ISimulationModelValidator;
-import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.core.simulation.simulator.event.Calendar;
-import jDistsim.core.simulation.simulator.event.EventContainer;
-import jDistsim.core.simulation.simulator.event.ScheduleEvent;
+import jDistsim.core.simulation.distributed.NullModuleSender;
 import jDistsim.core.simulation.exception.EventNotFoundException;
 import jDistsim.core.simulation.exception.ModelNotValidException;
 import jDistsim.core.simulation.exception.SimulatorCoreException;
 import jDistsim.core.simulation.exception.TimeNotSynchronizedException;
+import jDistsim.core.simulation.model.ISimulationModelValidator;
+import jDistsim.core.simulation.modules.Module;
+import jDistsim.core.simulation.modules.RootModule;
+import jDistsim.core.simulation.simulator.entity.Entity;
+import jDistsim.core.simulation.simulator.event.Calendar;
+import jDistsim.core.simulation.simulator.event.EventContainer;
+import jDistsim.core.simulation.simulator.event.ScheduleEvent;
 import jDistsim.core.simulation.validator.ValidatorException;
 import jDistsim.core.simulation.validator.ValidatorResult;
+import jDistsim.utils.common.ThreadWaiter;
+import jDistsim.utils.logging.Logger;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,7 +28,7 @@ import java.util.Date;
  */
 public abstract class BaseSimulator implements ISimulator, Serializable {
 
-    protected Calendar<ScheduleEvent> calendar;
+    protected Calendar calendar;
     private double localTime;
     private boolean run;
     private SimulatorEnvironment environment;
@@ -55,7 +58,7 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
 
         environment = new SimulatorEnvironment();
         output = new SimulatorOutput();
-        calendar = new Calendar<>();
+        calendar = new Calendar();
         run = false;
     }
 
@@ -81,6 +84,7 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
 
     @Override
     public void plan(double time, Module module, Entity entity) {
+        Logger.log(time + "<" + localTime);
         if (time < localTime)
             throw new TimeNotSynchronizedException(time, localTime);
 
@@ -111,25 +115,32 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
             output.sendToOutput(SimulatorOutput.MessageType.Standard, "Start simulation");
             run = true;
             while (run && !endCondition.occurred(environment)) {
-                while (calendar.isEmpty() || !canExecute()) ;
+                while (calendar.isEmpty() || !canExecute()) {
+                    ThreadWaiter.waitCurrentThreadFor(20);
+                }
                 if (!run) break;
 
                 ScheduleEvent scheduleEvent = calendar.peek();
                 if (scheduleEvent == null)
                     throw new EventNotFoundException();
 
-                localTime = scheduleEvent.getTime();
-
                 Module module = scheduleEvent.getEventContainer().getModule();
                 Entity entity = scheduleEvent.getEventContainer().getEntity();
+
+                if (module instanceof NullModuleSender) {
+                    int i = 1;
+                }
 
                 drawCurrentPrecessInfo(module, entity);
                 setEntityState(entity, module);
 
                 classification(module);
                 animate(entity);
-                module.execute(this, entity);
 
+                synchronized (lock) {
+                    localTime = scheduleEvent.getTime();
+                    module.execute(this, entity);
+                }
                 calendar.remove(scheduleEvent);
                 updateEnvironment();
             }
@@ -169,11 +180,16 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
         String entityName = "";
         if (entity != null)
             entityName = " {entity: " + entity.getShortIdentifier() + "}";
-        output.sendToOutput(SimulatorOutput.MessageType.Standard, "Local time: " + getLocalTime() + " Process module " + module.getIdentifier() + entityName);
+        output.sendToOutput(SimulatorOutput.MessageType.Standard, "Local time: " + getLocalTime() + " Process module " + module.getIdentifier() + entityName + "; " + calendar);
     }
 
+    protected abstract void fillEnvironment();
+
     private void updateEnvironment() {
-        environment.setLocalTime(getLocalTime());
+        fillEnvironment();
+
+        getEnvironment().setSimulatorAtt("local-time", getLocalTime());
+        getEnvironment().notifyObservers();
     }
 
     private void showSimulatorInfo() {
@@ -234,4 +250,6 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
         entity.getAttributes().put("currentModule", module.getIdentifier());
         // output.sendToOutput(entity.getAttributes().get("previousModule").getValue() + " -> " + entity.getAttributes().get("currentModule").getValue());
     }
+
+
 }
