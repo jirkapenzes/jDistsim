@@ -4,7 +4,6 @@ import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -15,8 +14,8 @@ public abstract class DistributedModule extends Module {
 
     private DistributedModelDefinition distributedModelDefinition;
 
-    public DistributedModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public DistributedModule(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     @Override

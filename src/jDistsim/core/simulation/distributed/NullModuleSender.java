@@ -17,7 +17,7 @@ public class NullModuleSender extends DistributedModule {
     protected DistributedModelDefinition distributedModelDefinition;
 
     public NullModuleSender(DistributedModelDefinition modelDefinition) {
-        super(null, new ModuleConfiguration("null_module_sender", null));
+        super(new ModuleConfiguration("null_module_sender", null));
         this.distributedModelDefinition = modelDefinition;
     }
 

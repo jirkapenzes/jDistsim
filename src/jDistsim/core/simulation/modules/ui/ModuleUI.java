@@ -2,11 +2,11 @@ package jDistsim.core.simulation.modules.ui;
 
 
 import jDistsim.application.designer.common.UIConfiguration;
+import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.ui.module.ColorScheme;
-import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.pattern.observer.IObservable;
 import jDistsim.utils.pattern.observer.IObserver;
 import jDistsim.utils.pattern.observer.Observable;
@@ -27,10 +27,12 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
     private Observable observable;
     private boolean active;
     private Module module;
+    private IModuleView view;
     private final List<ModuleConnectedPointUI> connectedPoints;
 
-    public ModuleUI(Module module) {
+    public ModuleUI(Module module, IModuleView view) {
         this.module = module;
+        this.view = view;
         this.connectedPoints = new ArrayList<>();
         this.observable = new Observable();
         module.addObserver(this);
@@ -44,9 +46,7 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
     private void initializeUI() {
         setSize(80, 50);
 
-        ModuleView view = module.getView();
         view.invalidateConnectedPoints(80, 50);
-
         for (int index = 0; index < module.getInputConnectedPoints().size(); index++) {
             ModuleConnectedPoint connectedPoint = module.getInputConnectedPoints().get(index);
             connectedPoints.add(new ModuleConnectedPointUI(connectedPoint, ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index), this));
@@ -107,7 +107,7 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
-        module.getView().draw(graphics2D, getWidth(), getHeight());
+        view.draw(graphics2D, getWidth(), getHeight());
 
         if (active) {
             graphics2D.setColor(new Color(160, 160, 160));
@@ -146,12 +146,12 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
     }
 
     public void setActiveBackgroundColor() {
-        module.getView().setColorScheme(UIConfiguration.getInstance().getColorSchemeForActiveModule());
+        view.setColorScheme(UIConfiguration.getInstance().getColorSchemeForActiveModule());
         repaint();
     }
 
     public void setDefaultBackgroundColor() {
-        module.getView().setDefaultColorScheme();
+        view.setDefaultColorScheme();
         repaint();
     }
 
@@ -165,7 +165,7 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
 
     @Override
     public boolean contains(int x, int y) {
-        return module.getView().getBounds(getWidth(), getHeight()).contains(x, y);
+        return view.getBounds(getWidth(), getHeight()).contains(x, y);
     }
 
     public ArrayList<ModuleConnectedPointUI> getModuleConnectedPointsForConnectWith(ModuleUI moduleUI) {
@@ -187,12 +187,12 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
     }
 
     public void setColorScheme(ColorScheme colorScheme) {
-        module.getView().setColorScheme(colorScheme);
+        view.setColorScheme(colorScheme);
         repaint();
     }
 
     public void setDefaultColorScheme() {
-        module.getView().setDefaultColorScheme();
+        view.setDefaultColorScheme();
         repaint();
     }
 

@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.modules.lib.assign;
 
+import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
 import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
@@ -10,11 +11,17 @@ import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
  * Time: 13:39
  */
 public class AssignFactory extends BaseModuleFactory {
+
     @Override
     public Module create() {
-        Module module = new Assign(new AssignView(moduleConfiguration.getColorScheme()), moduleConfiguration);
+        Module module = new Assign(moduleConfiguration);
         module.addOutputPoint(new ModuleConnectedPoint(1));
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
+    }
+
+    @Override
+    public IModuleView createView() {
+        return new AssignView(moduleConfiguration.getColorScheme());
     }
 }

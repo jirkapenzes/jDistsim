@@ -26,8 +26,8 @@ public class Create extends RootModule  {
     private Counter entityCounter;
     private Random random;
 
-    public Create(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public Create(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     @Override

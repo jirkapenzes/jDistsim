@@ -2,7 +2,6 @@ package jDistsim.core.simulation.modules;
 
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -23,8 +22,8 @@ public abstract class RootModule extends Module {
     protected double maxArrivals;
     protected String iconName;
 
-    public RootModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public RootModule(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
         createdModule = true;
     }
 

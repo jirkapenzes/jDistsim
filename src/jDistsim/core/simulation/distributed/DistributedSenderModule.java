@@ -1,7 +1,6 @@
 package jDistsim.core.simulation.distributed;
 
 import jDistsim.core.simulation.modules.ModuleConfiguration;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -13,8 +12,8 @@ public abstract class DistributedSenderModule extends DistributedModule {
     protected DistributedModelDefinition distributedModelDefinition;
     protected String distributedEntityKeyName;
 
-    public DistributedSenderModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public DistributedSenderModule(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     public DistributedModelDefinition getDistributedModelDefinition() {

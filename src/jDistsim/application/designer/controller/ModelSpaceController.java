@@ -4,6 +4,7 @@ import jDistsim.application.designer.controller.modelSpaceFeature.*;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.view.ModelSpaceView;
 import jDistsim.core.simulation.modules.IModuleFactory;
+import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ui.ModuleConnectedPointUI;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
@@ -92,8 +93,9 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         try {
             IModuleFactory moduleFactory = (IModuleFactory) transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
             Module module = moduleFactory.create();
+            IModuleView moduleView = moduleFactory.createView();
 
-            ModuleUI currentDragModule = new ModuleUI(module);
+            ModuleUI currentDragModule = new ModuleUI(module, moduleView);
             currentDragModule.setLocation(ModelSpaceHelper.calculateDragLocation(dropTargetDragEvent.getLocation(), currentDragModule.getSize()));
             getModel().setCurrentDragModule(currentDragModule);
 

@@ -16,7 +16,18 @@ public class DistributedModelDefinition extends Observable {
     private boolean lookahead;
     private boolean receive;
 
+    public DistributedModelDefinition() {
+        DistributedModelDefinition defaultValues = createNull();
+        this.modelName = defaultValues.modelName;
+        this.rmiModelName = defaultValues.rmiModelName;
+        this.address = defaultValues.address;
+        this.port = defaultValues.port;
+        this.lookahead = defaultValues.lookahead;
+        this.receive = defaultValues.receive;
+    }
+
     public DistributedModelDefinition(String rmiModelName, String address, int port) {
+        this();
         this.rmiModelName = rmiModelName;
         this.address = address;
         this.port = port;

@@ -1,11 +1,11 @@
 package jDistsim.core.simulation.modules;
 
 import jDistsim.application.designer.common.Application;
+import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperties;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.collection.ReadOnlyList;
 import jDistsim.utils.collection.observable.ObservableList;
 import jDistsim.utils.logging.Logger;
@@ -25,14 +25,16 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
 
     private String identifier;
     protected boolean createdModule = false;
-    private final ModuleView view;
     private final ObservableList<ModuleConnectedPoint> inputConnectedPoints;
     private final ObservableList<ModuleConnectedPoint> outputConnectedPoints;
     private final ModuleProperties properties;
 
-    public Module(ModuleView view, ModuleConfiguration moduleConfiguration) {
+    public Module() {
+        this(new ModuleConfiguration("null", UIConfiguration.getInstance().getColorSchemeForBasicModule()));
+    }
+
+    public Module(ModuleConfiguration moduleConfiguration) {
         this.identifier = moduleConfiguration.getBaseIdentifier();
-        this.view = view;
         this.properties = new ModuleProperties();
 
         inputConnectedPoints = new ObservableList<>(this);
@@ -88,10 +90,6 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
 
     public String getLongIdentifier() {
         return Application.global().getModelName() + "." + getIdentifier();
-    }
-
-    public ModuleView getView() {
-        return view;
     }
 
     public ModuleProperties getProperties() {

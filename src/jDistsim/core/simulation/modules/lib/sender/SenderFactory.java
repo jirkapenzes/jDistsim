@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.modules.lib.sender;
 
+import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
 import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
@@ -13,8 +14,13 @@ public class SenderFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Sender(new SenderView(moduleConfiguration.getColorScheme()), moduleConfiguration);
+        Module module = new Sender(moduleConfiguration);
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
+    }
+
+    @Override
+    public IModuleView createView() {
+        return new SenderView(moduleConfiguration.getColorScheme());
     }
 }

@@ -9,6 +9,8 @@ public interface IModuleFactory {
 
     public Module create();
 
+    public IModuleView createView();
+
     public String createIdentifier();
 
     void setModuleConfiguration(ModuleConfiguration moduleConfiguration);

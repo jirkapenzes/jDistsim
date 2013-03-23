@@ -7,7 +7,6 @@ import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -16,8 +15,8 @@ import jDistsim.ui.module.ModuleView;
  */
 public class Receiver extends DistributedReceiveModule {
 
-    public Receiver(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public Receiver(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
         createdModule = true;
     }
 

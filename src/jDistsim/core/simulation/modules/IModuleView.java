@@ -23,5 +23,11 @@ public interface IModuleView {
 
     List<Point> getOutputPoints();
 
+    void setDefaultColorScheme();
+
     void setDefaultColorScheme(ColorScheme defaultColorScheme);
+
+    void invalidateConnectedPoints(int width, int height);
+
+    void setColorScheme(ColorScheme colorScheme);
 }

@@ -6,7 +6,6 @@ import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -17,8 +16,8 @@ public class Delay extends Module implements ITimeAffectModule {
 
     private int delayTime;
 
-    public Delay(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public Delay(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     @Override

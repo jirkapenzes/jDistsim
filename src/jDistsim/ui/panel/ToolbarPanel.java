@@ -22,6 +22,8 @@ public class ToolbarPanel extends ListenerablePanel<ToolbarListener> {
 
     private Component relationsButton;
 
+    private ImageButton modelSaveButton;
+    private ImageButton modelLoadButton;
     private ImageButton simulationStartButton;
     private ImageButton simulationStopButton;
 
@@ -56,9 +58,18 @@ public class ToolbarPanel extends ListenerablePanel<ToolbarListener> {
             }
         });
 
+        modelSaveButton = new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), hoverStyle, iconDimension, padding);
+        modelSaveButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                Logger.log("Pressed the save mode button on toolbar");
+                getListener().onModelSaveButtonClick(mouseEvent, modelSaveButton);
+            }
+        });
+
         add(new ImageButton(Resources.getImage("system/toolbar-icon-new.png"), hoverStyle, new Dimension(16, 16), padding));
         add(new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), hoverStyle, iconDimension, padding));
-        add(new ImageButton(Resources.getImage("system/toolbar-icon-save-as.png"), hoverStyle, iconDimension, padding));
+        add(modelSaveButton);
         add(new MenuSeparator());
         relationsButton = add(new ImageButton(Resources.getImage("system/toolbar-icon-relationship.png"), hoverStyle, iconDimension, padding, true));
         add(new ImageButton(Resources.getImage("system/zajimave/application-network.png"), hoverStyle, iconDimension, padding, true));

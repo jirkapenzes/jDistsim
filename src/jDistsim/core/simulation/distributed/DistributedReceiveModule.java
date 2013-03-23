@@ -2,7 +2,6 @@ package jDistsim.core.simulation.distributed;
 
 import jDistsim.core.simulation.exception.DistributedException;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
-import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.logging.Logger;
 
 /**
@@ -14,8 +13,8 @@ public abstract class DistributedReceiveModule extends DistributedModule {
 
     protected String authorizedEntityName;
 
-    public DistributedReceiveModule(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public DistributedReceiveModule(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     public String getAuthorizedEntityName() {

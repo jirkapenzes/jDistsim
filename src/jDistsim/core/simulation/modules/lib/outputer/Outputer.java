@@ -4,7 +4,6 @@ import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -13,8 +12,8 @@ import jDistsim.ui.module.ModuleView;
  */
 public class Outputer extends Module {
 
-    public Outputer(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public Outputer(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     @Override

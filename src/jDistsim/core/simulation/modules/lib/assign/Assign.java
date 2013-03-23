@@ -7,7 +7,6 @@ import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.AttributeCollection;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -18,8 +17,8 @@ public class Assign extends Module {
 
     private AttributeCollection attributes;
 
-    public Assign(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public Assign(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     @Override

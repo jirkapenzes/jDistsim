@@ -10,7 +10,6 @@ import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.SimulatorOutput;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 
 /**
  * Author: Jirka Pénzeš
@@ -19,8 +18,8 @@ import jDistsim.ui.module.ModuleView;
  */
 public class Sender extends DistributedSenderModule {
 
-    public Sender(ModuleView view, ModuleConfiguration moduleConfiguration) {
-        super(view, moduleConfiguration);
+    public Sender(ModuleConfiguration moduleConfiguration) {
+        super(moduleConfiguration);
     }
 
     @Override
