@@ -37,7 +37,7 @@ public class SimulationModel implements ISimulationModel {
             }
             if (module instanceof DistributedReceiveModule) {
                 DistributedReceiveModule distributedReceiveModule = (DistributedReceiveModule) module;
-                receiveModules.put(distributedReceiveModule.getAuthorizedEntityName(), distributedReceiveModule);
+                receiveModules.put(distributedReceiveModule.getSettings().getAuthorizedEntityName(), distributedReceiveModule);
             }
             this.modules.put(module.getIdentifier(), module);
         }

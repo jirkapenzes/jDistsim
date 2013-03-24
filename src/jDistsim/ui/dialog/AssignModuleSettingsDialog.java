@@ -40,7 +40,7 @@ public class AssignModuleSettingsDialog extends BaseModuleSettingsDialog<Assign>
 
     @Override
     protected void initializeUI() {
-        for (Attribute attribute : module.getAttributes()) {
+        for (Attribute attribute : module.getSettings().getAttributes()) {
             attributes.set(attribute);
         }
         rebuildTable();
@@ -215,9 +215,9 @@ public class AssignModuleSettingsDialog extends BaseModuleSettingsDialog<Assign>
 
     @Override
     protected boolean doLogic() {
-        module.getAttributes().clear();
+        module.getSettings().getAttributes().clear();
         for (Attribute attribute : attributes)
-            module.getAttributes().set(attribute);
+            module.getSettings().getAttributes().set(attribute);
 
         return true;
     }

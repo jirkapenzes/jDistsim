@@ -21,7 +21,7 @@ public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
 
     @Override
     protected void initializeUI() {
-        delayTimeTextField.setText(String.valueOf(module.getDelayTime()));
+        delayTimeTextField.setText(String.valueOf(module.getSettings().getDelayTime()));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DelayModuleSettingsDialog extends BaseModuleSettingsDialog<Delay> {
         try {
             TypeInputValidator validator = new TypeInputValidator();
             int delayTime = validator.validateInteger(delayTimeTextField.getText(), "Delay time");
-            module.setDelayTime(delayTime);
+            module.getSettings().setDelayTime(delayTime);
             return true;
         } catch (Exception exception) {
             return false;

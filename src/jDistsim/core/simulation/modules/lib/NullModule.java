@@ -2,8 +2,8 @@ package jDistsim.core.simulation.modules.lib;
 
 import jDistsim.core.simulation.distributed.DistributedModelDefinition;
 import jDistsim.core.simulation.distributed.DistributedModule;
+import jDistsim.core.simulation.distributed.DistributedModuleSettings;
 import jDistsim.core.simulation.distributed.DistributedSimulator;
-import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
 
@@ -12,17 +12,13 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  * Date: 9.3.13
  * Time: 0:29
  */
-public class NullModule extends DistributedModule {
+public class NullModule extends DistributedModule<DistributedModuleSettings> {
 
     private boolean actual = true;
 
-    public NullModule() {
-        this(null);
-    }
-
     public NullModule(DistributedModelDefinition modelDefinition) {
-        super(new ModuleConfiguration("null_module", null));
-        setDistributedModelDefinition(modelDefinition);
+        super(new DistributedModuleSettings("null_module"));
+        settings.setDistributedModelDefinition(modelDefinition);
     }
 
     public boolean isActual() {

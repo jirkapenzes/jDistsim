@@ -54,7 +54,7 @@ public class DistributedSimulator extends BaseSimulator {
                 DistributedSenderModule distributedSenderModule = (DistributedSenderModule) module;
 
                 // TODO spíš použít long identifier pro distribuovaný modul
-                models.put(distributedSenderModule.getDistributedModelDefinition().getRmiModelName(), new ModelContainer(distributedSenderModule.getDistributedModelDefinition()));
+                models.put(distributedSenderModule.getSettings().getDistributedModelDefinition().getRmiModelName(), new ModelContainer(distributedSenderModule.getSettings().getDistributedModelDefinition()));
             }
 
             // calculate minimal minimalLookahead time
@@ -88,8 +88,8 @@ public class DistributedSimulator extends BaseSimulator {
     @Override
     protected void classification(Module module) {
         if (module instanceof DistributedReceiveModule || module instanceof NullModule) {
-            DistributedModule distributedModule = (DistributedModule) module;
-            String modelName = distributedModule.getDistributedModelDefinition().getRmiModelName();
+            DistributedModule<DistributedModuleSettings> distributedModule = (DistributedModule) module;
+            String modelName = distributedModule.getSettings().getDistributedModelDefinition().getRmiModelName();
 
             if (!models.containsKey(modelName))
                 throw new CommunicationException();
@@ -159,7 +159,7 @@ public class DistributedSimulator extends BaseSimulator {
             for (Module module : simulationModel.getModules()) {
                 if (module instanceof DistributedReceiveModule) {
                     DistributedReceiveModule receiveModule = (DistributedReceiveModule) module;
-                    receiverModules.put(receiveModule.getAuthorizedEntityName(), receiveModule);
+                    receiverModules.put(receiveModule.getSettings().getAuthorizedEntityName(), receiveModule);
                 }
             }
 
@@ -235,7 +235,7 @@ public class DistributedSimulator extends BaseSimulator {
         }
         DistributedReceiveModule receiveModule = receiverModules.get(authorizedEntityName).clone();
         models.get(modelName).getCounter().increment();
-        receiveModule.setDistributedModelDefinition(models.get(modelName).getModelDefinition());
+        receiveModule.getSettings().setDistributedModelDefinition(models.get(modelName).getModelDefinition());
         getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Descriptor -> " + entity.getIdentifier() + " at time " + time);
         // removeAllNullMessages(modelName);
         plan(time, receiveModule, entity);

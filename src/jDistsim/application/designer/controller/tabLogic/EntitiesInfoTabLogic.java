@@ -70,21 +70,21 @@ public class EntitiesInfoTabLogic implements IObserver {
 
     private Vector<String> makeEntityRow(RootModule rootModule) {
         Vector<String> row = new Vector<>();
-        row.addElement(rootModule.getBaseEntityName());
+        row.addElement(rootModule.getSettings().getBaseEntityName());
         row.addElement(rootModule.getIdentifier());
         row.addElement(Application.global().getModelName());
         row.addElement("false");
-        row.addElement(String.valueOf(rootModule.getEntityPerInterval()));
-        row.addElement(String.valueOf(rootModule.getFirsCreation()));
-        row.addElement(String.valueOf(rootModule.getMaxArrivals()));
-        row.addElement(rootModule.getArrivalsType() + "(" + rootModule.getArrivalsTypeValue() + ")");
-        row.addElement(rootModule.getIconName());
+        row.addElement(String.valueOf(rootModule.getSettings().getEntityPerInterval()));
+        row.addElement(String.valueOf(rootModule.getSettings().getFirsCreation()));
+        row.addElement(String.valueOf(rootModule.getSettings().getMaxArrivals()));
+        row.addElement(rootModule.getSettings().getArrivalsType() + "(" + rootModule.getSettings().getArrivalsTypeValue() + ")");
+        row.addElement(rootModule.getSettings().getIconName());
         return row;
     }
 
     private Vector<String> makeDistributedEntityRow(DistributedReceiveModule distributedReceiveModule) {
         Vector<String> row = new Vector<>();
-        row.addElement(distributedReceiveModule.getAuthorizedEntityName());
+        row.addElement(distributedReceiveModule.getSettings().getAuthorizedEntityName());
         row.addElement(distributedReceiveModule.getIdentifier());
         row.addElement("-");
         row.addElement("true");

@@ -2,15 +2,14 @@ package jDistsim.core.simulation.modules.lib.create;
 
 import jDistsim.core.simulation.exception.EntityNotCreatedException;
 import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.RootModule;
+import jDistsim.core.simulation.modules.RootSettings;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.SimulatorOutput;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.AttributeCollection;
 import jDistsim.core.simulation.simulator.entity.Entity;
-import jDistsim.ui.module.ModuleView;
 import jDistsim.utils.common.Counter;
 
 import java.util.Random;
@@ -20,31 +19,31 @@ import java.util.Random;
  * Date: 21.2.13
  * Time: 22:36
  */
-public class Create extends RootModule  {
+public class Create extends RootModule {
 
     private AttributeCollection initialEntityAttributes;
     private Counter entityCounter;
     private Random random;
 
-    public Create(ModuleConfiguration moduleConfiguration) {
-        super(moduleConfiguration);
+    public Create(RootSettings rootSettings) {
+        super(rootSettings);
     }
 
     @Override
     protected void initializeDefaultValues() {
         entityCounter = new Counter();
         random = new Random(0);
-        baseEntityName = "entity_" + entityCounter.nextValue();
-        arrivalsType = TimeBetweenArrivalsType.Constant;
-        arrivalsTypeValue = 1;
-        maxArrivals = Double.POSITIVE_INFINITY;
-        entityPerInterval = 1;
-        iconName = "box";
-        setFirsCreation(0.0);
+        settings.setBaseEntityName("entity_" + entityCounter.nextValue());
+        settings.setArrivalsType(RootSettings.TimeBetweenArrivalsType.Constant);
+        settings.setArrivalsTypeValue(1);
+        settings.setMaxArrivals(Double.POSITIVE_INFINITY);
+        settings.setEntityPerInterval(1);
+        settings.setIconName("box");
+        settings.setFirsCreation(0.0);
 
         initialEntityAttributes = new AttributeCollection();
         initialEntityAttributes.put("creator", getLongIdentifier());
-        initialEntityAttributes.put("iconName", iconName);
+        initialEntityAttributes.put("iconName", settings.getIconName());
     }
 
     @Override
@@ -54,23 +53,23 @@ public class Create extends RootModule  {
 
     @Override
     protected void setChildProperty() {
-        getProperties().set(new ModuleProperty("baseEntityName", getBaseEntityName(), "entity name"));
-        getProperties().set(new ModuleProperty("arrivalsType", getArrivalsType() + "(" + getArrivalsTypeValue() + ")", "arrivals type"));
-        getProperties().set(new ModuleProperty("maxArrivals", getMaxArrivals(), "max arrivals"));
-        getProperties().set(new ModuleProperty("entityPerInterval", getEntityPerInterval(), "per interval"));
-        getProperties().set(new ModuleProperty("iconName", getIconName(), "entity icon"));
-        getProperties().set(new ModuleProperty("firstCreation", getFirsCreation(), "first creation"));
+        getProperties().set(new ModuleProperty("baseEntityName", settings.getBaseEntityName(), "entity name"));
+        getProperties().set(new ModuleProperty("arrivalsType", settings.getArrivalsType() + "(" + settings.getArrivalsTypeValue() + ")", "arrivals type"));
+        getProperties().set(new ModuleProperty("maxArrivals", settings.getMaxArrivals(), "max arrivals"));
+        getProperties().set(new ModuleProperty("entityPerInterval", settings.getEntityPerInterval(), "per interval"));
+        getProperties().set(new ModuleProperty("iconName", settings.getIconName(), "entity icon"));
+        getProperties().set(new ModuleProperty("firstCreation", settings.getFirsCreation(), "first creation"));
     }
 
     private Entity makeEntity(ISimulator simulator) {
-        String entityName = baseEntityName + entityCounter.nextValue();
-        Entity entity = new Entity(entityName, getIdentifier(), simulator.getEnvironment().getModelName());
+        String entityName = settings.getBaseEntityName() + entityCounter.nextValue();
+        Entity entity = new Entity(entityName, settings.getIdentifier(), simulator.getEnvironment().getModelName());
         for (Attribute attribute : initialEntityAttributes) {
             entity.getAttributes().put(attribute);
         }
-        entity.getAttributes().put("iconName", getIconName());
+        entity.getAttributes().put("iconName", settings.getIconName());
         entity.getAttributes().put("creationTime", String.valueOf(simulator.getLocalTime()));
-        entity.getAttributes().put("currentModule", getIdentifier());
+        entity.getAttributes().put("currentModule", settings.getIdentifier());
         return entity;
     }
 
@@ -79,24 +78,24 @@ public class Create extends RootModule  {
         double currentTime = simulator.getLocalTime();
 
         for (Module module : getAllOutputDependencies()) {
-            for (int index = 0; index < entityPerInterval; index++) {
+            for (int index = 0; index < settings.getEntityPerInterval(); index++) {
                 Entity entity = makeEntity(simulator);
                 simulator.plan(currentTime, module, entity);
             }
         }
 
         try {
-            if (entityCounter.getCurrentValue() >= maxArrivals) {
+            if (entityCounter.getCurrentValue() >= settings.getMaxArrivals()) {
                 simulator.getOutput().sendToOutput(SimulatorOutput.MessageType.Warning, "Entity not created -> max arrivals -> true");
                 return;
             }
-            double timeInterval = arrivalsTypeValue;
-            if (arrivalsType == TimeBetweenArrivalsType.Random_Expo)
-                timeInterval = Math.round((random.nextDouble() * arrivalsTypeValue + 1) * 100) / 100;
+            double timeInterval = settings.getArrivalsTypeValue();
+            if (settings.getArrivalsType() == RootSettings.TimeBetweenArrivalsType.Random_Expo)
+                timeInterval = Math.round((random.nextDouble() * settings.getArrivalsTypeValue() + 1) * 100) / 100;
 
             simulator.plan(currentTime + timeInterval, (Module) clone(), null);
         } catch (CloneNotSupportedException exception) {
-            throw new EntityNotCreatedException(getIdentifier());
+            throw new EntityNotCreatedException(settings.getIdentifier());
         }
     }
 }

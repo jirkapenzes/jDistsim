@@ -1,5 +1,6 @@
 package jDistsim.ui.dialog;
 
+import jDistsim.core.simulation.modules.RootSettings;
 import jDistsim.core.simulation.modules.lib.create.Create;
 import jDistsim.ui.TypeInputValidator;
 import jDistsim.ui.control.button.ImageButton;
@@ -35,12 +36,12 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
 
     @Override
     protected void initializeUI() {
-        entityNameTextField.setText(module.getBaseEntityName());
-        valueTextField.setText(String.valueOf(module.getArrivalsTypeValue()));
-        entitiesPerIntervalTextField.setText(String.valueOf(module.getEntityPerInterval()));
-        maxArrivalsTextField.setText(String.valueOf(module.getMaxArrivals()));
-        firstCreationTextField.setText(String.valueOf(module.getFirsCreation()));
-        currentIcon = module.getIconName();
+        entityNameTextField.setText(module.getSettings().getBaseEntityName());
+        valueTextField.setText(String.valueOf(module.getSettings().getArrivalsTypeValue()));
+        entitiesPerIntervalTextField.setText(String.valueOf(module.getSettings().getEntityPerInterval()));
+        maxArrivalsTextField.setText(String.valueOf(module.getSettings().getMaxArrivals()));
+        firstCreationTextField.setText(String.valueOf(module.getSettings().getFirsCreation()));
+        currentIcon = module.getSettings().getIconName();
         buttons.get(getIconIndex(currentIcon)).setActive(true);
     }
 
@@ -70,7 +71,7 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
         constraints.insets = new Insets(0, 0, 8, 5);
         constraints.gridwidth = 1;
         timeBetweenArrivalsTypeComboBox = new JComboBox(new Object[]{"Constant", "Random (expo)"});
-        if (module.getArrivalsType() == Create.TimeBetweenArrivalsType.Constant)
+        if (module.getSettings().getArrivalsType() == RootSettings.TimeBetweenArrivalsType.Constant)
             timeBetweenArrivalsTypeComboBox.setSelectedIndex(0);
         else
             timeBetweenArrivalsTypeComboBox.setSelectedIndex(1);
@@ -105,18 +106,18 @@ public class CreateModuleSettingsDialog extends BaseModuleSettingsDialog<Create>
             double firstCreation = validator.validateDouble(firstCreationTextField.getText(), "First creation");
             String iconName = getSelectedIcon();
 
-            module.setMaxArrivals(maxArrivals);
-            module.setEntityPerInterval(entitiesPerInterval);
-            module.setBaseEntityName(entityName);
-            module.setArrivalsTypeValue(value);
-            module.setFirsCreation(firstCreation);
-            module.setIconName(iconName);
+            module.getSettings().setMaxArrivals(maxArrivals);
+            module.getSettings().setEntityPerInterval(entitiesPerInterval);
+            module.getSettings().setBaseEntityName(entityName);
+            module.getSettings().setArrivalsTypeValue(value);
+            module.getSettings().setFirsCreation(firstCreation);
+            module.getSettings().setIconName(iconName);
 
             if (timeBetweenArrivalsTypeComboBox.getSelectedIndex() == 0) {
-                module.setArrivalsType(Create.TimeBetweenArrivalsType.Constant);
-                module.setArrivalsTypeValue((int) value);
+                module.getSettings().setArrivalsType(RootSettings.TimeBetweenArrivalsType.Constant);
+                module.getSettings().setArrivalsTypeValue((int) value);
             } else {
-                module.setArrivalsType(Create.TimeBetweenArrivalsType.Random_Expo);
+                module.getSettings().setArrivalsType(RootSettings.TimeBetweenArrivalsType.Random_Expo);
             }
 
             return true;

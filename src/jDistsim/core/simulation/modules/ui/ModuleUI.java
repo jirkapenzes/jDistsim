@@ -48,12 +48,12 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
 
         view.invalidateConnectedPoints(80, 50);
         for (int index = 0; index < module.getInputConnectedPoints().size(); index++) {
-            ModuleConnectedPoint connectedPoint = module.getInputConnectedPoints().get(index);
+            ModuleConnectedPoint connectedPoint = (ModuleConnectedPoint) module.getInputConnectedPoints().get(index);
             connectedPoints.add(new ModuleConnectedPointUI(connectedPoint, ModuleConnectedPointUI.Type.INPUT, view.getInputPoints().get(index), this));
         }
 
         for (int index = 0; index < module.getOutputConnectedPoints().size(); index++) {
-            ModuleConnectedPoint connectedPoint = module.getOutputConnectedPoints().get(index);
+            ModuleConnectedPoint connectedPoint = (ModuleConnectedPoint) module.getOutputConnectedPoints().get(index);
             connectedPoints.add(new ModuleConnectedPointUI(connectedPoint, ModuleConnectedPointUI.Type.OUTPUT, view.getOutputPoints().get(index), this));
         }
     }
@@ -141,7 +141,7 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
     }
 
     public void setIdentifier(String identifier) {
-        module.setIdentifier(identifier);
+        module.getSettings().setIdentifier(identifier);
         repaint();
     }
 

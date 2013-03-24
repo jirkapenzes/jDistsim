@@ -29,9 +29,9 @@ public class SenderModuleSettingsDialog extends BaseModuleSettingsDialog<Sender>
 
     @Override
     protected void initializeUI() {
-        rebuildComboBox(module.getDistributedModelDefinition().getRmiModelName());
-        rebuildRemoteAddressLabel(module.getDistributedModelDefinition());
-        entityNameTextField.setText(module.getDistributedEntityKeyName());
+        rebuildComboBox(module.getSettings().getDistributedModelDefinition().getRmiModelName());
+        rebuildRemoteAddressLabel(module.getSettings().getDistributedModelDefinition());
+        entityNameTextField.setText(module.getSettings().getDistributedEntityKeyName());
     }
 
     private void rebuildRemoteAddressLabel(DistributedModelDefinition modelDefinition) {
@@ -130,8 +130,8 @@ public class SenderModuleSettingsDialog extends BaseModuleSettingsDialog<Sender>
             String entityName = validator.validateString(entityNameTextField.getText(), "entity name");
             entityName = validator.validateSpecialCharacters(entityName, "entity name");
 
-            module.setDistributedModelDefinition(distributedModelDefinition);
-            module.setDistributedEntityKeyName(entityName);
+            module.getSettings().setDistributedModelDefinition(distributedModelDefinition);
+            module.getSettings().setDistributedEntityKeyName(entityName);
             module.notifyObservers();
 
             return true;

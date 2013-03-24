@@ -2,8 +2,8 @@ package jDistsim.core.simulation.modules.lib.receiver;
 
 import jDistsim.core.simulation.distributed.DistributedReceiveModule;
 import jDistsim.core.simulation.distributed.DistributedSimulator;
+import jDistsim.core.simulation.distributed.ReceiveSettings;
 import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.Entity;
@@ -15,14 +15,14 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class Receiver extends DistributedReceiveModule {
 
-    public Receiver(ModuleConfiguration moduleConfiguration) {
-        super(moduleConfiguration);
+    public Receiver(ReceiveSettings receiveSettings) {
+        super(receiveSettings);
         createdModule = true;
     }
 
     @Override
     protected void initializeDefaultValues() {
-        authorizedEntityName = "entity";
+        settings.setAuthorizedEntityName("entity");
     }
 
     @Override
@@ -41,6 +41,6 @@ public class Receiver extends DistributedReceiveModule {
 
     @Override
     protected void setChildProperty() {
-        getProperties().set(new ModuleProperty("d.entity", authorizedEntityName, "d.entity"));
+        getProperties().set(new ModuleProperty("d.entity", settings.getAuthorizedEntityName(), "d.entity"));
     }
 }

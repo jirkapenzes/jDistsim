@@ -231,7 +231,7 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
 
         getEnvironment().setModelName(simulationModel.getModelName());
         for (RootModule rootModule : simulationModel.getRootModules()) {
-            plan(rootModule.getFirsCreation(), rootModule, null);
+            plan(rootModule.getSettings().getFirsCreation(), rootModule, null);
         }
     }
 

@@ -1,7 +1,6 @@
 package jDistsim.core.simulation.modules;
 
 import jDistsim.application.designer.common.Application;
-import jDistsim.application.designer.common.UIConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperties;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
@@ -21,20 +20,17 @@ import java.util.List;
  * Date: 24.11.12
  * Time: 12:16
  */
-public abstract class Module extends Observable implements IObserver, Cloneable {
+public abstract class Module<Settings extends ModuleSettings> extends Observable implements IObserver, Cloneable {
 
-    private String identifier;
     protected boolean createdModule = false;
+    protected Settings settings;
     private final ObservableList<ModuleConnectedPoint> inputConnectedPoints;
     private final ObservableList<ModuleConnectedPoint> outputConnectedPoints;
     private final ModuleProperties properties;
 
-    public Module() {
-        this(new ModuleConfiguration("null", UIConfiguration.getInstance().getColorSchemeForBasicModule()));
-    }
 
-    public Module(ModuleConfiguration moduleConfiguration) {
-        this.identifier = moduleConfiguration.getBaseIdentifier();
+    public Module(Settings moduleSettings) {
+        this.settings = moduleSettings;
         this.properties = new ModuleProperties();
 
         inputConnectedPoints = new ObservableList<>(this);
@@ -47,7 +43,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     protected abstract void initializeDefaultValues();
 
     private void initialize() {
-        properties.set(new ModuleProperty("identifier", getIdentifier(), "identifier"));
+        properties.set(new ModuleProperty("identifier", settings.getIdentifier(), "identifier"));
         properties.set(new ModuleProperty("correct", false, "correct"));
 
         setInputPointsProperties();
@@ -74,22 +70,12 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     protected abstract void logic(ISimulator simulator, Entity entity);
 
     protected void preExecute(ISimulator simulator, Entity entity) {
-        entity.getAttributes().put("modelLifeCycle", "->" + getIdentifier());
+        entity.getAttributes().put("modelLifeCycle", "->" + settings.getIdentifier());
         entity.getAttributes().put("distributedLifeCycle", "->" + getLongIdentifier());
     }
 
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-        properties.get("identifier").setValue(identifier);
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
     public String getLongIdentifier() {
-        return Application.global().getModelName() + "." + getIdentifier();
+        return Application.global().getModelName() + "." + settings.getIdentifier();
     }
 
     public ModuleProperties getProperties() {
@@ -99,6 +85,16 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     public Iterable<Module> getAllOutputDependencies() {
         List<Module> allDependencies = new ArrayList<>();
         for (ModuleConnectedPoint connectedPoint : getOutputConnectedPoints()) {
+            for (Module module : connectedPoint.getDependencies()) {
+                allDependencies.add(module);
+            }
+        }
+        return allDependencies;
+    }
+
+    public Iterable<Module> getAllInputDependencies() {
+        List<Module> allDependencies = new ArrayList<>();
+        for (ModuleConnectedPoint connectedPoint : getInputConnectedPoints()) {
             for (Module module : connectedPoint.getDependencies()) {
                 allDependencies.add(module);
             }
@@ -144,6 +140,10 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
         return createdModule;
     }
 
+    public Settings getSettings() {
+        return settings;
+    }
+
     @Override
     public void update(Observable observable, Object arguments) {
         Logger.log("module -> update");
@@ -158,6 +158,7 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
 
     public void rebuild() {
         properties.set(new ModuleProperty("correct", isValid(), "correct"));
+        properties.get("identifier").setValue(settings.getIdentifier());
         setChildProperty();
         setChanged();
         notifyObservers();
@@ -210,12 +211,16 @@ public abstract class Module extends Observable implements IObserver, Cloneable 
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         try {
             final Module result = (Module) super.clone();
             return result;
         } catch (final CloneNotSupportedException ex) {
             throw new AssertionError();
         }
+    }
+
+    public String getIdentifier() {
+        return settings.getIdentifier();
     }
 }

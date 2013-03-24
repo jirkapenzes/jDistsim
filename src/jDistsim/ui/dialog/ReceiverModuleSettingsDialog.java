@@ -21,7 +21,7 @@ public class ReceiverModuleSettingsDialog extends BaseModuleSettingsDialog<Recei
 
     @Override
     protected void initializeUI() {
-        authorizedEntityTextField.setText(module.getAuthorizedEntityName());
+        authorizedEntityTextField.setText(module.getSettings().getAuthorizedEntityName());
     }
 
     @Override
@@ -39,8 +39,7 @@ public class ReceiverModuleSettingsDialog extends BaseModuleSettingsDialog<Recei
         try {
             TypeInputValidator validator = new TypeInputValidator();
             String authorizedEntityName = validator.validateString(authorizedEntityTextField.getText(), "entity name");
-            module.setAuthorizedEntityName(authorizedEntityName);
-            module.notifyObservers();
+            module.getSettings().setAuthorizedEntityName(authorizedEntityName);
             return true;
         } catch (Exception exception) {
             return false;

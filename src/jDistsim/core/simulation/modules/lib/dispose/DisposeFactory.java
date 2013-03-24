@@ -14,7 +14,7 @@ public class DisposeFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Dispose(moduleConfiguration);
+        Module module = new Dispose(new DisposeSettings(moduleConfiguration.getBaseIdentifier()));
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }

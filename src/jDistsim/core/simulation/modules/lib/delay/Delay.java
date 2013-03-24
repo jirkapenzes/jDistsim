@@ -2,7 +2,6 @@ package jDistsim.core.simulation.modules.lib.delay;
 
 import jDistsim.core.simulation.modules.ITimeAffectModule;
 import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
@@ -12,17 +11,15 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  * Date: 21.2.13
  * Time: 22:37
  */
-public class Delay extends Module implements ITimeAffectModule {
+public class Delay extends Module<DelaySettings> implements ITimeAffectModule {
 
-    private int delayTime;
-
-    public Delay(ModuleConfiguration moduleConfiguration) {
-        super(moduleConfiguration);
+    public Delay(DelaySettings delaySettings) {
+        super(delaySettings);
     }
 
     @Override
     protected void initializeDefaultValues() {
-        delayTime = 1;
+        settings.setDelayTime(1);
     }
 
     @Override
@@ -34,24 +31,16 @@ public class Delay extends Module implements ITimeAffectModule {
         double localTime = simulator.getLocalTime();
 
         for (Module module : getAllOutputDependencies())
-            simulator.plan(localTime + delayTime, module, entity);
+            simulator.plan(localTime + settings.getDelayTime(), module, entity);
     }
 
     @Override
     protected void setChildProperty() {
-        getProperties().set(new ModuleProperty("delayTime", getDelayTime(), "delay time"));
-    }
-
-    public int getDelayTime() {
-        return delayTime;
-    }
-
-    public void setDelayTime(int delayTime) {
-        this.delayTime = delayTime;
+        getProperties().set(new ModuleProperty("delayTime", settings.getDelayTime(), "delay time"));
     }
 
     @Override
     public double getMinimalAffectTime() {
-        return delayTime;
+        return settings.getDelayTime();
     }
 }

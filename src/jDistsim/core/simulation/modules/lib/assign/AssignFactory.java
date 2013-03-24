@@ -14,7 +14,7 @@ public class AssignFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Assign(moduleConfiguration);
+        Module module = new Assign(new AssignSettings(moduleConfiguration.getBaseIdentifier()));
         module.addOutputPoint(new ModuleConnectedPoint(1));
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;

@@ -57,6 +57,11 @@ public class ObservableHashMap<Key, Value extends IObservable> extends Observabl
         return hashMap.isEmpty();
     }
 
+    public void clear() {
+        hashMap.clear();
+        setChanged();
+    }
+
     @Override
     public void update(Observable observable, Object arguments) {
         setChanged();

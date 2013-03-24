@@ -10,10 +10,10 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  * Date: 13.3.13
  * Time: 23:59
  */
-public class  Condition extends Module {
+public class Condition extends Module<ConditionSettings> {
 
-    public Condition(ModuleConfiguration moduleConfiguration) {
-        super(moduleConfiguration);
+    public Condition(ConditionSettings conditionSettings) {
+        super(conditionSettings);
     }
 
     @Override

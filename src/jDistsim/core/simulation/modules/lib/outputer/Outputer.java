@@ -1,7 +1,6 @@
 package jDistsim.core.simulation.modules.lib.outputer;
 
 import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.ModuleConfiguration;
 import jDistsim.core.simulation.simulator.ISimulator;
 import jDistsim.core.simulation.simulator.entity.Entity;
 
@@ -10,10 +9,10 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  * Date: 13.3.13
  * Time: 23:29
  */
-public class Outputer extends Module {
+public class Outputer extends Module<OutputerSettings> {
 
-    public Outputer(ModuleConfiguration moduleConfiguration) {
-        super(moduleConfiguration);
+    public Outputer(OutputerSettings outputerSettings) {
+        super(outputerSettings);
     }
 
     @Override

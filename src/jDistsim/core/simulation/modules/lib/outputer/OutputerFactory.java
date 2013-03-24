@@ -14,7 +14,7 @@ public class OutputerFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Outputer(moduleConfiguration);
+        Module module = new Outputer(new OutputerSettings(moduleConfiguration.getBaseIdentifier()));
         module.addOutputPoint(new ModuleConnectedPoint(1));
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;

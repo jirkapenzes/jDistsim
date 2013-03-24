@@ -29,6 +29,7 @@ public abstract class BaseModuleSettingsDialog<TModule extends Module> extends B
     protected boolean okButtonLogic() {
         boolean logicResult = doLogic();
         if (logicResult) {
+            module.setChanged();
             module.rebuild();
             module.notifyObservers("properties");
         }

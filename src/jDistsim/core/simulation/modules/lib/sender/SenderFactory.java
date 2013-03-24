@@ -1,5 +1,6 @@
 package jDistsim.core.simulation.modules.lib.sender;
 
+import jDistsim.core.simulation.distributed.SenderSettings;
 import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
@@ -14,7 +15,7 @@ public class SenderFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Sender(moduleConfiguration);
+        Module module = new Sender(new SenderSettings(moduleConfiguration.getBaseIdentifier()));
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }

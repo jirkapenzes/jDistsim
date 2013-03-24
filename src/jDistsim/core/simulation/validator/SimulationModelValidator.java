@@ -73,8 +73,8 @@ public class SimulationModelValidator implements ISimulationModelValidator {
         if (!simulationModel.containsModule(parentModule.getIdentifier()))
             exceptions.add(new ValidatorException(parentModule.getIdentifier(), "not defined in model"));
 
-        for (ModuleConnectedPoint connectedPoint : parentModule.getOutputConnectedPoints()) {
-            for (Module module : connectedPoint.getDependencies())
+        for (Object connectedPoint : parentModule.getOutputConnectedPoints()) {
+            for (Module module : ((ModuleConnectedPoint) connectedPoint).getDependencies())
                 continueSearch(module, simulationModel, exceptions);
         }
     }
@@ -85,7 +85,7 @@ public class SimulationModelValidator implements ISimulationModelValidator {
                 if (rootModuleA.getIdentifier().equals(rootModuleB.getIdentifier()))
                     continue;
 
-                if (rootModuleA.getBaseEntityName().equals(rootModuleB.getBaseEntityName()))
+                if (rootModuleA.getSettings().getBaseEntityName().equals(rootModuleB.getSettings().getBaseEntityName()))
                     exceptions.add(new ValidatorException(rootModuleA.getIdentifier(), "duplicity entity name with " + rootModuleB.getIdentifier()));
             }
         }

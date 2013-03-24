@@ -13,17 +13,14 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  * Date: 3.3.13
  * Time: 13:39
  */
-public class Assign extends Module {
+public class Assign extends Module<AssignSettings> {
 
-    private AttributeCollection attributes;
-
-    public Assign(ModuleConfiguration moduleConfiguration) {
-        super(moduleConfiguration);
+    public Assign(AssignSettings assignSettings) {
+        super(assignSettings);
     }
 
     @Override
     protected void initializeDefaultValues() {
-        attributes = new AttributeCollection();
     }
 
     @Override
@@ -34,7 +31,7 @@ public class Assign extends Module {
     protected void logic(ISimulator simulator, Entity entity) {
         double localTime = simulator.getLocalTime();
 
-        for (Attribute attribute : attributes) {
+        for (Attribute attribute : settings.getAttributes()) {
             entity.getAttributes().set(attribute);
         }
 
@@ -44,10 +41,6 @@ public class Assign extends Module {
 
     @Override
     protected void setChildProperty() {
-        getProperties().set(new ModuleProperty("assignments", attributes.size(), "assignments"));
-    }
-
-    public AttributeCollection getAttributes() {
-        return attributes;
+        getProperties().set(new ModuleProperty("assignments", settings.size(), "assignments"));
     }
 }
