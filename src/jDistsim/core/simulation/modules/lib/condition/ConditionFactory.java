@@ -3,6 +3,7 @@ package jDistsim.core.simulation.modules.lib.condition;
 import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
+import jDistsim.core.simulation.modules.ModuleSettings;
 import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
 
 /**
@@ -14,7 +15,16 @@ public class ConditionFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Condition(new ConditionSettings(moduleConfiguration.getBaseIdentifier()));
+        return create(new ConditionSettings(moduleConfiguration.getBaseIdentifier()), true);
+    }
+
+    @Override
+    public Module create(ModuleSettings settings) {
+        return create(settings, false);
+    }
+
+    private Module create(ModuleSettings settings, boolean defaultInitialization) {
+        Module module = new Condition((ConditionSettings) settings, defaultInitialization);
         module.addOutputPoint(new ModuleConnectedPoint(1));
         module.addOutputPoint(new ModuleConnectedPoint(1));
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));

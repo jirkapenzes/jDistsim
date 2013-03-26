@@ -13,8 +13,12 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class Delay extends Module<DelaySettings> implements ITimeAffectModule {
 
-    public Delay(DelaySettings delaySettings) {
-        super(delaySettings);
+    public Delay(DelaySettings delaySettings, boolean defaultInitialize) {
+        super(delaySettings, defaultInitialize);
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

@@ -17,7 +17,7 @@ public class NullModule extends DistributedModule<DistributedModuleSettings> {
     private boolean actual = true;
 
     public NullModule(DistributedModelDefinition modelDefinition) {
-        super(new DistributedModuleSettings("null_module"));
+        super(new DistributedModuleSettings("null_module"), false);
         settings.setDistributedModelDefinition(modelDefinition);
     }
 
@@ -28,6 +28,10 @@ public class NullModule extends DistributedModule<DistributedModuleSettings> {
     public void setActual(boolean actual) {
         this.actual = actual;
         setChanged();
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

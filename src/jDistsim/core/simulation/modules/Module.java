@@ -28,17 +28,19 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
     private final ObservableList<ModuleConnectedPoint> outputConnectedPoints;
     private final ModuleProperties properties;
 
-
-    public Module(Settings moduleSettings) {
+    public Module(Settings moduleSettings, boolean defaultInitialize) {
         this.settings = moduleSettings;
         this.properties = new ModuleProperties();
 
         inputConnectedPoints = new ObservableList<>(this);
         outputConnectedPoints = new ObservableList<>(this);
 
-        initializeDefaultValues();
+        preInitialization();
+        if (defaultInitialize) initializeDefaultValues();
         initialize();
     }
+
+    protected abstract void preInitialization();
 
     protected abstract void initializeDefaultValues();
 
@@ -82,8 +84,8 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
         return properties;
     }
 
-    public Iterable<Module> getAllOutputDependencies() {
-        List<Module> allDependencies = new ArrayList<>();
+    public Iterable<Module<Settings>> getAllOutputDependencies() {
+        List<Module<Settings>> allDependencies = new ArrayList<>();
         for (ModuleConnectedPoint connectedPoint : getOutputConnectedPoints()) {
             for (Module module : connectedPoint.getDependencies()) {
                 allDependencies.add(module);
@@ -92,8 +94,8 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
         return allDependencies;
     }
 
-    public Iterable<Module> getAllInputDependencies() {
-        List<Module> allDependencies = new ArrayList<>();
+    public Iterable<Module<Settings>> getAllInputDependencies() {
+        List<Module<Settings>> allDependencies = new ArrayList<>();
         for (ModuleConnectedPoint connectedPoint : getInputConnectedPoints()) {
             for (Module module : connectedPoint.getDependencies()) {
                 allDependencies.add(module);

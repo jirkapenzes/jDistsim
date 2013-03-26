@@ -18,8 +18,12 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class Sender extends DistributedSenderModule {
 
-    public Sender(SenderSettings senderSettings) {
-        super(senderSettings);
+    public Sender(SenderSettings senderSettings, boolean defaultInitialize) {
+        super(senderSettings, defaultInitialize);
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

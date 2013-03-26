@@ -25,14 +25,21 @@ public class Create extends RootModule {
     private Counter entityCounter;
     private Random random;
 
-    public Create(RootSettings rootSettings) {
-        super(rootSettings);
+    public Create(RootSettings rootSettings, boolean defaultInitialize) {
+        super(rootSettings, defaultInitialize);
+    }
+
+    @Override
+    protected void preInitialization() {
+        entityCounter = new Counter();
+        random = new Random(0);
+        initialEntityAttributes = new AttributeCollection();
+        initialEntityAttributes.put("creator", getLongIdentifier());
+        initialEntityAttributes.put("iconName", settings.getIconName());
     }
 
     @Override
     protected void initializeDefaultValues() {
-        entityCounter = new Counter();
-        random = new Random(0);
         settings.setBaseEntityName("entity_" + entityCounter.nextValue());
         settings.setArrivalsType(RootSettings.TimeBetweenArrivalsType.Constant);
         settings.setArrivalsTypeValue(1);
@@ -40,10 +47,6 @@ public class Create extends RootModule {
         settings.setEntityPerInterval(1);
         settings.setIconName("box");
         settings.setFirsCreation(0.0);
-
-        initialEntityAttributes = new AttributeCollection();
-        initialEntityAttributes.put("creator", getLongIdentifier());
-        initialEntityAttributes.put("iconName", settings.getIconName());
     }
 
     @Override
@@ -53,6 +56,9 @@ public class Create extends RootModule {
 
     @Override
     protected void setChildProperty() {
+        if (settings.getArrivalsType() == null)
+            settings.setArrivalsType(RootSettings.TimeBetweenArrivalsType.Constant);
+
         getProperties().set(new ModuleProperty("baseEntityName", settings.getBaseEntityName(), "entity name"));
         getProperties().set(new ModuleProperty("arrivalsType", settings.getArrivalsType() + "(" + settings.getArrivalsTypeValue() + ")", "arrivals type"));
         getProperties().set(new ModuleProperty("maxArrivals", settings.getMaxArrivals(), "max arrivals"));

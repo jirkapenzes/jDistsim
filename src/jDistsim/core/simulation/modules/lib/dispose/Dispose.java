@@ -11,8 +11,12 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class Dispose extends Module<DisposeSettings> {
 
-    public Dispose(DisposeSettings disposeSettings) {
-        super(disposeSettings);
+    public Dispose(DisposeSettings disposeSettings, boolean defaultInitialize) {
+        super(disposeSettings, defaultInitialize);
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

@@ -15,9 +15,13 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class Receiver extends DistributedReceiveModule {
 
-    public Receiver(ReceiveSettings receiveSettings) {
-        super(receiveSettings);
+    public Receiver(ReceiveSettings receiveSettings, boolean defaultInitialize) {
+        super(receiveSettings, defaultInitialize);
         createdModule = true;
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

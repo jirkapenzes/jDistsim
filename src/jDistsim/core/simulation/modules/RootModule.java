@@ -10,8 +10,8 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public abstract class RootModule extends Module<RootSettings> {
 
-    public RootModule(RootSettings rootSettings) {
-        super(rootSettings);
+    public RootModule(RootSettings rootSettings, boolean defaultInitialize) {
+        super(rootSettings, defaultInitialize);
         createdModule = true;
     }
 

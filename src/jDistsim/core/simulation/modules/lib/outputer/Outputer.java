@@ -11,8 +11,12 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class Outputer extends Module<OutputerSettings> {
 
-    public Outputer(OutputerSettings outputerSettings) {
-        super(outputerSettings);
+    public Outputer(OutputerSettings outputerSettings, boolean defaultInitialize) {
+        super(outputerSettings, defaultInitialize);
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

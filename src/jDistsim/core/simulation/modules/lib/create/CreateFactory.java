@@ -1,9 +1,6 @@
 package jDistsim.core.simulation.modules.lib.create;
 
-import jDistsim.core.simulation.modules.IModuleView;
-import jDistsim.core.simulation.modules.Module;
-import jDistsim.core.simulation.modules.ModuleConnectedPoint;
-import jDistsim.core.simulation.modules.RootSettings;
+import jDistsim.core.simulation.modules.*;
 import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
 
 /**
@@ -15,7 +12,16 @@ public class CreateFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Create(new RootSettings(moduleConfiguration.getBaseIdentifier()));
+        return create(new RootSettings(moduleConfiguration.getBaseIdentifier()), true);
+    }
+
+    @Override
+    public Module create(ModuleSettings settings) {
+        return create(settings, false);
+    }
+
+    private Module create(ModuleSettings settings, boolean defaultInitialization) {
+        Module module = new Create((RootSettings) settings, defaultInitialization);
         module.addOutputPoint(new ModuleConnectedPoint(1));
         return module;
     }

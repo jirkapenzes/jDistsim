@@ -4,6 +4,7 @@ import jDistsim.core.simulation.distributed.ReceiveSettings;
 import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
+import jDistsim.core.simulation.modules.ModuleSettings;
 import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
 
 /**
@@ -15,7 +16,16 @@ public class ReceiverFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Receiver(new ReceiveSettings(moduleConfiguration.getBaseIdentifier()));
+        return create(new ReceiveSettings(moduleConfiguration.getBaseIdentifier()), true);
+    }
+
+    @Override
+    public Module create(ModuleSettings settings) {
+        return create(settings, false);
+    }
+
+    private Module create(ModuleSettings settings, boolean defaultInitialization) {
+        Module module = new Receiver((ReceiveSettings) settings, defaultInitialization);
         module.addOutputPoint(new ModuleConnectedPoint(1));
         return module;
     }

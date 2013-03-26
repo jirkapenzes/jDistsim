@@ -3,6 +3,7 @@ package jDistsim.core.simulation.modules.lib.dispose;
 import jDistsim.core.simulation.modules.IModuleView;
 import jDistsim.core.simulation.modules.Module;
 import jDistsim.core.simulation.modules.ModuleConnectedPoint;
+import jDistsim.core.simulation.modules.ModuleSettings;
 import jDistsim.core.simulation.modules.lib.BaseModuleFactory;
 
 /**
@@ -14,7 +15,16 @@ public class DisposeFactory extends BaseModuleFactory {
 
     @Override
     public Module create() {
-        Module module = new Dispose(new DisposeSettings(moduleConfiguration.getBaseIdentifier()));
+        return create(new DisposeSettings(moduleConfiguration.getBaseIdentifier()), true);
+    }
+
+    @Override
+    public Module create(ModuleSettings settings) {
+        return create(settings, false);
+    }
+
+    private Module create(ModuleSettings settings, boolean defaultInitialization) {
+        Module module = new Dispose((DisposeSettings) settings, defaultInitialization);
         module.addInputPoint(new ModuleConnectedPoint(Integer.MAX_VALUE));
         return module;
     }
