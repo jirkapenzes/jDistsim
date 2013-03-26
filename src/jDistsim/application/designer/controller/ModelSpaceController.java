@@ -133,13 +133,7 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
 
             ModuleUI currentDragModule = getModel().getCurrentDragModule();
             currentDragModule.setIdentifier(moduleFactory.createIdentifier());
-            currentDragModule.addMouseListener(new ModelSpaceModuleMouseAdapter());
-            currentDragModule.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
-
-            getModel().getModuleList().put(currentDragModule.getIdentifier(), currentDragModule);
-            getModel().getModuleList().notifyObservers();
-            for (ModelSpaceListener listener : modelSpaceListeners)
-                listener.onAddedModule(currentDragModule, this);
+            addModule(currentDragModule, false, true);
 
             new PandaInjector(view.getContentPane(), currentDragModule).activate();
         } catch (Exception exception) {
@@ -147,11 +141,35 @@ public class ModelSpaceController extends AbstractController<ModelSpaceModel> im
         }
     }
 
+    public void addModule(ModuleUI moduleUI, boolean addedToCanvas, boolean autorepaint) {
+        moduleUI.addMouseListener(new ModelSpaceModuleMouseAdapter());
+        moduleUI.addMouseMotionListener(new ModelSpaceModuleMouseMotionAdapter());
+
+        getModel().getModuleList().put(moduleUI.getIdentifier(), moduleUI);
+        getModel().getModuleList().notifyObservers();
+        for (ModelSpaceListener listener : modelSpaceListeners)
+            listener.onAddedModule(moduleUI, this);
+
+        if (addedToCanvas) {
+            view.getContentPane().add(moduleUI, 0);
+            if (autorepaint)
+                view.getContentPane().repaint();
+        }
+    }
+
+    public void rebuildModel() {
+        List<ModuleUI> moduleUIs = new ArrayList<>(getModel().getModuleList().values());
+        for (ModuleUI moduleUI : moduleUIs) {
+            addModule(moduleUI, true, true);
+        }
+        repaint();
+    }
+
     private void repaint() {
         getView().getContentPane().repaint();
     }
 
-    public void connect(final ModuleUI moduleA, final ModuleConnectedPointUI modulePointA, final ModuleUI moduleB, final ModuleConnectedPointUI modulePointB) {
+    public void connect(final ModuleConnectedPointUI modulePointA, final ModuleConnectedPointUI modulePointB) {
         final ModuleConnector moduleConnector;
         try {
             moduleConnector = modulePointA.connect(modulePointB);

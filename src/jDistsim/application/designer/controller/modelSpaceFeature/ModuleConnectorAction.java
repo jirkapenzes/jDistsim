@@ -323,14 +323,14 @@ public class ModuleConnectorAction extends ModelSpaceListener {
 
                         if (currentSelectedModule != null)
                             currentSelectedModule.setDefaultBackgroundColor();
-                        controller.connect(parentModule, parentConnectedPoint, currentSelectedConnectPoint.getOwner(), currentSelectedConnectPoint.getModuleConnectedPointUI());
+                        controller.connect(parentConnectedPoint, currentSelectedConnectPoint.getModuleConnectedPointUI());
 
                     } else if (currentSelectedModule != null) {
                         currentSelectedModule.setDefaultBackgroundColor();
                         List<ModuleConnectedPointUI> points = currentSelectedModule.getInputPoints();
                         for (ModuleConnectedPointUI pointUI : points) {
                             if (pointUI.getParent().canBeConnected()) {
-                                controller.connect(parentModule, parentConnectedPoint, pointUI.getOwner(), pointUI);
+                                controller.connect(parentConnectedPoint, pointUI);
                             }
                         }
                     }
