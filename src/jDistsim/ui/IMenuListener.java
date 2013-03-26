@@ -8,7 +8,10 @@ package jDistsim.ui;
 public interface IMenuListener {
 
     public void viewToolboxOnClick(boolean selected);
+
     public void viewPropertiesClick(boolean selected);
+
     public void viewModulesNavigatorOnClick(boolean selected);
+
     public void viewModelInformationOnClick(boolean selected);
 }

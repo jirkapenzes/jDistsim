@@ -16,4 +16,6 @@ public interface ToolbarListener extends IPanelListener {
     void onSimulationStopButtonClick(MouseEvent mouseEvent, Object sender);
 
     void onModelSaveButtonClick(MouseEvent mouseEvent, Object sender);
+
+    void onModelOpenButtonClick(MouseEvent mouseEvent, Object sender);
 }

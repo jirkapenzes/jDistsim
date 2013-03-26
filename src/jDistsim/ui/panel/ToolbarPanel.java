@@ -23,7 +23,7 @@ public class ToolbarPanel extends ListenerablePanel<ToolbarListener> {
     private Component relationsButton;
 
     private ImageButton modelSaveButton;
-    private ImageButton modelLoadButton;
+    private ImageButton modelOpenButton;
     private ImageButton simulationStartButton;
     private ImageButton simulationStopButton;
 
@@ -66,9 +66,17 @@ public class ToolbarPanel extends ListenerablePanel<ToolbarListener> {
                 getListener().onModelSaveButtonClick(mouseEvent, modelSaveButton);
             }
         });
+        modelOpenButton = new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), hoverStyle, iconDimension, padding);
+        modelOpenButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                Logger.log("Pressed the open button on toolbar");
+                getListener().onModelOpenButtonClick(mouseEvent, modelOpenButton);
+            }
+        });
 
         add(new ImageButton(Resources.getImage("system/toolbar-icon-new.png"), hoverStyle, new Dimension(16, 16), padding));
-        add(new ImageButton(Resources.getImage("system/toolbar-icon-open.png"), hoverStyle, iconDimension, padding));
+        add(modelOpenButton);
         add(modelSaveButton);
         add(new MenuSeparator());
         relationsButton = add(new ImageButton(Resources.getImage("system/toolbar-icon-relationship.png"), hoverStyle, iconDimension, padding, true));
