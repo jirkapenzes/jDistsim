@@ -15,7 +15,7 @@ public abstract class ModuleSettings {
 
     public ModuleSettings(String baseIdentifier) {
         this.baseIdentifier = baseIdentifier;
-        this.identifier = "";
+        this.identifier = "new " + baseIdentifier;
     }
 
     public String getIdentifier() {
