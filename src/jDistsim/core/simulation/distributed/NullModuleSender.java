@@ -14,7 +14,7 @@ import jDistsim.core.simulation.simulator.entity.Entity;
 public class NullModuleSender extends DistributedModule<DistributedModuleSettings> {
 
     public NullModuleSender(DistributedModelDefinition modelDefinition) {
-        super(new DistributedModuleSettings("null_module_sender"));
+        super(new DistributedModuleSettings("null_module_sender"), false);
         settings.setDistributedModelDefinition(modelDefinition);
     }
 
@@ -27,6 +27,10 @@ public class NullModuleSender extends DistributedModule<DistributedModuleSetting
             simulator.getOutput().sendToOutput(SimulatorOutput.MessageType.Error, "Error sending");
             throw new DistributedException();
         }
+    }
+
+    @Override
+    protected void preInitialization() {
     }
 
     @Override

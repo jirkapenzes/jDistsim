@@ -10,8 +10,8 @@ import jDistsim.utils.logging.Logger;
  */
 public abstract class DistributedReceiveModule extends DistributedModule<ReceiveSettings> {
 
-    public DistributedReceiveModule(ReceiveSettings receiveSettings) {
-        super(receiveSettings);
+    public DistributedReceiveModule(ReceiveSettings receiveSettings, boolean defaultInitialize) {
+        super(receiveSettings, defaultInitialize);
     }
 
     public DistributedReceiveModule clone() {

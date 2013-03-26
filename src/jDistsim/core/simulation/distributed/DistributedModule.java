@@ -9,10 +9,10 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  * Date: 1.3.13
  * Time: 20:43
  */
-public abstract class DistributedModule<Settings extends DistributedModuleSettings> extends Module<Settings > {
+public abstract class DistributedModule<Settings extends DistributedModuleSettings> extends Module<Settings> {
 
-    public DistributedModule(Settings disSettings) {
-        super(disSettings);
+    public DistributedModule(Settings disSettings, boolean defaultInitialize) {
+        super(disSettings, defaultInitialize);
     }
 
     @Override
