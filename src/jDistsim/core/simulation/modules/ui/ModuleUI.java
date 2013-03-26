@@ -186,6 +186,10 @@ public class ModuleUI extends JComponent implements IObservable, IObserver {
         return possiblePoints;
     }
 
+    public ModuleConnectedPointUI getModuleConnectedPointUI(int index, ModuleConnectedPointUI.Type type) {
+        return type == ModuleConnectedPointUI.Type.INPUT ? getInputPoints().get(index) : getOutputPoints().get(index);
+    }
+
     public void setColorScheme(ColorScheme colorScheme) {
         view.setColorScheme(colorScheme);
         repaint();
