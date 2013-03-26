@@ -26,7 +26,7 @@ import jDistsim.utils.collection.ReadOnlyList;
 import jDistsim.utils.common.WaitDialog;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
-import jDistsim.utils.xml.wox.serial.Persistor;
+import jDistsim.utils.persistence.Persistor;
 
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -112,7 +112,7 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
                 saveBox.store(modelDefinition);
             }
             saveBox.setNetworkSettings(Application.global().getNetworkSettings());
-            Persistor.save(saveBox, "C:/Users/Jirka/Desktop/demo.xml");
+            Persistor.save(saveBox, "C:/Users/Jirka/Desktop/demo.persistence");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +127,7 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
                     ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
                     WaitDialog waitDialog = new WaitDialog(modelSpaceController.getMainFrame().getFrame());
                     waitDialog.show();
-                    SaveBox saveBox = (SaveBox) Persistor.load("C:/Users/Jirka/Desktop/demo.xml");
+                    SaveBox saveBox = (SaveBox) Persistor.load("C:/Users/Jirka/Desktop/demo.persistence");
 
                     // load remote models
                     for (DistributedModelDefinition modelDefinition : saveBox.getRemotes()) {
