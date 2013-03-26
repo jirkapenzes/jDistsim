@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Observable implements IObservable {
 
-    private List<IObserver> observers;
+    private final List<IObserver> observers;
     private boolean changed = false;
 
     public Observable() {
@@ -23,6 +23,15 @@ public class Observable implements IObservable {
 
     public void removeObserver(IObserver observer) {
         observers.remove(observer);
+    }
+
+    public List<IObserver> removeAllObservers() {
+        List<IObserver> result = new ArrayList<>();
+        for (IObserver observer : observers)
+            result.add(observer);
+
+        observers.clear();
+        return result;
     }
 
     public int countObservers() {
@@ -48,5 +57,10 @@ public class Observable implements IObservable {
 
     public void setChanged() {
         changed = true;
+    }
+
+    public void addObservers(List<IObserver> observerList) {
+        for (IObserver observer : observerList)
+            addObserver(observer);
     }
 }
