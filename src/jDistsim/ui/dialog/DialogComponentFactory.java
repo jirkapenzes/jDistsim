@@ -54,6 +54,6 @@ public class DialogComponentFactory implements IDialogComponentFactory {
 
     @Override
     public ImageButton makeImageButton(String imageUrl) {
-        return new ImageButton(Resources.getImage(imageUrl),  new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 3);
+        return new ImageButton(Resources.getImage(imageUrl), new IconBackgroundColorHoverStyle(), new Dimension(16, 16), 3);
     }
 }

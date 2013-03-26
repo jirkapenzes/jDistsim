@@ -131,7 +131,7 @@ public class ImageButton extends JComponent {
             graphics.drawImage(image, paddingSize, paddingSize, getWidth() - 2 * paddingSize, getHeight() - 2 * paddingSize, this);
     }
 
-    public static Image createDisabledImage (Image i) {
+    public static Image createDisabledImage(Image i) {
         GrayFilter filter = new GrayFilter(true, 60);
         ImageProducer prod = new FilteredImageSource(i.getSource(), filter);
         Image grayImage = Toolkit.getDefaultToolkit().createImage(prod);

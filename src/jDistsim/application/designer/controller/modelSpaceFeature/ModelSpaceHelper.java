@@ -12,7 +12,7 @@ import java.awt.*;
  */
 public final class ModelSpaceHelper {
 
-    public static Point calculatePointPosition(int size, ModuleConnectedPointUI connectedPointUI,  ModuleUI moduleUI) {
+    public static Point calculatePointPosition(int size, ModuleConnectedPointUI connectedPointUI, ModuleUI moduleUI) {
         int offset = size / 2;
         return new Point(
                 (int) ((int) moduleUI.getLocation().getX() + connectedPointUI.getLocation().getX() - offset),

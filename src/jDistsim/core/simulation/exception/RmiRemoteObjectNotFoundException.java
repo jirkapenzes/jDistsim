@@ -5,7 +5,7 @@ package jDistsim.core.simulation.exception;
  * Date: 8.3.13
  * Time: 19:11
  */
-public class RmiRemoteObjectNotFoundException extends BaseSimulatorException{
+public class RmiRemoteObjectNotFoundException extends BaseSimulatorException {
     public RmiRemoteObjectNotFoundException() {
         super("Remote object not found");
     }

@@ -21,7 +21,7 @@ public class IconBackgroundColorHoverStyle implements IIconButtonHoverStyle {
     }
 
     public IconBackgroundColorHoverStyle(Color hoverBackgroundColor) {
-        this(hoverBackgroundColor, new Color(120, 174, 229), new Color(181, 190, 214),  new Color(8, 36, 107));
+        this(hoverBackgroundColor, new Color(120, 174, 229), new Color(181, 190, 214), new Color(8, 36, 107));
     }
 
 
