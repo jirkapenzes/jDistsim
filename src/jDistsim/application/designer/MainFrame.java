@@ -1,6 +1,7 @@
 package jDistsim.application.designer;
 
 import jDistsim.ServiceLocator;
+import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.common.DialogBuilder;
 import jDistsim.application.designer.common.IDialogBuilder;
 import jDistsim.application.designer.controller.*;
@@ -10,6 +11,8 @@ import jDistsim.ui.MenuBar;
 import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.pattern.mvc.IComponentFactory;
+import jDistsim.utils.pattern.observer.IObserver;
+import jDistsim.utils.pattern.observer.Observable;
 import jDistsim.utils.resource.TextResources;
 
 import javax.swing.*;
@@ -19,7 +22,9 @@ import javax.swing.*;
  * Date: 27.10.12
  * Time: 13:05
  */
-public class MainFrame extends AbstractFrame {
+public class MainFrame extends AbstractFrame implements IObserver {
+
+    private JFrame mainFrame;
 
     public MainFrame(IComponentFactory componentFactory) {
         super(componentFactory);
@@ -68,8 +73,14 @@ public class MainFrame extends AbstractFrame {
     @Override
     protected JFrame layout() {
         Logger.log("Component factory build main frame");
-        JFrame mainFrame = componentFactory.frame(TextResources.APPLICATION_NAME, getView(DesignerView.class).getContentPane(), new MenuBar(getController(MenuController.class)));
+        mainFrame = componentFactory.frame(TextResources.APPLICATION_NAME, getView(DesignerView.class).getContentPane(), new MenuBar(getController(MenuController.class)));
+        Application.global().addObserver(this);
         ServiceLocator.getInstance().bind(IDialogBuilder.class, new DialogBuilder(mainFrame));
         return mainFrame;
+    }
+
+    @Override
+    public void update(Observable observable, Object arguments) {
+        mainFrame.setTitle(TextResources.APPLICATION_NAME + " - " + Application.global().getModelName());
     }
 }
