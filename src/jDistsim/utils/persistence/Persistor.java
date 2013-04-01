@@ -1,5 +1,6 @@
 package jDistsim.utils.persistence;
 
+import jDistsim.utils.logging.Logger;
 import org.jdom.Element;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
@@ -34,7 +35,8 @@ public class Persistor {
             ObjectReader reader = new SimpleReader();
             return reader.read(el);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.log(e);
+            Logger.log(e.getStackTrace());
             return null;
         }
     }
