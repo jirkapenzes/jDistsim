@@ -14,20 +14,9 @@ import jDistsim.core.simulation.simulator.entity.Entity;
  */
 public class NullModule extends DistributedModule<DistributedModuleSettings> {
 
-    private boolean actual = true;
-
     public NullModule(DistributedModelDefinition modelDefinition) {
         super(new DistributedModuleSettings("null_module"), false);
         settings.setDistributedModelDefinition(modelDefinition);
-    }
-
-    public boolean isActual() {
-        return actual;
-    }
-
-    public void setActual(boolean actual) {
-        this.actual = actual;
-        setChanged();
     }
 
     @Override
@@ -51,7 +40,7 @@ public class NullModule extends DistributedModule<DistributedModuleSettings> {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
     }
 
     @Override

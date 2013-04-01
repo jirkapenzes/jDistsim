@@ -24,6 +24,8 @@ public class Sender extends DistributedSenderModule {
 
     @Override
     protected void preInitialization() {
+        if (settings.getDistributedModelDefinition() != null && settings.getDistributedModelDefinition().getRmiModelName().equals("null"))
+            initializeDefaultValues();
     }
 
     @Override
@@ -61,7 +63,7 @@ public class Sender extends DistributedSenderModule {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
         getProperties().set(new ModuleProperty("d.address", settings.getDistributedModelDefinition().getAddress(), "d.address"));
         getProperties().set(new ModuleProperty("d.rmiModelName", settings.getDistributedModelDefinition().getRmiModelName(), "d.rmi-name"));
         getProperties().set(new ModuleProperty("d.port", settings.getDistributedModelDefinition().getPort(), "d.port"));

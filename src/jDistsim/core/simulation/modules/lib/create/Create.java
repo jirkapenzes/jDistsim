@@ -55,7 +55,7 @@ public class Create extends RootModule {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
         if (settings.getArrivalsType() == null)
             settings.setArrivalsType(RootSettings.TimeBetweenArrivalsType.Constant);
 

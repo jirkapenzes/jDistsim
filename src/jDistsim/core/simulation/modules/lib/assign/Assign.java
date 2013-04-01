@@ -42,7 +42,7 @@ public class Assign extends Module<AssignSettings> {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
         getProperties().set(new ModuleProperty("assignments", settings.size(), "assignments"));
     }
 }

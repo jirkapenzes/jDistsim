@@ -50,7 +50,7 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
 
         setInputPointsProperties();
         setOutputPointsProperties();
-        setChildProperty();
+        setProperty();
     }
 
     public void initializeForSimulation(ISimulator simulator) {
@@ -161,7 +161,7 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
     public void rebuild() {
         properties.set(new ModuleProperty("correct", isValid(), "correct"));
         properties.get("identifier").setValue(settings.getIdentifier());
-        setChildProperty();
+        setProperty();
         setChanged();
         notifyObservers();
     }
@@ -198,7 +198,7 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
         hasChanged();
     }
 
-    protected abstract void setChildProperty();
+    protected abstract void setProperty();
 
     public boolean isValid() {
         for (ModuleConnectedPoint connectedPoint : getInputConnectedPoints()) {

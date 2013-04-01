@@ -34,7 +34,7 @@ public class Dispose extends Module<DisposeSettings> {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
 
     }
 }

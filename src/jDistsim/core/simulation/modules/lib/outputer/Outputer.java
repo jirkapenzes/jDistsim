@@ -32,6 +32,6 @@ public class Outputer extends Module<OutputerSettings> {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
     }
 }

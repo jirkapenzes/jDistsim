@@ -1,7 +1,5 @@
 package jDistsim.core.simulation.modules;
 
-import jDistsim.core.simulation.distributed.DistributedModelDefinition;
-
 /**
  * Author: Jirka Pénzeš
  * Date: 24.3.13
@@ -11,7 +9,6 @@ public abstract class ModuleSettings {
 
     private String identifier;
     private String baseIdentifier;
-    private DistributedModelDefinition distributedModelDefinition;
 
     public ModuleSettings(String baseIdentifier) {
         this.baseIdentifier = baseIdentifier;

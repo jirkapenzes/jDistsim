@@ -32,6 +32,6 @@ public class Condition extends Module<ConditionSettings> {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
     }
 }

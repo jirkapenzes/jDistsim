@@ -39,7 +39,7 @@ public class Delay extends Module<DelaySettings> implements ITimeAffectModule {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
         getProperties().set(new ModuleProperty("delayTime", settings.getDelayTime(), "delay time"));
     }
 

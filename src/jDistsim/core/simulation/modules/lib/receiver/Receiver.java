@@ -44,7 +44,7 @@ public class Receiver extends DistributedReceiveModule {
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
         getProperties().set(new ModuleProperty("d.entity", settings.getAuthorizedEntityName(), "d.entity"));
     }
 }
