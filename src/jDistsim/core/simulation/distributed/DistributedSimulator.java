@@ -18,9 +18,7 @@ import jDistsim.utils.common.Counter;
 import jDistsim.utils.logging.Logger;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Author: Jirka Pénzeš
@@ -36,6 +34,7 @@ public class DistributedSimulator extends BaseSimulator {
     private Communication communication;
     private boolean isDistributed;
     private double minimalLookahead = 0;
+    private double minimalModelTime = 0;
     private LocalNetworkSettings networkSettings;
     private boolean ready = false;
     private double safeTime;
@@ -63,7 +62,9 @@ public class DistributedSimulator extends BaseSimulator {
                 if (timeAffectModule.getMinimalAffectTime() < minimalLookahead || minimalLookahead == 0) {
                     minimalLookahead = timeAffectModule.getMinimalAffectTime();
                 }
+                minimalModelTime += timeAffectModule.getMinimalAffectTime();
             }
+
         }
         // TODO netahat to z jádra aplikace
         for (DistributedModelDefinition modelDefinition : Application.global().getDistributedModels().values()) {
@@ -97,16 +98,10 @@ public class DistributedSimulator extends BaseSimulator {
             ModelContainer container = models.get(modelName);
             container.getCounter().decrement();
 
-            if (module instanceof NullModule) {
-                NullModule nullModule = (NullModule) module;
-                container.getNullModulles().remove(nullModule);
-                if (!nullModule.isActual())
-                    return;
-            }
-
             if (container.getModelDefinition().isLookahead()) {
                 if (container.getCounter().getCurrentValue() == 0) {
-                    checkLookahead(container);
+                    if (container.getModelDefinition().isLookahead())
+                        checkLookahead(container);
                 }
             }
             checkExecuteCondition();
@@ -314,11 +309,11 @@ public class DistributedSimulator extends BaseSimulator {
                 ModelContainer modelContainer = models.get(requester);
                 Logger.log("State: calendar -> " + calendar.size() + "; minimal lookahead: " + minimalLookahead);
                 if (calendar.isEmpty()) {
-                    modelContainer.getRemote().processNullModule(minimalLookahead, communication.getNetworkSettings().getModelName());
+                    modelContainer.getRemote().processNullModule(requesterTime + minimalLookahead, communication.getNetworkSettings().getModelName());
                     return;
                 }
                 double lbts = getLocalTime() + minimalLookahead;
-                if (requesterTime >= lbts) {
+                if (requesterTime > lbts) {
                     plan(requesterTime, new NullModuleSender(modelContainer.getModelDefinition()), null);
                     return;
                 }
@@ -366,12 +361,10 @@ public class DistributedSimulator extends BaseSimulator {
         private Counter counter;
         private DistributedModelDefinition modelDefinition;
         private IRemote remote;
-        private List nullModulles;
 
         private ModelContainer(DistributedModelDefinition modelDefinition) {
             this.counter = new Counter();
             this.modelDefinition = modelDefinition;
-            this.nullModulles = new ArrayList<>();
         }
 
         public Counter getCounter() {
@@ -393,10 +386,6 @@ public class DistributedSimulator extends BaseSimulator {
         @Override
         public String toString() {
             return modelDefinition.getRmiModelName();
-        }
-
-        public List<NullModule> getNullModulles() {
-            return nullModulles;
         }
     }
 }
