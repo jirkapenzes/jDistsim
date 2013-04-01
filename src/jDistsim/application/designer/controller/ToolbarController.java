@@ -12,6 +12,7 @@ import jDistsim.core.common.SaveContainer;
 import jDistsim.core.simulation.distributed.DistributedModelDefinition;
 import jDistsim.core.simulation.distributed.DistributedModuleSettings;
 import jDistsim.core.simulation.distributed.DistributedSimulator;
+import jDistsim.core.simulation.distributed.SenderSettings;
 import jDistsim.core.simulation.model.ISimulationModelValidator;
 import jDistsim.core.simulation.model.SimulationModelBuilder;
 import jDistsim.core.simulation.modules.*;
@@ -24,11 +25,16 @@ import jDistsim.core.simulation.validator.SimulationModelValidator;
 import jDistsim.ui.panel.listener.ToolbarListener;
 import jDistsim.utils.collection.ReadOnlyList;
 import jDistsim.utils.common.WaitDialog;
+import jDistsim.utils.logging.Logger;
 import jDistsim.utils.pattern.mvc.AbstractController;
 import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.persistence.Persistor;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Collection;
 
 /**
@@ -83,10 +89,143 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
     @Override
     public void onModelSaveButtonClick(MouseEvent mouseEvent, Object sender) {
         ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
-        modelSpaceController.unselectedActiveModule();
+        String modelFullPath = Application.global().getModelFullPath();
+        if (modelFullPath.equals("")) {
+            onModelSaveAsButtonClick(mouseEvent, sender);
+        } else {
+            String modelName = Application.global().getModelName();
+            save(modelSpaceController, modelFullPath, modelName);
+        }
+    }
+
+    @Override
+    public void onModelOpenButtonClick(MouseEvent mouseEvent, Object sender) {
+        final ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
+
+        JFileChooser fd = new JFileChooser();
+        fd.setMultiSelectionEnabled(false);
+        fd.setCurrentDirectory(new File("."));
+        fd.setDialogTitle("Select model for configure");
+        fd.setFileHidingEnabled(true);
+        fd.setApproveButtonText("Open model");
+        FileFilter fileFilter = new FileNameExtensionFilter("jDistsim model (*.jdsim)", "jdsim");
+        fd.addChoosableFileFilter(fileFilter);
+        fd.setAcceptAllFileFilterUsed(false);
+        fd.setFileFilter(fileFilter);
+
+        int returnVal = fd.showOpenDialog(modelSpaceController.getMainFrame().getFrame());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fd.getSelectedFile();
+            final String filePath = file.getAbsolutePath();
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        WaitDialog waitDialog = new WaitDialog(modelSpaceController.getMainFrame().getFrame());
+                        waitDialog.show();
+                        Logger.log();
+                        Logger.log(filePath);
+                        SaveBox saveBox = (SaveBox) Persistor.load(filePath);
+                        Logger.log();
+                        // load remote models
+                        for (DistributedModelDefinition modelDefinition : saveBox.getRemotes()) {
+                            DistributedModelDefinition loadDefinition = new DistributedModelDefinition(modelDefinition.getModelName(), modelDefinition.getRmiModelName(),
+                                    modelDefinition.getAddress(), modelDefinition.getPort(), modelDefinition.isLookahead(), modelDefinition.isReceive());
+
+                            Application.global().getDistributedModels().put(loadDefinition.getRmiModelName(), loadDefinition);
+                        }
+                        Application.global().getDistributedModels().notifyObservers();
+                        Logger.log();
+
+                        // load local network settings
+                        Application.global().getNetworkSettings().setModelName(saveBox.getNetworkSettings().getModelName());
+                        Application.global().getNetworkSettings().setPort(saveBox.getNetworkSettings().getPort());
+                        Application.global().getNetworkSettings().notifyObservers();
+                        Logger.log();
+
+                        // load model
+                        modelSpaceController.unselectedActiveModule();
+                        modelSpaceController.getModel().getModuleList().clear();
+                        modelSpaceController.getModel().getModuleList().notifyObservers();
+                        modelSpaceController.getView().getContentPane().removeAll();
+                        Logger.log();
+
+                        for (SaveContainer container : saveBox.getModelData()) {
+                            Class moduleClass = Class.forName(container.getModule());
+                            IModuleFactory moduleFactory = ServiceLocator.getInstance().get(IModuleLibrary.class).get(moduleClass).getFactory();
+                            ModuleSettings settings = container.getSettings();
+                            if (settings instanceof DistributedModuleSettings && settings instanceof SenderSettings) {
+                                DistributedModuleSettings distributedModuleSettings = (DistributedModuleSettings) settings;
+                                String modelName = distributedModuleSettings.getDistributedModelDefinition().getRmiModelName();
+                                if (!modelName.equals("null")) {
+                                    distributedModuleSettings.setDistributedModelDefinition(Application.global().getDistributedModels().get(modelName));
+                                }
+                            }
+                            Module module = moduleFactory.create(settings);
+                            Logger.log();
+
+                            ModuleUI moduleUI = new ModuleUI(module, moduleFactory.createView());
+                            moduleUI.setLocation(container.getLocation());
+                            modelSpaceController.getModel().getModuleList().put(module.getIdentifier(), moduleUI);
+                        }
+                        Logger.log();
+
+                        // load dependencies
+                        for (SaveContainer container : saveBox.getModelData()) {
+                            String identifier = container.getSettings().getIdentifier();
+                            ModuleUI moduleA = modelSpaceController.getModel().getModuleList().get(identifier);
+
+                            for (SaveConnect saveConnect : container.getOut()) {
+                                ModuleConnectedPointUI pointA = moduleA.getModuleConnectedPointUI(saveConnect.getSourcePointIndex(), ModuleConnectedPointUI.Type.OUTPUT);
+                                ModuleUI moduleB = modelSpaceController.getModel().getModuleList().get(saveConnect.getDependency());
+                                ModuleConnectedPointUI pointB = moduleB.getModuleConnectedPointUI(saveConnect.getTargetPointIndex(), ModuleConnectedPointUI.Type.INPUT);
+                                modelSpaceController.connect(pointA, pointB);
+                            }
+                        }
+                        Logger.log();
+
+                        modelSpaceController.rebuildModel();
+                        waitDialog.hide();
+                    } catch (Exception exception) {
+                        Logger.log(exception);
+                        Logger.log(exception.getStackTrace());
+                    }
+                }
+            });
+            thread.start();
+        }
+    }
+
+    @Override
+    public void onModelSaveAsButtonClick(MouseEvent mouseEvent, Object sender) {
+        ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
+
+        JFileChooser fd = new JFileChooser();
+        fd.setMultiSelectionEnabled(false);
+        fd.setCurrentDirectory(new File("."));
+        fd.setDialogTitle("Select model for configure");
+        fd.setFileHidingEnabled(true);
+        fd.setApproveButtonText("Open model");
+        FileFilter fileFilter = new FileNameExtensionFilter("jDistsim model (*.jdsim)", "jdsim");
+        fd.addChoosableFileFilter(fileFilter);
+        fd.setAcceptAllFileFilterUsed(false);
+        fd.setFileFilter(fileFilter);
+
+        int returnVal = fd.showSaveDialog(modelSpaceController.getMainFrame().getFrame());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String fileName = addJDistsimExtension(fd.getSelectedFile().getPath());
+            String modelName = addJDistsimExtension(fd.getSelectedFile().getName());
+
+            save(modelSpaceController, fileName, modelName);
+        }
+    }
+
+    private void save(ModelSpaceController controller, String fileName, String modelName) {
+        controller.unselectedActiveModule();
         try {
             SaveBox saveBox = new SaveBox();
-            for (ModuleUI moduleUI : modelSpaceController.getModel().getModuleList().values()) {
+            for (ModuleUI moduleUI : controller.getModel().getModuleList().values()) {
                 Module module = moduleUI.getModule();
                 SaveContainer saveContainer = new SaveContainer(module, moduleUI.getLocation());
 
@@ -112,79 +251,17 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
                 saveBox.store(modelDefinition);
             }
             saveBox.setNetworkSettings(Application.global().getNetworkSettings());
-            Persistor.save(saveBox, "C:/Users/Jirka/Desktop/demo.persistence");
+            Persistor.save(saveBox, fileName);
+
+            Application.global().setModelName(modelName);
+            Application.global().setModelFullPath(fileName);
+            Application.global().notifyObservers();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onModelOpenButtonClick(MouseEvent mouseEvent, Object sender) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
-                    WaitDialog waitDialog = new WaitDialog(modelSpaceController.getMainFrame().getFrame());
-                    waitDialog.show();
-                    SaveBox saveBox = (SaveBox) Persistor.load("C:/Users/Jirka/Desktop/demo.persistence");
-
-                    // load remote models
-                    for (DistributedModelDefinition modelDefinition : saveBox.getRemotes()) {
-                        DistributedModelDefinition loadDefinition = new DistributedModelDefinition(modelDefinition.getModelName(), modelDefinition.getRmiModelName(),
-                                modelDefinition.getAddress(), modelDefinition.getPort(), modelDefinition.isLookahead(), modelDefinition.isReceive());
-
-                        Application.global().getDistributedModels().put(loadDefinition.getRmiModelName(), loadDefinition);
-                    }
-                    Application.global().getDistributedModels().notifyObservers();
-
-                    // load local network settings
-                    Application.global().getNetworkSettings().setModelName(saveBox.getNetworkSettings().getModelName());
-                    Application.global().getNetworkSettings().setPort(saveBox.getNetworkSettings().getPort());
-                    Application.global().getNetworkSettings().notifyObservers();
-
-                    // load model
-                    modelSpaceController.unselectedActiveModule();
-                    modelSpaceController.getModel().getModuleList().clear();
-                    modelSpaceController.getModel().getModuleList().notifyObservers();
-                    modelSpaceController.getView().getContentPane().removeAll();
-
-                    for (SaveContainer container : saveBox.getModelData()) {
-                        Class moduleClass = Class.forName(container.getModule());
-                        IModuleFactory moduleFactory = ServiceLocator.getInstance().get(IModuleLibrary.class).get(moduleClass).getFactory();
-                        ModuleSettings settings = container.getSettings();
-                        if (settings instanceof DistributedModuleSettings) {
-                            DistributedModuleSettings distributedModuleSettings = (DistributedModuleSettings) settings;
-                            String modelName = distributedModuleSettings.getDistributedModelDefinition().getRmiModelName();
-                            distributedModuleSettings.setDistributedModelDefinition(Application.global().getDistributedModels().get(modelName));
-                        }
-                        Module module = moduleFactory.create(settings);
-
-                        ModuleUI moduleUI = new ModuleUI(module, moduleFactory.createView());
-                        moduleUI.setLocation(container.getLocation());
-                        modelSpaceController.getModel().getModuleList().put(module.getIdentifier(), moduleUI);
-                    }
-
-                    // load dependencies
-                    for (SaveContainer container : saveBox.getModelData()) {
-                        String identifier = container.getSettings().getIdentifier();
-                        ModuleUI moduleA = modelSpaceController.getModel().getModuleList().get(identifier);
-
-                        for (SaveConnect saveConnect : container.getOut()) {
-                            ModuleConnectedPointUI pointA = moduleA.getModuleConnectedPointUI(saveConnect.getSourcePointIndex(), ModuleConnectedPointUI.Type.OUTPUT);
-                            ModuleUI moduleB = modelSpaceController.getModel().getModuleList().get(saveConnect.getDependency());
-                            ModuleConnectedPointUI pointB = moduleB.getModuleConnectedPointUI(saveConnect.getTargetPointIndex(), ModuleConnectedPointUI.Type.INPUT);
-                            modelSpaceController.connect(pointA, pointB);
-                        }
-                    }
-                    modelSpaceController.rebuildModel();
-                    waitDialog.hide();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-
+    private String addJDistsimExtension(String fileName) {
+        return fileName.contains(".jdsim") ? fileName : fileName + ".jdsim";
     }
 }
