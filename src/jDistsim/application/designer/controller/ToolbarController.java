@@ -2,6 +2,7 @@ package jDistsim.application.designer.controller;
 
 import jDistsim.ServiceLocator;
 import jDistsim.application.designer.common.Application;
+import jDistsim.application.designer.common.IDialogBuilder;
 import jDistsim.application.designer.controller.modelSpaceFeature.ModuleAnimator;
 import jDistsim.application.designer.controller.tabLogic.OutputTabLogic;
 import jDistsim.application.designer.model.ToolbarModel;
@@ -31,8 +32,6 @@ import jDistsim.utils.pattern.mvc.AbstractFrame;
 import jDistsim.utils.persistence.Persistor;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Collection;
@@ -101,33 +100,21 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
     @Override
     public void onModelOpenButtonClick(MouseEvent mouseEvent, Object sender) {
         final ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
+        final IDialogBuilder dialogBuilder = ServiceLocator.getInstance().get(IDialogBuilder.class);
 
-        JFileChooser fd = new JFileChooser();
-        fd.setMultiSelectionEnabled(false);
-        fd.setCurrentDirectory(new File("."));
-        fd.setDialogTitle("Select model for configure");
-        fd.setFileHidingEnabled(true);
-        fd.setApproveButtonText("Open model");
-        FileFilter fileFilter = new FileNameExtensionFilter("jDistsim model (*.jdsim)", "jdsim");
-        fd.addChoosableFileFilter(fileFilter);
-        fd.setAcceptAllFileFilterUsed(false);
-        fd.setFileFilter(fileFilter);
-
-        int returnVal = fd.showOpenDialog(modelSpaceController.getMainFrame().getFrame());
+        JFileChooser fileChooser = dialogBuilder.buildFileChooser("Select model for configure", "Open model");
+        int returnVal = fileChooser.showOpenDialog(modelSpaceController.getMainFrame().getFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fd.getSelectedFile();
+            File file = fileChooser.getSelectedFile();
             final String filePath = file.getAbsolutePath();
 
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    WaitDialog waitDialog = new WaitDialog(modelSpaceController.getMainFrame().getFrame());
                     try {
-                        WaitDialog waitDialog = new WaitDialog(modelSpaceController.getMainFrame().getFrame());
                         waitDialog.show();
-                        Logger.log();
-                        Logger.log(filePath);
                         SaveBox saveBox = (SaveBox) Persistor.load(filePath);
-                        Logger.log();
                         // load remote models
                         for (DistributedModelDefinition modelDefinition : saveBox.getRemotes()) {
                             DistributedModelDefinition loadDefinition = new DistributedModelDefinition(modelDefinition.getModelName(), modelDefinition.getRmiModelName(),
@@ -136,20 +123,14 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
                             Application.global().getDistributedModels().put(loadDefinition.getRmiModelName(), loadDefinition);
                         }
                         Application.global().getDistributedModels().notifyObservers();
-                        Logger.log();
 
                         // load local network settings
                         Application.global().getNetworkSettings().setModelName(saveBox.getNetworkSettings().getModelName());
                         Application.global().getNetworkSettings().setPort(saveBox.getNetworkSettings().getPort());
                         Application.global().getNetworkSettings().notifyObservers();
-                        Logger.log();
 
                         // load model
-                        modelSpaceController.unselectedActiveModule();
-                        modelSpaceController.getModel().getModuleList().clear();
-                        modelSpaceController.getModel().getModuleList().notifyObservers();
-                        modelSpaceController.getView().getContentPane().removeAll();
-                        Logger.log();
+                        clearSpace(modelSpaceController);
 
                         for (SaveContainer container : saveBox.getModelData()) {
                             Class moduleClass = Class.forName(container.getModule());
@@ -163,13 +144,11 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
                                 }
                             }
                             Module module = moduleFactory.create(settings);
-                            Logger.log();
-
                             ModuleUI moduleUI = new ModuleUI(module, moduleFactory.createView());
+
                             moduleUI.setLocation(container.getLocation());
                             modelSpaceController.getModel().getModuleList().put(module.getIdentifier(), moduleUI);
                         }
-                        Logger.log();
 
                         // load dependencies
                         for (SaveContainer container : saveBox.getModelData()) {
@@ -177,19 +156,25 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
                             ModuleUI moduleA = modelSpaceController.getModel().getModuleList().get(identifier);
 
                             for (SaveConnect saveConnect : container.getOut()) {
-                                ModuleConnectedPointUI pointA = moduleA.getModuleConnectedPointUI(saveConnect.getSourcePointIndex(), ModuleConnectedPointUI.Type.OUTPUT);
-                                ModuleUI moduleB = modelSpaceController.getModel().getModuleList().get(saveConnect.getDependency());
-                                ModuleConnectedPointUI pointB = moduleB.getModuleConnectedPointUI(saveConnect.getTargetPointIndex(), ModuleConnectedPointUI.Type.INPUT);
-                                modelSpaceController.connect(pointA, pointB);
+                                try {
+                                    ModuleConnectedPointUI pointA = moduleA.getModuleConnectedPointUI(saveConnect.getSourcePointIndex(), ModuleConnectedPointUI.Type.OUTPUT);
+                                    ModuleUI moduleB = modelSpaceController.getModel().getModuleList().get(saveConnect.getDependency());
+                                    ModuleConnectedPointUI pointB = moduleB.getModuleConnectedPointUI(saveConnect.getTargetPointIndex(), ModuleConnectedPointUI.Type.INPUT);
+                                    modelSpaceController.connect(pointA, pointB);
+                                } catch (Exception exception) {
+                                    Logger.log("I can not load dependency for module " + moduleA.getIdentifier());
+                                    continue;
+                                }
                             }
                         }
-                        Logger.log();
 
                         modelSpaceController.rebuildModel();
-                        waitDialog.hide();
                     } catch (Exception exception) {
-                        Logger.log(exception);
-                        Logger.log(exception.getStackTrace());
+                        clearSpace(modelSpaceController);
+                        dialogBuilder.buildErrorDialog("The input file is damaged");
+                        Logger.log("The input file is damaged " + exception.getMessage());
+                    } finally {
+                        waitDialog.hide();
                     }
                 }
             });
@@ -200,22 +185,12 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
     @Override
     public void onModelSaveAsButtonClick(MouseEvent mouseEvent, Object sender) {
         ModelSpaceController modelSpaceController = getMainFrame().getController(ModelSpaceController.class);
-
-        JFileChooser fd = new JFileChooser();
-        fd.setMultiSelectionEnabled(false);
-        fd.setCurrentDirectory(new File("."));
-        fd.setDialogTitle("Select model for configure");
-        fd.setFileHidingEnabled(true);
-        fd.setApproveButtonText("Open model");
-        FileFilter fileFilter = new FileNameExtensionFilter("jDistsim model (*.jdsim)", "jdsim");
-        fd.addChoosableFileFilter(fileFilter);
-        fd.setAcceptAllFileFilterUsed(false);
-        fd.setFileFilter(fileFilter);
-
-        int returnVal = fd.showSaveDialog(modelSpaceController.getMainFrame().getFrame());
+        IDialogBuilder dialogBuilder = ServiceLocator.getInstance().get(IDialogBuilder.class);
+        JFileChooser fileChooser = dialogBuilder.buildFileChooser("Select model for configure", "Save model");
+        int returnVal = fileChooser.showSaveDialog(modelSpaceController.getMainFrame().getFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            String fileName = addJDistsimExtension(fd.getSelectedFile().getPath());
-            String modelName = addJDistsimExtension(fd.getSelectedFile().getName());
+            String fileName = addJDistsimExtension(fileChooser.getSelectedFile().getPath());
+            String modelName = addJDistsimExtension(fileChooser.getSelectedFile().getName());
 
             save(modelSpaceController, fileName, modelName);
         }
@@ -263,5 +238,12 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
 
     private String addJDistsimExtension(String fileName) {
         return fileName.contains(".jdsim") ? fileName : fileName + ".jdsim";
+    }
+
+    private void clearSpace(ModelSpaceController modelSpaceController) {
+        modelSpaceController.unselectedActiveModule();
+        modelSpaceController.getModel().getModuleList().clear();
+        modelSpaceController.getModel().getModuleList().notifyObservers();
+        modelSpaceController.getView().getContentPane().removeAll();
     }
 }
