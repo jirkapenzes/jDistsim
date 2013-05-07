@@ -69,8 +69,8 @@ public class ToolbarController extends AbstractController<ToolbarModel> implemen
 
         simulator = new DistributedSimulator(modelValidator, Application.global().getNetworkSettings());
         simulator.setAnimator(new ModuleAnimator(modelSpaceController.getModel().getModuleList(), modelSpaceController.getView().getContentPane()));
-        simulator.getOutput().getWriters().add(informationController.makeSimulatorWriter());
-        simulator.getOutput().getWriters().add(new SimulatorLoggerHandler());
+        simulator.getOutput().getSimulatorWriters().add(informationController.makeSimulatorWriter());
+        simulator.getOutput().getSimulatorWriters().add(new SimulatorLoggerHandler());
         simulator.getEnvironment().addObserver(outputTabLogic);
 
         SimulatorRunner simulatorRunner = new SimulatorRunner(simulator, simulationModel);

@@ -9,7 +9,7 @@ public class TextResources {
 
     public static String APPLICATION_NAME = "jDistsim IDE by @jirkapenzes";
     public static String INFORMATION_PANEL_TITLE = "Project bar";
-    public static String TOOLBAR_EVENT_PANEL_TITLE = "Event toolbox";
+    public static String TOOLBAR_EVENT_PANEL_TITLE = "Modules";
     public static String NULL_TEXT = "Empty string";
 
 }

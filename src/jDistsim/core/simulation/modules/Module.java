@@ -27,6 +27,7 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
     private final ObservableList<ModuleConnectedPoint> inputConnectedPoints;
     private final ObservableList<ModuleConnectedPoint> outputConnectedPoints;
     private final ModuleProperties properties;
+    private Module module;
 
     public Module(Settings moduleSettings, boolean defaultInitialize) {
         this.settings = moduleSettings;
@@ -128,6 +129,14 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
                 return true;
         }
         return false;
+    }
+
+    public void addOutputDependency(Module module) {
+        try {
+            outputConnectedPoints.get(0).addDependency(module);
+        } catch (Exception e) {
+            Logger.log(e);
+        }
     }
 
     public boolean canOutputConnected() {

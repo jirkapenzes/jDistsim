@@ -1,7 +1,6 @@
 package jDistsim.core.simulation.simulator;
 
 import jDistsim.core.simulation.animation.ISimulationAnimator;
-import jDistsim.core.simulation.distributed.NullModuleSender;
 import jDistsim.core.simulation.exception.EventNotFoundException;
 import jDistsim.core.simulation.exception.ModelNotValidException;
 import jDistsim.core.simulation.exception.SimulatorCoreException;
@@ -16,9 +15,8 @@ import jDistsim.core.simulation.simulator.event.ScheduleEvent;
 import jDistsim.core.simulation.validator.ValidatorException;
 import jDistsim.core.simulation.validator.ValidatorResult;
 import jDistsim.utils.common.ThreadWaiter;
-import jDistsim.utils.logging.Logger;
+import jDistsim.utils.persistence.AsyncWorker;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -26,7 +24,7 @@ import java.util.Date;
  * Date: 18.2.13
  * Time: 10:38
  */
-public abstract class BaseSimulator implements ISimulator, Serializable {
+public abstract class BaseSimulator implements ISimulator {
 
     protected Calendar calendar;
     private double localTime;
@@ -36,6 +34,8 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
     private ISimulatorEndCondition endCondition;
     private ISimulationModelValidator modelValidator;
     private ISimulationAnimator animator;
+    private AsyncWorker asyncWorker;
+    protected ISimulationModel currentSimulationModel;
     protected volatile Object lock = new Object();
 
     public BaseSimulator(ISimulationModelValidator modelValidator) {
@@ -84,7 +84,6 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
 
     @Override
     public void plan(double time, Module module, Entity entity) {
-        Logger.log(time + "<" + localTime);
         if (time < localTime)
             throw new TimeNotSynchronizedException(time, localTime);
 
@@ -98,24 +97,36 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
 
     @Override
     public void simulate(ISimulationModel simulationModel) throws SimulatorCoreException {
+        currentSimulationModel = simulationModel;
         try {
-            prepareOutput();
-            prepareEnvironment();
-            showSimulatorInfo();
-            validateModel(simulationModel);
+            asyncWorker = new AsyncWorker() {
+                @Override
+                public void doWork() {
+                    prepareOutput();
+                    prepareEnvironment();
+                    showSimulatorInfo();
+                    validateModel(currentSimulationModel);
 
-            prepare(simulationModel);
-            initializeModules(simulationModel);
-            initializeSimulator(simulationModel);
+                    prepare(currentSimulationModel);
+                    initializeModules(currentSimulationModel);
+                    initializeSimulator(currentSimulationModel);
 
-            output.drawSeparateLine();
-            if (simulationModel == null)
-                return;
+                    output.drawSeparateLine();
+                    if (currentSimulationModel == null)
+                        return;
+                }
 
+                @Override
+                public void workerCompleted() {
+                    getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Simulator initialization is complete");
+                }
+            };
+
+            asyncWorker.runAsync().waitForComplete();
             output.sendToOutput(SimulatorOutput.MessageType.Standard, "Start simulation");
             run = true;
             while (run && !endCondition.occurred(environment)) {
-                while (calendar.isEmpty() || !canExecute()) {
+                while (run && (calendar.isEmpty() || !canExecute())) {
                     ThreadWaiter.waitCurrentThreadFor(20);
                 }
                 if (!run) break;
@@ -127,29 +138,25 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
                 Module module = scheduleEvent.getEventContainer().getModule();
                 Entity entity = scheduleEvent.getEventContainer().getEntity();
 
-                if (module instanceof NullModuleSender) {
-                    int i = 1;
-                }
-
-                drawCurrentPrecessInfo(module, entity);
-                setEntityState(entity, module);
-
-                classification(module);
-                animate(entity);
-
                 synchronized (lock) {
+                    setEntityState(entity, module);
+                    animate(entity);
                     localTime = scheduleEvent.getTime();
+                    drawCurrentPrecessInfo(module, entity);
                     module.execute(this, entity);
                 }
+
+                classification(module);
                 calendar.remove(scheduleEvent);
                 updateEnvironment();
             }
-
         } catch (Exception exception) {
             output.drawSeparateLine();
             output.sendToOutput(SimulatorOutput.MessageType.Error, "Error -> " + exception.getClass().getSimpleName());
             output.sendToOutput(SimulatorOutput.MessageType.Error, "Unexpected end of simulation");
             throw new SimulatorCoreException(exception);
+        } finally {
+            dispose();
         }
         output.drawSeparateLine();
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "End of simulation");
@@ -206,6 +213,10 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
     @Override
     public void stop() {
         run = false;
+
+        if (asyncWorker != null && asyncWorker.isRun())
+            asyncWorker.stop();
+
         output.drawSeparateLine();
         output.sendToOutput(SimulatorOutput.MessageType.Standard, "End of simulation -> explicit stop");
     }
@@ -250,6 +261,4 @@ public abstract class BaseSimulator implements ISimulator, Serializable {
         entity.getAttributes().put("currentModule", module.getIdentifier());
         // output.sendToOutput(entity.getAttributes().get("previousModule").getValue() + " -> " + entity.getAttributes().get("currentModule").getValue());
     }
-
-
 }

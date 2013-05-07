@@ -3,7 +3,7 @@ package jDistsim.application.designer.controller.tabLogic;
 import jDistsim.application.designer.controller.InformationController;
 import jDistsim.application.designer.view.InformationView;
 import jDistsim.core.simulation.simulator.SimulatorEnvironment;
-import jDistsim.core.simulation.simulator.Writer;
+import jDistsim.core.simulation.simulator.SimulatorWriter;
 import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.ui.control.LogTextArea;
 import jDistsim.ui.control.button.ImageButton;
@@ -27,7 +27,7 @@ import java.util.Vector;
  * Date: 2.3.13
  * Time: 14:39
  */
-public class OutputTabLogic implements OutputTabListener, Writer, IObserver {
+public class OutputTabLogic implements OutputTabListener, SimulatorWriter, IObserver {
 
     private enum EnvState {Local, Network, Distributed, Modules}
 

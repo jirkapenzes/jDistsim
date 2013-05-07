@@ -12,25 +12,29 @@ public class SimulatorOutput {
 
     public enum MessageType {Core, Standard, Warning, Error}
 
-    private List<Writer> writers;
+    private List<SimulatorWriter> simulatorWriters;
 
     public SimulatorOutput() {
-        writers = new ArrayList<>();
+        simulatorWriters = new ArrayList<>();
     }
 
-    public List<Writer> getWriters() {
-        return writers;
+    public List<SimulatorWriter> getSimulatorWriters() {
+        return simulatorWriters;
+    }
+
+    public void sendToOutput(String message) {
+        sendToOutput(MessageType.Standard, message);
     }
 
     public void sendToOutput(MessageType messageType, String message) {
-        for (Writer writer : writers) {
-            writer.write(message);
+        for (SimulatorWriter simulatorWriter : simulatorWriters) {
+            simulatorWriter.write(message);
         }
     }
 
     public void clearOutput() {
-        for (Writer writer : writers) {
-            writer.clear();
+        for (SimulatorWriter simulatorWriter : simulatorWriters) {
+            simulatorWriter.clear();
         }
     }
 

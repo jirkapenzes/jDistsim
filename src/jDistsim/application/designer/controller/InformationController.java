@@ -7,7 +7,7 @@ import jDistsim.application.designer.controller.tabLogic.OutputTabLogic;
 import jDistsim.application.designer.controller.tabLogic.RemoteModelsTabLogic;
 import jDistsim.application.designer.model.InformationModel;
 import jDistsim.application.designer.view.InformationView;
-import jDistsim.core.simulation.simulator.Writer;
+import jDistsim.core.simulation.simulator.SimulatorWriter;
 import jDistsim.ui.panel.listener.LogTabListener;
 import jDistsim.utils.pattern.mvc.AbstractController;
 
@@ -42,7 +42,7 @@ public class InformationController extends AbstractController<InformationModel> 
         view.setRemoteModelsListener(remoteModelsTabLogic);
     }
 
-    public Writer makeSimulatorWriter() {
+    public SimulatorWriter makeSimulatorWriter() {
         return outputTabLogic;
     }
 

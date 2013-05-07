@@ -7,7 +7,7 @@ import jDistsim.utils.logging.Logger;
  * Date: 21.2.13
  * Time: 21:44
  */
-public class SimulatorLoggerHandler implements Writer {
+public class SimulatorLoggerHandler implements SimulatorWriter {
 
     private final String simulatorPrefix = "Simulator -> ";
 

@@ -1,6 +1,7 @@
 package jDistsim.core.simulation.distributed.communication;
 
 import jDistsim.core.simulation.exception.RmiRemoteObjectNotFoundException;
+import jDistsim.utils.common.ThreadWaiter;
 import jDistsim.utils.logging.Logger;
 
 import java.rmi.NotBoundException;
@@ -50,7 +51,7 @@ public class RmiBinder {
             } catch (Exception exception) {
                 Logger.log("Remote object " + name + " not found [attempt " + i + "]");
             }
-            sleep(sleepTime);
+            ThreadWaiter.waitCurrentThreadFor(sleepTime);
         }
         throw new RmiRemoteObjectNotFoundException();
     }

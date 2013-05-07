@@ -71,13 +71,13 @@ public class ModuleLibrary implements IModuleLibrary {
                 .toUIFactory(new CreateUIFactory())
                 .withConfiguration(new ModuleConfiguration("dispose", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
                 .build();
-        container.bind(Delay.class, new ModuleContainer())
-                .toIndex(3)
-                .toView(new DelayView())
-                .toFactory(new DelayFactory())
-                .toUIFactory(new DelayUIFactory())
-                .withConfiguration(new ModuleConfiguration("delay", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
-                .build();
+container.bind(Delay.class, new ModuleContainer())
+        .toIndex(3)
+        .toView(new DelayView())
+        .toFactory(new DelayFactory())
+        .toUIFactory(new DelayUIFactory())
+        .withConfiguration(new ModuleConfiguration("delay", UIConfiguration.getInstance().getColorSchemeForBasicModule()))
+        .build();
         container.bind(Assign.class, new ModuleContainer())
                 .toIndex(4)
                 .toView(new AssignView())

@@ -5,7 +5,7 @@ package jDistsim.core.simulation.simulator;
  * Date: 18.2.13
  * Time: 21:43
  */
-public interface Writer {
+public interface SimulatorWriter {
 
     void write(String text);
 

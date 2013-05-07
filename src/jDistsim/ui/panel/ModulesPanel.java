@@ -32,7 +32,7 @@ public class ModulesPanel extends InternalPanel {
     private ImageButton listViewButton;
 
     public ModulesPanel(JTree jTree) {
-        super("Modules on model", true, false);
+        super("Navigator", true, false);
         this.jTree = jTree;
 
         initialize();

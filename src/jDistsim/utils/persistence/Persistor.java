@@ -35,6 +35,7 @@ public class Persistor {
             ObjectReader reader = new SimpleReader();
             return reader.read(el);
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.log(e);
             Logger.log(e.getStackTrace());
             return null;

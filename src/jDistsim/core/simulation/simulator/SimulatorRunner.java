@@ -12,11 +12,11 @@ import jDistsim.utils.logging.Logger;
  */
 public class SimulatorRunner {
 
-    private volatile BaseSimulator baseSimulator;
+    private volatile ISimulator baseSimulator;
     private volatile ISimulationModel model;
     private static volatile Thread simulatorThread;
 
-    public SimulatorRunner(BaseSimulator baseSimulator, ISimulationModel model) {
+    public SimulatorRunner(ISimulator baseSimulator, ISimulationModel model) {
         Logger.log("Initialize simulator runner");
         this.baseSimulator = baseSimulator;
         this.model = model;
@@ -24,7 +24,7 @@ public class SimulatorRunner {
 
     public synchronized void start() {
         if (simulatorThread != null) {
-            Logger.log("Interrupt old simulation simulatorThread");
+            Logger.log("Interrupt old simulation thread");
             baseSimulator.stop();
             simulatorThread.interrupt();
         }
@@ -38,7 +38,8 @@ public class SimulatorRunner {
                     baseSimulator.simulate(model);
                 } catch (SimulatorCoreException exception) {
                     Logger.log(exception);
-                    ServiceLocator.getInstance().get(IDialogBuilder.class).buildErrorDialog(exception.getMessage() + "\nMore information in the application log.");
+                    ServiceLocator.getInstance().get(IDialogBuilder.class)
+                            .buildErrorDialog(exception.getMessage() + "\nMore information in the application log.");
                 }
             }
         });

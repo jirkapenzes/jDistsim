@@ -5,7 +5,9 @@ import jDistsim.core.simulation.distributed.DistributedModelDefinition;
 import jDistsim.core.simulation.distributed.DistributedSimulator;
 import jDistsim.core.simulation.exception.DistributedException;
 import jDistsim.core.simulation.exception.RmiRemoteObjectNotFoundException;
+import jDistsim.utils.logging.Logger;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -62,7 +64,13 @@ public class Communication {
     }
 
     public void stop() {
+        try {
+            Logger.log("RMI -> model unbind");
+            Registry registry = LocateRegistry.getRegistry(networkSettings.getPort());
+            registry.unbind(networkSettings.getModelName());
+        } catch (NotBoundException | RemoteException exception) {
 
+        }
     }
 
     public void waitForReady() {
@@ -72,4 +80,6 @@ public class Communication {
             throw new RmiRemoteObjectNotFoundException();
         }
     }
+
+
 }

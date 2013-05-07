@@ -14,7 +14,7 @@ import jDistsim.core.simulation.simulator.entity.Entity;
 public class NullModuleSender extends DistributedModule<DistributedModuleSettings> {
 
     public NullModuleSender(DistributedModelDefinition modelDefinition) {
-        super(new DistributedModuleSettings("null_module_sender"), false);
+        super(new DistributedModuleSettings("Ynull_module_sender"), false);
         settings.setDistributedModelDefinition(modelDefinition);
     }
 
@@ -46,7 +46,7 @@ public class NullModuleSender extends DistributedModule<DistributedModuleSetting
     }
 
     @Override
-    protected void setChildProperty() {
+    protected void setProperty() {
     }
 
     @Override
