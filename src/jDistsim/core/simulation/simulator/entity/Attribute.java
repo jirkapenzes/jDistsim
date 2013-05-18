@@ -13,7 +13,7 @@ public class Attribute implements Serializable {
     public String value;
 
     public Attribute(String name) {
-        this(name, null);
+        this(name, "");
     }
 
     public Attribute(String name, String value) {
