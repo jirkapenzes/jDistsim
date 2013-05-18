@@ -2,6 +2,7 @@ package jDistsim.core.simulation.modules.lib.condition;
 
 import jDistsim.core.simulation.modules.IModuleUIFactory;
 import jDistsim.ui.dialog.BaseModuleSettingsDialog;
+import jDistsim.ui.dialog.ConditionModuleSettingsDialog;
 
 import javax.swing.*;
 
@@ -14,6 +15,6 @@ public class ConditionUIFactory implements IModuleUIFactory<Condition> {
 
     @Override
     public BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, Condition module) {
-        return null;
+        return new ConditionModuleSettingsDialog(parent, module);
     }
 }
