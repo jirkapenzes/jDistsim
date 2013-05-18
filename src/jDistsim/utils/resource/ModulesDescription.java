@@ -10,13 +10,13 @@ public class ModulesDescription {
     public String resolveTitle(String moduleName) {
         switch (moduleName) {
             case "create":
-                return EventTextResource.CREATE_EVENT_DESCRIPTION_TITLE;
+                return "Create";
             case "dispose":
-                return EventTextResource.DISPOSE_EVENT_DESCRIPTION_TITLE;
+                return "Dispose";
             case "delay":
-                return EventTextResource.DELAY_EVENT_DESCRIPTION_TITLE;
+                return "Delay";
             case "sender":
-                return EventTextResource.SENDER_EVENT_DESCRIPTION_TITLE;
+                return "Sender";
             case "assign":
                 return "Assign";
             case "receiver":

@@ -26,4 +26,9 @@ public class Resources {
             return null;
         }
     }
+
+    public static String getResourceRootDirectory() {
+        URL url = resource.getClass().getResource(resourceRootDirectory);
+        return url.getPath();
+    }
 }
