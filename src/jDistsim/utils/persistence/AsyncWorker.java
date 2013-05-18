@@ -42,10 +42,14 @@ public abstract class AsyncWorker {
 
     public abstract void workerCompleted();
 
+    public abstract void rollback();
+
     public void stop() {
         Logger.log("Explicit stop async thread");
         thread.interrupt();
         run = false;
+        Logger.log("Asyncworker rollback");
+        rollback();
     }
 
     public boolean isRun() {
