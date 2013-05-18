@@ -76,6 +76,7 @@ public class Create extends RootModule {
         entity.getAttributes().put("iconName", settings.getIconName());
         entity.getAttributes().put("creationTime", String.valueOf(simulator.getLocalTime()));
         entity.getAttributes().put("currentModule", settings.getIdentifier());
+        entity.getAttributes().put("id", entityCounter.getCurrentValue() + "");
         return entity;
     }
 
