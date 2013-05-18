@@ -9,7 +9,17 @@ import jDistsim.core.simulation.modules.ModuleSettings;
  */
 public class OutputerSettings extends ModuleSettings {
 
+    private String filePath;
+
     public OutputerSettings(String baseIdentifier) {
         super(baseIdentifier);
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

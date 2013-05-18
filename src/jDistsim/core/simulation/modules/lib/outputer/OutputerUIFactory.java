@@ -2,6 +2,7 @@ package jDistsim.core.simulation.modules.lib.outputer;
 
 import jDistsim.core.simulation.modules.IModuleUIFactory;
 import jDistsim.ui.dialog.BaseModuleSettingsDialog;
+import jDistsim.ui.dialog.OutputerModuleSettingsDialog;
 
 import javax.swing.*;
 
@@ -13,6 +14,6 @@ import javax.swing.*;
 public class OutputerUIFactory implements IModuleUIFactory<Outputer> {
     @Override
     public BaseModuleSettingsDialog makeSettingsDialog(JFrame parent, Outputer module) {
-        return null;
+        return new OutputerModuleSettingsDialog(parent, module);
     }
 }
