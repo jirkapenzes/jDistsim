@@ -10,8 +10,16 @@ public class ThreadWaiter {
     public static void waitCurrentThreadFor(long millis) {
         try {
             Thread.sleep(millis);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException exception) {
         }
     }
 
+    public static void waitCurrentThreadFor(long millis, boolean throwsException) throws InterruptedException {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException exception) {
+            if (throwsException)
+                throw exception;
+        }
+    }
 }
