@@ -5,12 +5,12 @@ import jDistsim.application.designer.common.Application;
 import jDistsim.application.designer.model.ModelSpaceModel;
 import jDistsim.application.designer.model.PropertiesModel;
 import jDistsim.application.designer.view.PropertiesView;
+import jDistsim.core.simulation.modules.IModuleLibrary;
 import jDistsim.core.simulation.modules.IModuleUIFactory;
 import jDistsim.core.simulation.modules.Module;
+import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.modules.ui.ModuleConnectedPointUI;
 import jDistsim.core.simulation.modules.ui.ModuleUI;
-import jDistsim.core.simulation.modules.common.ModuleProperty;
-import jDistsim.core.simulation.modules.IModuleLibrary;
 import jDistsim.ui.control.button.ImageButton;
 import jDistsim.ui.dialog.BaseModuleSettingsDialog;
 import jDistsim.ui.panel.listener.ModulesViewListener;
@@ -223,7 +223,11 @@ public class PropertiesController extends AbstractController<PropertiesModel> im
         DefaultMutableTreeNode mutableTreeNode = new DefaultMutableTreeNode(moduleUI.getIdentifier());
         for (ModuleConnectedPointUI connectedPointUI : moduleUI.getOutputPoints()) {
             for (ModuleConnector moduleConnector : connectedPointUI.getDependencies().values()) {
-                addNextTreeNode(mutableTreeNode, moduleConnector.getModuleB(), expand);
+                try {
+                    addNextTreeNode(mutableTreeNode, moduleConnector.getModuleB(), expand);
+                } catch (Exception exception) {
+                    Logger.log("Addiction is already defined");
+                }
             }
         }
         parent.add(mutableTreeNode);
