@@ -51,7 +51,11 @@ public class RmiBinder {
             } catch (Exception exception) {
                 Logger.log("Remote object " + name + " not found [attempt " + i + "]");
             }
-            ThreadWaiter.waitCurrentThreadFor(sleepTime);
+            try {
+                ThreadWaiter.waitCurrentThreadFor(sleepTime, true);
+            } catch (InterruptedException e) {
+                throw new RmiRemoteObjectNotFoundException();
+            }
         }
         throw new RmiRemoteObjectNotFoundException();
     }

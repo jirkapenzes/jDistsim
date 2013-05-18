@@ -95,6 +95,8 @@ public abstract class BaseSimulator implements ISimulator {
 
     protected abstract boolean canExecute();
 
+    protected abstract void unexpectedExit();
+
     @Override
     public void simulate(ISimulationModel simulationModel) throws SimulatorCoreException {
         currentSimulationModel = simulationModel;
@@ -119,6 +121,13 @@ public abstract class BaseSimulator implements ISimulator {
                 @Override
                 public void workerCompleted() {
                     getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Simulator initialization is complete");
+                }
+
+                @Override
+                public void rollback() {
+                    getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Simulator rollback");
+                    unexpectedExit();
+
                 }
             };
 
@@ -187,7 +196,7 @@ public abstract class BaseSimulator implements ISimulator {
         String entityName = "";
         if (entity != null)
             entityName = " {entity: " + entity.getShortIdentifier() + "}";
-        output.sendToOutput(SimulatorOutput.MessageType.Standard, "Local time: " + getLocalTime() + " Process module " + module.getIdentifier() + entityName + "; " + calendar);
+        output.sendToOutput(SimulatorOutput.MessageType.Standard, "Local time: " + getLocalTime() + " Process module " + module.getIdentifier() + entityName + "; ");
     }
 
     protected abstract void fillEnvironment();

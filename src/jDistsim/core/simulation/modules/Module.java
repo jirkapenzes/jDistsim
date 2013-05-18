@@ -4,6 +4,7 @@ import jDistsim.application.designer.common.Application;
 import jDistsim.core.simulation.modules.common.ModuleProperties;
 import jDistsim.core.simulation.modules.common.ModuleProperty;
 import jDistsim.core.simulation.simulator.ISimulator;
+import jDistsim.core.simulation.simulator.entity.Attribute;
 import jDistsim.core.simulation.simulator.entity.Entity;
 import jDistsim.utils.collection.ReadOnlyList;
 import jDistsim.utils.collection.observable.ObservableList;
@@ -62,7 +63,6 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
     protected abstract void resetStates(ISimulator simulator);
 
     private void resetBaseStates(ISimulator simulator) {
-
     }
 
     public void execute(ISimulator simulator, Entity entity) {
@@ -73,7 +73,12 @@ public abstract class Module<Settings extends ModuleSettings> extends Observable
     protected abstract void logic(ISimulator simulator, Entity entity);
 
     protected void preExecute(ISimulator simulator, Entity entity) {
-        entity.getAttributes().put("modelLifeCycle", "->" + settings.getIdentifier());
+        Attribute attribute = entity.getAttributes().get("modelLifeCycle");
+        if (attribute == null) {
+            entity.getAttributes().put("modelLifeCycle", settings.getIdentifier());
+        } else {
+            entity.getAttributes().put("modelLifeCycle", attribute.getValue() + "->" + settings.getIdentifier());
+        }
         entity.getAttributes().put("distributedLifeCycle", "->" + getLongIdentifier());
     }
 

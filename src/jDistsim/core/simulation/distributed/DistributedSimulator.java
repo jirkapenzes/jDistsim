@@ -230,6 +230,11 @@ public class DistributedSimulator extends BaseSimulator implements ISimulator {
         return isDistributed ? executeCondition || calendar.peek().getTime() <= safeTime : true;
     }
 
+    @Override
+    protected void unexpectedExit() {
+        communication.stop();
+    }
+
     private void checkLookahead(ModelContainer modelContainer) {
         try {
             getOutput().sendToOutput(SimulatorOutput.MessageType.Standard, "Send lookahead");

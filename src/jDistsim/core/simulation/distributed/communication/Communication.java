@@ -21,6 +21,7 @@ public class Communication {
 
     private LocalNetworkSettings networkSettings;
     private IRemote remote;
+    private static boolean CreateRegistry = false;
 
     public Communication(LocalNetworkSettings networkSettings) {
         this.networkSettings = networkSettings;
@@ -29,7 +30,13 @@ public class Communication {
     public void start(DistributedSimulator simulator) {
         try {
             validateNetworkSettings(networkSettings);
-            Registry registry = LocateRegistry.createRegistry(networkSettings.getPort());
+            Registry registry;
+            if (CreateRegistry) {
+                registry = LocateRegistry.getRegistry(networkSettings.getPort());
+            } else {
+                registry = LocateRegistry.createRegistry(networkSettings.getPort());
+                CreateRegistry = true;
+            }
             remote = new RmiRemote(simulator);
             registry.rebind(networkSettings.getModelName(), remote);
         } catch (RemoteException exception) {
